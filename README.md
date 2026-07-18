@@ -454,6 +454,12 @@ The project generates the following files:
 * Historical performance may not continue in live markets.
 * The project is designed as a machine-learning demonstration and not as financial advice.
 
+## Architecture Documentation
+
+Detailed system architecture, data flow, API sequence, Docker workflow, and model lifecycle diagrams are available here:
+
+[View Architecture Documentation](/architecture.md)
+
 ## Limitations
 
 Financial markets are noisy and difficult to predict.
