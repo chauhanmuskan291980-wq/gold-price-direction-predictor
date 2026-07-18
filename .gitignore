@@ -35,7 +35,7 @@ data/raw/*
 data/processed/*
 
 # Generated artifacts
-artifacts/*
+artifacts/*.joblib
 
 # Keep empty directories
 !data/raw/.gitkeep
