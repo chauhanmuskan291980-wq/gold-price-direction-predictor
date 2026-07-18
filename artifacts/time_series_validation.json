@@ -1,0 +1,300 @@
+{
+  "model": "LogisticRegression",
+  "baseline": "DummyClassifier-most_frequent",
+  "features": [
+    "return_1",
+    "ma_gap",
+    "volatility_10",
+    "candle_body_ratio",
+    "rsi_14"
+  ],
+  "target": "target",
+  "threshold": 0.5,
+  "gap": 1,
+  "folds": [
+    {
+      "fold": 1,
+      "training_rows": 189,
+      "testing_rows": 188,
+      "gap_rows": 1,
+      "training_period": {
+        "start": "2026-05-07T00:00:00+00:00",
+        "end": "2026-05-19T04:00:00+00:00"
+      },
+      "testing_period": {
+        "start": "2026-05-19T06:00:00+00:00",
+        "end": "2026-06-01T15:00:00+00:00"
+      },
+      "training_class_distribution": {
+        "0": 101,
+        "1": 88
+      },
+      "testing_class_distribution": {
+        "0": 100,
+        "1": 88
+      },
+      "model_metrics": {
+        "accuracy": 0.5319148936170213,
+        "balanced_accuracy": 0.5320454545454545,
+        "precision": 0.5,
+        "recall": 0.5340909090909091,
+        "f1_score": 0.5164835164835165,
+        "roc_auc": 0.5317045454545455
+      },
+      "baseline_metrics": {
+        "accuracy": 0.5319148936170213,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": null
+      },
+      "accuracy_improvement": 0.0,
+      "balanced_accuracy_improvement": 0.03204545454545449
+    },
+    {
+      "fold": 2,
+      "training_rows": 377,
+      "testing_rows": 188,
+      "gap_rows": 1,
+      "training_period": {
+        "start": "2026-05-07T00:00:00+00:00",
+        "end": "2026-06-01T14:00:00+00:00"
+      },
+      "testing_period": {
+        "start": "2026-06-01T16:00:00+00:00",
+        "end": "2026-06-11T19:00:00+00:00"
+      },
+      "training_class_distribution": {
+        "0": 201,
+        "1": 176
+      },
+      "testing_class_distribution": {
+        "0": 101,
+        "1": 87
+      },
+      "model_metrics": {
+        "accuracy": 0.5106382978723404,
+        "balanced_accuracy": 0.5150790941163081,
+        "precision": 0.47619047619047616,
+        "recall": 0.5747126436781609,
+        "f1_score": 0.5208333333333334,
+        "roc_auc": 0.5298736770228747
+      },
+      "baseline_metrics": {
+        "accuracy": 0.5372340425531915,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": null
+      },
+      "accuracy_improvement": -0.02659574468085113,
+      "balanced_accuracy_improvement": 0.015079094116308145
+    },
+    {
+      "fold": 3,
+      "training_rows": 565,
+      "testing_rows": 188,
+      "gap_rows": 1,
+      "training_period": {
+        "start": "2026-05-07T00:00:00+00:00",
+        "end": "2026-06-11T18:00:00+00:00"
+      },
+      "testing_period": {
+        "start": "2026-06-11T20:00:00+00:00",
+        "end": "2026-06-24T17:00:00+00:00"
+      },
+      "training_class_distribution": {
+        "0": 302,
+        "1": 263
+      },
+      "testing_class_distribution": {
+        "0": 101,
+        "1": 87
+      },
+      "model_metrics": {
+        "accuracy": 0.4627659574468085,
+        "balanced_accuracy": 0.46654148173438037,
+        "precision": 0.4326923076923077,
+        "recall": 0.5172413793103449,
+        "f1_score": 0.4712041884816754,
+        "roc_auc": 0.47160578126778196
+      },
+      "baseline_metrics": {
+        "accuracy": 0.5372340425531915,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": null
+      },
+      "accuracy_improvement": -0.07446808510638303,
+      "balanced_accuracy_improvement": -0.03345851826561963
+    },
+    {
+      "fold": 4,
+      "training_rows": 753,
+      "testing_rows": 188,
+      "gap_rows": 1,
+      "training_period": {
+        "start": "2026-05-07T00:00:00+00:00",
+        "end": "2026-06-24T16:00:00+00:00"
+      },
+      "testing_period": {
+        "start": "2026-06-24T18:00:00+00:00",
+        "end": "2026-07-07T15:00:00+00:00"
+      },
+      "training_class_distribution": {
+        "0": 403,
+        "1": 350
+      },
+      "testing_class_distribution": {
+        "0": 97,
+        "1": 91
+      },
+      "model_metrics": {
+        "accuracy": 0.5319148936170213,
+        "balanced_accuracy": 0.5341565650844001,
+        "precision": 0.514018691588785,
+        "recall": 0.6043956043956044,
+        "f1_score": 0.5555555555555556,
+        "roc_auc": 0.5322306559419961
+      },
+      "baseline_metrics": {
+        "accuracy": 0.5159574468085106,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": null
+      },
+      "accuracy_improvement": 0.015957446808510634,
+      "balanced_accuracy_improvement": 0.034156565084400126
+    },
+    {
+      "fold": 5,
+      "training_rows": 941,
+      "testing_rows": 188,
+      "gap_rows": 1,
+      "training_period": {
+        "start": "2026-05-07T00:00:00+00:00",
+        "end": "2026-07-07T14:00:00+00:00"
+      },
+      "testing_period": {
+        "start": "2026-07-07T16:00:00+00:00",
+        "end": "2026-07-17T19:00:00+00:00"
+      },
+      "training_class_distribution": {
+        "0": 500,
+        "1": 441
+      },
+      "testing_class_distribution": {
+        "0": 105,
+        "1": 83
+      },
+      "model_metrics": {
+        "accuracy": 0.5372340425531915,
+        "balanced_accuracy": 0.5427997705106139,
+        "precision": 0.4803921568627451,
+        "recall": 0.5903614457831325,
+        "f1_score": 0.5297297297297298,
+        "roc_auc": 0.5694779116465863
+      },
+      "baseline_metrics": {
+        "accuracy": 0.5585106382978723,
+        "balanced_accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "roc_auc": null
+      },
+      "accuracy_improvement": -0.02127659574468077,
+      "balanced_accuracy_improvement": 0.0427997705106139
+    }
+  ],
+  "summary": {
+    "number_of_folds": 5,
+    "model_summary": {
+      "accuracy": {
+        "mean": 0.5148936170212766,
+        "standard_deviation": 0.03087856441212766,
+        "minimum": 0.4627659574468085,
+        "maximum": 0.5372340425531915
+      },
+      "balanced_accuracy": {
+        "mean": 0.5181244731982314,
+        "standard_deviation": 0.03053592692011782,
+        "minimum": 0.46654148173438037,
+        "maximum": 0.5427997705106139
+      },
+      "precision": {
+        "mean": 0.4806587264668628,
+        "standard_deviation": 0.030853629384408564,
+        "minimum": 0.4326923076923077,
+        "maximum": 0.514018691588785
+      },
+      "recall": {
+        "mean": 0.5641603964516303,
+        "standard_deviation": 0.037156039568074534,
+        "minimum": 0.5172413793103449,
+        "maximum": 0.6043956043956044
+      },
+      "f1_score": {
+        "mean": 0.5187612647167621,
+        "standard_deviation": 0.030599363426655216,
+        "minimum": 0.4712041884816754,
+        "maximum": 0.5555555555555556
+      },
+      "roc_auc": {
+        "mean": 0.5269785142667569,
+        "standard_deviation": 0.03510926041578478,
+        "minimum": 0.47160578126778196,
+        "maximum": 0.5694779116465863
+      }
+    },
+    "baseline_summary": {
+      "accuracy": {
+        "mean": 0.5361702127659574,
+        "standard_deviation": 0.015231724535400358,
+        "minimum": 0.5159574468085106,
+        "maximum": 0.5585106382978723
+      },
+      "balanced_accuracy": {
+        "mean": 0.5,
+        "standard_deviation": 0.0,
+        "minimum": 0.5,
+        "maximum": 0.5
+      },
+      "precision": {
+        "mean": 0.0,
+        "standard_deviation": 0.0,
+        "minimum": 0.0,
+        "maximum": 0.0
+      },
+      "recall": {
+        "mean": 0.0,
+        "standard_deviation": 0.0,
+        "minimum": 0.0,
+        "maximum": 0.0
+      },
+      "f1_score": {
+        "mean": 0.0,
+        "standard_deviation": 0.0,
+        "minimum": 0.0,
+        "maximum": 0.0
+      },
+      "roc_auc": {
+        "mean": null,
+        "standard_deviation": null,
+        "minimum": null,
+        "maximum": null
+      }
+    },
+    "fold_comparison": {
+      "model_wins": 1,
+      "baseline_wins": 3,
+      "ties": 1
+    }
+  }
+}

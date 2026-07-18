@@ -170,12 +170,12 @@ def chronological_train_test_split(
 
     split_index = int(len(data) * train_ratio)
 
-    if split_index <= 0 or split_index >= len(data):
+    if split_index <= 1 or split_index >= len(data):
         raise ValueError(
             "The train-test split produced an empty dataset."
         )
 
-    train_data = data.iloc[:split_index].copy()
+    train_data = data.iloc[:split_index-1].copy()
     test_data = data.iloc[split_index:].copy()
 
     x_train = train_data[FEATURE_COLUMNS].copy()

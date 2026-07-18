@@ -78,7 +78,7 @@ def test_chronological_split_preserves_order() -> None:
         train_ratio=0.80,
     )
 
-    assert len(split.x_train) == 80
+    assert len(split.x_train) == 79
     assert len(split.x_test) == 20
 
     assert (
