@@ -23,35 +23,17 @@ def create_sample_data(
         tz="UTC",
     )
 
-    close_prices = [
-        2600.0 + index
-        for index in range(rows)
-    ]
+    close_prices = [2600.0 + index for index in range(rows)]
 
     return pd.DataFrame(
         {
             "timestamp": timestamps,
-            "open": [
-                price - 1
-                for price in close_prices
-            ],
-            "high": [
-                price + 3
-                for price in close_prices
-            ],
-            "low": [
-                price - 3
-                for price in close_prices
-            ],
+            "open": [price - 1 for price in close_prices],
+            "high": [price + 3 for price in close_prices],
+            "low": [price - 3 for price in close_prices],
             "close": close_prices,
-            "volume": [
-                100 + index
-                for index in range(rows)
-            ],
-            "target": [
-                index % 2
-                for index in range(rows)
-            ],
+            "volume": [100 + index for index in range(rows)],
+            "target": [index % 2 for index in range(rows)],
         }
     )
 
@@ -106,9 +88,7 @@ def test_short_dataset_is_rejected() -> None:
 
 def test_load_missing_file() -> None:
     """Missing processed files should raise an error."""
-    missing_path = Path(
-        "data/processed/missing.csv"
-    )
+    missing_path = Path("data/processed/missing.csv")
 
     with pytest.raises(FileNotFoundError):
         load_processed_data(missing_path)
@@ -122,9 +102,7 @@ def test_save_feature_data(
 
     featured = build_features(data)
 
-    output_path = (
-        tmp_path / "gold_features.csv"
-    )
+    output_path = tmp_path / "gold_features.csv"
 
     save_feature_data(
         featured,

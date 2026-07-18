@@ -51,8 +51,7 @@ def normalize_columns(data: pd.DataFrame) -> pd.DataFrame:
     normalized = normalized.reset_index()
 
     normalized.columns = [
-        str(column).strip().lower().replace(" ", "_")
-        for column in normalized.columns
+        str(column).strip().lower().replace(" ", "_") for column in normalized.columns
     ]
 
     timestamp_candidates = [
@@ -62,22 +61,14 @@ def normalize_columns(data: pd.DataFrame) -> pd.DataFrame:
     ]
 
     timestamp_column = next(
-        (
-            column
-            for column in timestamp_candidates
-            if column in normalized.columns
-        ),
+        (column for column in timestamp_candidates if column in normalized.columns),
         None,
     )
 
     if timestamp_column is None:
-        raise ValueError(
-            "Could not find a timestamp column in downloaded data."
-        )
+        raise ValueError("Could not find a timestamp column in downloaded data.")
 
-    normalized = normalized.rename(
-        columns={timestamp_column: "timestamp"}
-    )
+    normalized = normalized.rename(columns={timestamp_column: "timestamp"})
 
     required_columns = [
         "timestamp",
@@ -89,15 +80,11 @@ def normalize_columns(data: pd.DataFrame) -> pd.DataFrame:
     ]
 
     missing_columns = [
-        column
-        for column in required_columns
-        if column not in normalized.columns
+        column for column in required_columns if column not in normalized.columns
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Downloaded data is missing columns: {missing_columns}"
-        )
+        raise ValueError(f"Downloaded data is missing columns: {missing_columns}")
 
     normalized = normalized[required_columns]
 
@@ -134,18 +121,12 @@ def validate_downloaded_data(data: pd.DataFrame) -> None:
     if (data[price_columns] <= 0).any().any():
         raise ValueError("The dataset contains non-positive prices.")
 
-    invalid_high = (
-        data["high"]
-        < data[["open", "low", "close"]].max(axis=1)
-    )
+    invalid_high = data["high"] < data[["open", "low", "close"]].max(axis=1)
 
     if invalid_high.any():
         raise ValueError("The dataset contains invalid high prices.")
 
-    invalid_low = (
-        data["low"]
-        > data[["open", "high", "close"]].min(axis=1)
-    )
+    invalid_low = data["low"] > data[["open", "high", "close"]].min(axis=1)
 
     if invalid_low.any():
         raise ValueError("The dataset contains invalid low prices.")
@@ -170,9 +151,7 @@ def save_raw_data(
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Download hourly Gold market data."
-    )
+    parser = argparse.ArgumentParser(description="Download hourly Gold market data.")
 
     parser.add_argument(
         "--symbol",
@@ -240,4 +219,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

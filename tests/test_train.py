@@ -30,30 +30,12 @@ def create_training_data(
     return pd.DataFrame(
         {
             "timestamp": timestamps,
-            "return_1": [
-                ((index % 7) - 3) / 1_000
-                for index in range(rows)
-            ],
-            "ma_gap": [
-                ((index % 9) - 4) / 1_000
-                for index in range(rows)
-            ],
-            "volatility_10": [
-                0.001 + (index % 5) / 10_000
-                for index in range(rows)
-            ],
-            "candle_body_ratio": [
-                0.2 + (index % 6) / 10
-                for index in range(rows)
-            ],
-            "rsi_14": [
-                35.0 + (index % 30)
-                for index in range(rows)
-            ],
-            "target": [
-                index % 2
-                for index in range(rows)
-            ],
+            "return_1": [((index % 7) - 3) / 1_000 for index in range(rows)],
+            "ma_gap": [((index % 9) - 4) / 1_000 for index in range(rows)],
+            "volatility_10": [0.001 + (index % 5) / 10_000 for index in range(rows)],
+            "candle_body_ratio": [0.2 + (index % 6) / 10 for index in range(rows)],
+            "rsi_14": [35.0 + (index % 30) for index in range(rows)],
+            "target": [index % 2 for index in range(rows)],
         }
     )
 
@@ -69,9 +51,7 @@ def test_prepare_training_data_sorts_timestamps() -> None:
 
 def test_chronological_split_preserves_order() -> None:
     """Training observations must occur before test data."""
-    data = prepare_training_data(
-        create_training_data()
-    )
+    data = prepare_training_data(create_training_data())
 
     split = chronological_train_test_split(
         data,
@@ -81,37 +61,26 @@ def test_chronological_split_preserves_order() -> None:
     assert len(split.x_train) == 79
     assert len(split.x_test) == 20
 
-    assert (
-        split.train_timestamps.max()
-        < split.test_timestamps.min()
-    )
+    assert split.train_timestamps.max() < split.test_timestamps.min()
 
 
 def test_split_contains_expected_features() -> None:
     """Model input should contain only feature columns."""
-    data = prepare_training_data(
-        create_training_data()
-    )
+    data = prepare_training_data(create_training_data())
 
     split = chronological_train_test_split(
         data,
         train_ratio=0.80,
     )
 
-    assert split.x_train.columns.tolist() == (
-        FEATURE_COLUMNS
-    )
+    assert split.x_train.columns.tolist() == (FEATURE_COLUMNS)
 
-    assert split.x_test.columns.tolist() == (
-        FEATURE_COLUMNS
-    )
+    assert split.x_test.columns.tolist() == (FEATURE_COLUMNS)
 
 
 def test_invalid_train_ratio_is_rejected() -> None:
     """Invalid split ratios should raise an error."""
-    data = prepare_training_data(
-        create_training_data()
-    )
+    data = prepare_training_data(create_training_data())
 
     with pytest.raises(
         ValueError,
@@ -137,9 +106,7 @@ def test_build_model_returns_pipeline() -> None:
 
 def test_model_training_and_evaluation() -> None:
     """Model should train and produce valid metrics."""
-    data = prepare_training_data(
-        create_training_data()
-    )
+    data = prepare_training_data(create_training_data())
 
     split = chronological_train_test_split(
         data,
@@ -176,9 +143,7 @@ def test_save_model(
     tmp_path: Path,
 ) -> None:
     """A fitted model should be serialized."""
-    data = prepare_training_data(
-        create_training_data()
-    )
+    data = prepare_training_data(create_training_data())
 
     split = chronological_train_test_split(
         data,
@@ -226,9 +191,7 @@ def test_save_metadata(
 
 def test_load_missing_feature_file() -> None:
     """A missing feature dataset should be rejected."""
-    missing_path = Path(
-        "data/processed/missing-features.csv"
-    )
+    missing_path = Path("data/processed/missing-features.csv")
 
     with pytest.raises(FileNotFoundError):
         load_feature_data(missing_path)

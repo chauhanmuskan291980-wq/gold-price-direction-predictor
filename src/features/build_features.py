@@ -29,9 +29,7 @@ FEATURE_COLUMNS = [
 def load_processed_data(input_path: Path) -> pd.DataFrame:
     """Load the processed Gold dataset."""
     if not input_path.exists():
-        raise FileNotFoundError(
-            f"Processed data file was not found: {input_path}"
-        )
+        raise FileNotFoundError(f"Processed data file was not found: {input_path}")
 
     data = pd.read_csv(input_path)
 
@@ -44,15 +42,11 @@ def load_processed_data(input_path: Path) -> pd.DataFrame:
 def validate_columns(data: pd.DataFrame) -> None:
     """Validate that all required columns are present."""
     missing_columns = [
-        column
-        for column in REQUIRED_COLUMNS
-        if column not in data.columns
+        column for column in REQUIRED_COLUMNS if column not in data.columns
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Dataset is missing required columns: {missing_columns}"
-        )
+        raise ValueError(f"Dataset is missing required columns: {missing_columns}")
 
 
 def calculate_rsi(
@@ -75,14 +69,9 @@ def calculate_rsi(
         min_periods=period,
     ).mean()
 
-    relative_strength = (
-        average_gain
-        / average_loss.replace(0, np.nan)
-    )
+    relative_strength = average_gain / average_loss.replace(0, np.nan)
 
-    rsi = 100 - (
-        100 / (1 + relative_strength)
-    )
+    rsi = 100 - (100 / (1 + relative_strength))
 
     rsi = rsi.fillna(50)
 
@@ -105,38 +94,24 @@ def build_features(data: pd.DataFrame) -> pd.DataFrame:
     featured = featured.reset_index(drop=True)
 
     # Percentage change from the previous hourly close.
-    featured["return_1"] = (
-        featured["close"].pct_change()
-    )
+    featured["return_1"] = featured["close"].pct_change()
 
     # Difference between short and long moving averages.
-    short_moving_average = (
-        featured["close"].rolling(window=5).mean()
-    )
+    short_moving_average = featured["close"].rolling(window=5).mean()
 
-    long_moving_average = (
-        featured["close"].rolling(window=20).mean()
-    )
+    long_moving_average = featured["close"].rolling(window=20).mean()
 
     featured["ma_gap"] = (
         short_moving_average - long_moving_average
     ) / long_moving_average
 
     # Standard deviation of recent hourly returns.
-    featured["volatility_10"] = (
-        featured["return_1"]
-        .rolling(window=10)
-        .std()
-    )
+    featured["volatility_10"] = featured["return_1"].rolling(window=10).std()
 
     # Size of candle body relative to full candle range.
-    candle_range = (
-        featured["high"] - featured["low"]
-    )
+    candle_range = featured["high"] - featured["low"]
 
-    candle_body = (
-        featured["close"] - featured["open"]
-    ).abs()
+    candle_body = (featured["close"] - featured["open"]).abs()
 
     featured["candle_body_ratio"] = np.where(
         candle_range > 0,
@@ -161,9 +136,7 @@ def build_features(data: pd.DataFrame) -> pd.DataFrame:
     featured = featured.reset_index(drop=True)
 
     if featured.empty:
-        raise ValueError(
-            "No valid rows remained after feature engineering."
-        )
+        raise ValueError("No valid rows remained after feature engineering.")
 
     return featured
 
@@ -203,25 +176,20 @@ def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Create machine-learning features from "
-            "processed Gold hourly data."
+            "Create machine-learning features from processed Gold hourly data."
         )
     )
 
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path(
-            "data/processed/gold_processed.csv"
-        ),
+        default=Path("data/processed/gold_processed.csv"),
     )
 
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(
-            "data/processed/gold_features.csv"
-        ),
+        default=Path("data/processed/gold_features.csv"),
     )
 
     return parser.parse_args()
@@ -233,15 +201,11 @@ def main() -> None:
 
     print(f"Loading processed data from: {args.input}")
 
-    processed_data = load_processed_data(
-        args.input
-    )
+    processed_data = load_processed_data(args.input)
 
     print(f"Input rows: {len(processed_data):,}")
 
-    feature_data = build_features(
-        processed_data
-    )
+    feature_data = build_features(processed_data)
 
     save_feature_data(
         feature_data,

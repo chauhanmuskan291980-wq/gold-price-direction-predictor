@@ -27,30 +27,12 @@ def create_feature_data(
                 freq="h",
                 tz="UTC",
             ),
-            "return_1": [
-                ((index % 7) - 3) / 1_000
-                for index in range(rows)
-            ],
-            "ma_gap": [
-                ((index % 9) - 4) / 1_000
-                for index in range(rows)
-            ],
-            "volatility_10": [
-                0.001 + (index % 5) / 10_000
-                for index in range(rows)
-            ],
-            "candle_body_ratio": [
-                0.2 + (index % 6) / 10
-                for index in range(rows)
-            ],
-            "rsi_14": [
-                35.0 + (index % 30)
-                for index in range(rows)
-            ],
-            "target": [
-                index % 2
-                for index in range(rows)
-            ],
+            "return_1": [((index % 7) - 3) / 1_000 for index in range(rows)],
+            "ma_gap": [((index % 9) - 4) / 1_000 for index in range(rows)],
+            "volatility_10": [0.001 + (index % 5) / 10_000 for index in range(rows)],
+            "candle_body_ratio": [0.2 + (index % 6) / 10 for index in range(rows)],
+            "rsi_14": [35.0 + (index % 30) for index in range(rows)],
+            "target": [index % 2 for index in range(rows)],
         }
     )
 
@@ -77,9 +59,7 @@ def test_predict_direction_returns_valid_result() -> None:
     model = create_fitted_model()
     data = create_feature_data()
 
-    feature_row = data.iloc[[-1]][
-        FEATURE_COLUMNS
-    ]
+    feature_row = data.iloc[[-1]][FEATURE_COLUMNS]
 
     result = predict_direction(
         model=model,
@@ -97,10 +77,7 @@ def test_predict_direction_returns_valid_result() -> None:
     assert 0 <= result.probability_down <= 1
     assert 0 <= result.confidence <= 1
 
-    assert (
-        result.probability_up
-        + result.probability_down
-    ) == pytest.approx(1.0)
+    assert (result.probability_up + result.probability_down) == pytest.approx(1.0)
 
 
 def test_prediction_requires_one_row() -> None:
@@ -108,9 +85,7 @@ def test_prediction_requires_one_row() -> None:
     model = create_fitted_model()
     data = create_feature_data()
 
-    feature_rows = data.iloc[:2][
-        FEATURE_COLUMNS
-    ]
+    feature_rows = data.iloc[:2][FEATURE_COLUMNS]
 
     with pytest.raises(
         ValueError,
@@ -127,9 +102,7 @@ def test_prediction_rejects_missing_feature() -> None:
     model = create_fitted_model()
     data = create_feature_data()
 
-    feature_row = data.iloc[[-1]][
-        FEATURE_COLUMNS
-    ].drop(columns=["rsi_14"])
+    feature_row = data.iloc[[-1]][FEATURE_COLUMNS].drop(columns=["rsi_14"])
 
     with pytest.raises(
         ValueError,
@@ -146,9 +119,7 @@ def test_invalid_threshold_is_rejected() -> None:
     model = create_fitted_model()
     data = create_feature_data()
 
-    feature_row = data.iloc[[-1]][
-        FEATURE_COLUMNS
-    ]
+    feature_row = data.iloc[[-1]][FEATURE_COLUMNS]
 
     with pytest.raises(
         ValueError,
@@ -174,15 +145,11 @@ def test_load_latest_feature_row(
         index=False,
     )
 
-    latest_features, timestamp = (
-        load_latest_feature_row(output_path)
-    )
+    latest_features, timestamp = load_latest_feature_row(output_path)
 
     assert len(latest_features) == 1
 
-    assert latest_features.columns.tolist() == (
-        FEATURE_COLUMNS
-    )
+    assert latest_features.columns.tolist() == (FEATURE_COLUMNS)
 
     assert timestamp is not None
 
@@ -192,9 +159,7 @@ def test_result_to_dictionary() -> None:
     model = create_fitted_model()
     data = create_feature_data()
 
-    feature_row = data.iloc[[-1]][
-        FEATURE_COLUMNS
-    ]
+    feature_row = data.iloc[[-1]][FEATURE_COLUMNS]
 
     result = predict_direction(
         model=model,
@@ -216,9 +181,7 @@ def test_result_to_dictionary() -> None:
 
 def test_load_missing_model() -> None:
     """Missing model artifacts should raise an error."""
-    missing_path = Path(
-        "artifacts/missing-model.joblib"
-    )
+    missing_path = Path("artifacts/missing-model.joblib")
 
     with pytest.raises(FileNotFoundError):
         load_model(missing_path)

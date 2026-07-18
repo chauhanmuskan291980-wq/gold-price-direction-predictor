@@ -65,9 +65,7 @@ def test_validate_required_columns() -> None:
 
 def test_missing_required_column_is_rejected() -> None:
     """Missing required columns should raise an error."""
-    data = create_sample_data().drop(
-        columns=["close"]
-    )
+    data = create_sample_data().drop(columns=["close"])
 
     with pytest.raises(
         ValueError,
@@ -115,9 +113,7 @@ def test_clean_data_sorts_timestamps() -> None:
 
 def test_create_direction_target() -> None:
     """Target should represent the next close direction."""
-    cleaned = clean_ohlc_data(
-        create_sample_data()
-    )
+    cleaned = clean_ohlc_data(create_sample_data())
 
     result = create_direction_target(cleaned)
 
@@ -131,9 +127,7 @@ def test_create_direction_target() -> None:
 
 def test_next_close_is_not_in_final_dataset() -> None:
     """Future close should not remain as a model feature."""
-    cleaned = clean_ohlc_data(
-        create_sample_data()
-    )
+    cleaned = clean_ohlc_data(create_sample_data())
 
     result = create_direction_target(cleaned)
 
@@ -142,9 +136,7 @@ def test_next_close_is_not_in_final_dataset() -> None:
 
 def test_load_raw_data_missing_file() -> None:
     """Missing input files should raise an error."""
-    missing_path = Path(
-        "data/raw/file-that-does-not-exist.csv"
-    )
+    missing_path = Path("data/raw/file-that-does-not-exist.csv")
 
     with pytest.raises(FileNotFoundError):
         load_raw_data(missing_path)
@@ -154,15 +146,11 @@ def test_save_processed_data(
     tmp_path: Path,
 ) -> None:
     """Processed data should be saved as CSV."""
-    cleaned = clean_ohlc_data(
-        create_sample_data()
-    )
+    cleaned = clean_ohlc_data(create_sample_data())
 
     processed = create_direction_target(cleaned)
 
-    output_path = (
-        tmp_path / "gold_processed.csv"
-    )
+    output_path = tmp_path / "gold_processed.csv"
 
     save_processed_data(
         processed,

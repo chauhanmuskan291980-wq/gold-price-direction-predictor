@@ -28,21 +28,15 @@ class PredictionResult:
 def load_model(model_path: Path) -> Pipeline:
     """Load the trained machine-learning pipeline."""
     if not model_path.exists():
-        raise FileNotFoundError(
-            f"Trained model was not found: {model_path}"
-        )
+        raise FileNotFoundError(f"Trained model was not found: {model_path}")
 
     model = joblib.load(model_path)
 
     if not isinstance(model, Pipeline):
-        raise TypeError(
-            "Loaded model is not a scikit-learn Pipeline."
-        )
+        raise TypeError("Loaded model is not a scikit-learn Pipeline.")
 
     if not hasattr(model, "predict_proba"):
-        raise TypeError(
-            "Loaded model does not support probability predictions."
-        )
+        raise TypeError("Loaded model does not support probability predictions.")
 
     return model
 
@@ -50,20 +44,14 @@ def load_model(model_path: Path) -> Pipeline:
 def validate_feature_data(data: pd.DataFrame) -> None:
     """Validate the feature data used for prediction."""
     missing_columns = [
-        feature
-        for feature in FEATURE_COLUMNS
-        if feature not in data.columns
+        feature for feature in FEATURE_COLUMNS if feature not in data.columns
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Prediction data is missing features: {missing_columns}"
-        )
+        raise ValueError(f"Prediction data is missing features: {missing_columns}")
 
     if data[FEATURE_COLUMNS].isna().any().any():
-        raise ValueError(
-            "Prediction data contains missing feature values."
-        )
+        raise ValueError("Prediction data contains missing feature values.")
 
     non_numeric_columns = [
         feature
@@ -85,14 +73,10 @@ def predict_direction(
 ) -> PredictionResult:
     """Predict the next-hour Gold price direction."""
     if len(features) != 1:
-        raise ValueError(
-            "Exactly one feature row is required for prediction."
-        )
+        raise ValueError("Exactly one feature row is required for prediction.")
 
     if not 0 < threshold < 1:
-        raise ValueError(
-            "Prediction threshold must be between 0 and 1."
-        )
+        raise ValueError("Prediction threshold must be between 0 and 1.")
 
     validate_feature_data(features)
 
@@ -103,21 +87,11 @@ def predict_direction(
     probability_down = float(probabilities[0])
     probability_up = float(probabilities[1])
 
-    predicted_class = int(
-        probability_up >= threshold
-    )
+    predicted_class = int(probability_up >= threshold)
 
-    direction = (
-        "up"
-        if predicted_class == 1
-        else "down_or_flat"
-    )
+    direction = "up" if predicted_class == 1 else "down_or_flat"
 
-    confidence = (
-        probability_up
-        if predicted_class == 1
-        else probability_down
-    )
+    confidence = probability_up if predicted_class == 1 else probability_down
 
     return PredictionResult(
         predicted_class=predicted_class,
@@ -134,17 +108,12 @@ def load_latest_feature_row(
 ) -> tuple[pd.DataFrame, str | None]:
     """Load the latest available engineered-feature row."""
     if not feature_data_path.exists():
-        raise FileNotFoundError(
-            "Feature dataset was not found: "
-            f"{feature_data_path}"
-        )
+        raise FileNotFoundError(f"Feature dataset was not found: {feature_data_path}")
 
     data = pd.read_csv(feature_data_path)
 
     if data.empty:
-        raise ValueError(
-            "The feature dataset is empty."
-        )
+        raise ValueError("The feature dataset is empty.")
 
     validate_feature_data(data)
 
@@ -153,9 +122,7 @@ def load_latest_feature_row(
     if "timestamp" in data.columns:
         timestamp = str(data.iloc[-1]["timestamp"])
 
-    latest_features = data.iloc[[-1]][
-        FEATURE_COLUMNS
-    ].copy()
+    latest_features = data.iloc[[-1]][FEATURE_COLUMNS].copy()
 
     return latest_features, timestamp
 
@@ -177,25 +144,20 @@ def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Predict next-hour Gold price direction "
-            "using the latest feature row."
+            "Predict next-hour Gold price direction using the latest feature row."
         )
     )
 
     parser.add_argument(
         "--model",
         type=Path,
-        default=Path(
-            "artifacts/gold_direction_pipeline.joblib"
-        ),
+        default=Path("artifacts/gold_direction_pipeline.joblib"),
     )
 
     parser.add_argument(
         "--features",
         type=Path,
-        default=Path(
-            "data/processed/gold_features.csv"
-        ),
+        default=Path("data/processed/gold_features.csv"),
     )
 
     parser.add_argument(
@@ -213,9 +175,7 @@ def main() -> None:
 
     model = load_model(args.model)
 
-    latest_features, timestamp = load_latest_feature_row(
-        args.features
-    )
+    latest_features, timestamp = load_latest_feature_row(args.features)
 
     result = predict_direction(
         model=model,

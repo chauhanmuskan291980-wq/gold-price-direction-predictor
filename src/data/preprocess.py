@@ -18,9 +18,7 @@ REQUIRED_COLUMNS = [
 def load_raw_data(input_path: Path) -> pd.DataFrame:
     """Load raw hourly Gold data from a CSV file."""
     if not input_path.exists():
-        raise FileNotFoundError(
-            f"Raw data file was not found: {input_path}"
-        )
+        raise FileNotFoundError(f"Raw data file was not found: {input_path}")
 
     data = pd.read_csv(input_path)
 
@@ -33,15 +31,11 @@ def load_raw_data(input_path: Path) -> pd.DataFrame:
 def validate_required_columns(data: pd.DataFrame) -> None:
     """Ensure the dataset contains all required OHLCV columns."""
     missing_columns = [
-        column
-        for column in REQUIRED_COLUMNS
-        if column not in data.columns
+        column for column in REQUIRED_COLUMNS if column not in data.columns
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Dataset is missing required columns: {missing_columns}"
-        )
+        raise ValueError(f"Dataset is missing required columns: {missing_columns}")
 
 
 def clean_ohlc_data(data: pd.DataFrame) -> pd.DataFrame:
@@ -97,23 +91,13 @@ def clean_ohlc_data(data: pd.DataFrame) -> pd.DataFrame:
         "close",
     ]
 
-    positive_price_mask = (
-        cleaned[price_columns] > 0
-    ).all(axis=1)
+    positive_price_mask = (cleaned[price_columns] > 0).all(axis=1)
 
-    non_negative_volume_mask = (
-        cleaned["volume"] >= 0
-    )
+    non_negative_volume_mask = cleaned["volume"] >= 0
 
-    valid_high_mask = (
-        cleaned["high"]
-        >= cleaned[["open", "low", "close"]].max(axis=1)
-    )
+    valid_high_mask = cleaned["high"] >= cleaned[["open", "low", "close"]].max(axis=1)
 
-    valid_low_mask = (
-        cleaned["low"]
-        <= cleaned[["open", "high", "close"]].min(axis=1)
-    )
+    valid_low_mask = cleaned["low"] <= cleaned[["open", "high", "close"]].min(axis=1)
 
     cleaned = cleaned[
         positive_price_mask
@@ -126,9 +110,7 @@ def clean_ohlc_data(data: pd.DataFrame) -> pd.DataFrame:
     cleaned = cleaned.reset_index(drop=True)
 
     if cleaned.empty:
-        raise ValueError(
-            "No valid rows remained after cleaning."
-        )
+        raise ValueError("No valid rows remained after cleaning.")
 
     return cleaned
 
@@ -144,14 +126,10 @@ def create_direction_target(data: pd.DataFrame) -> pd.DataFrame:
         the next hourly close is equal to or lower than the current close.
     """
     if "close" not in data.columns:
-        raise ValueError(
-            "The dataset must contain a close column."
-        )
+        raise ValueError("The dataset must contain a close column.")
 
     if len(data) < 2:
-        raise ValueError(
-            "At least two rows are required to create the target."
-        )
+        raise ValueError("At least two rows are required to create the target.")
 
     result = data.copy()
 
@@ -161,9 +139,7 @@ def create_direction_target(data: pd.DataFrame) -> pd.DataFrame:
         subset=["next_close"],
     )
 
-    result["target"] = (
-        result["next_close"] > result["close"]
-    ).astype("int8")
+    result["target"] = (result["next_close"] > result["close"]).astype("int8")
 
     result = result.drop(
         columns=["next_close"],
@@ -207,22 +183,16 @@ def print_dataset_summary(data: pd.DataFrame) -> None:
     print(f"Up candles: {up_count:,}")
 
     if len(data) > 0:
-        up_percentage = (
-            up_count / len(data)
-        ) * 100
+        up_percentage = (up_count / len(data)) * 100
 
-        print(
-            f"Up-candle percentage: "
-            f"{up_percentage:.2f}%"
-        )
+        print(f"Up-candle percentage: {up_percentage:.2f}%")
 
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Clean hourly Gold OHLCV data and create "
-            "the next-hour direction target."
+            "Clean hourly Gold OHLCV data and create the next-hour direction target."
         )
     )
 
@@ -236,9 +206,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(
-            "data/processed/gold_processed.csv"
-        ),
+        default=Path("data/processed/gold_processed.csv"),
         help="Path where processed data will be saved.",
     )
 
@@ -259,9 +227,7 @@ def main() -> None:
 
     print(f"Valid rows after cleaning: {len(cleaned_data):,}")
 
-    processed_data = create_direction_target(
-        cleaned_data
-    )
+    processed_data = create_direction_target(cleaned_data)
 
     save_processed_data(
         processed_data,
