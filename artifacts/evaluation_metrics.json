@@ -1,0 +1,51 @@
+{
+  "model": "LogisticRegression",
+  "threshold": 0.5,
+  "test_size": 0.2,
+  "features": [
+    "return_1",
+    "ma_gap",
+    "volatility_10",
+    "candle_body_ratio",
+    "rsi_14"
+  ],
+  "target": "target",
+  "dataset": {
+    "total_rows": 1129,
+    "training_rows": 902,
+    "testing_rows": 226,
+    "purged_boundary_rows": 1,
+    "training_period": {
+      "start": "2026-05-07T00:00:00+00:00",
+      "end": "2026-07-05T22:00:00+00:00"
+    },
+    "testing_period": {
+      "start": "2026-07-06T00:00:00+00:00",
+      "end": "2026-07-17T18:00:00+00:00"
+    }
+  },
+  "classification_metrics": {
+    "accuracy": 0.5309734513274337,
+    "balanced_accuracy": 0.5347967867652907,
+    "precision": 0.47058823529411764,
+    "recall": 0.5656565656565656,
+    "f1_score": 0.5137614678899083,
+    "roc_auc": 0.5756780402449694
+  },
+  "strategy_metrics": {
+    "number_of_trades": 226.0,
+    "winning_trades": 119.0,
+    "losing_trades": 107.0,
+    "win_rate": 0.5265486725663717,
+    "cumulative_strategy_return": 0.015437061460368717,
+    "buy_and_hold_return": -0.04096292377903776,
+    "average_trade_return": 7.178901876202691e-05,
+    "best_trade_return": 0.008036252007494582,
+    "worst_trade_return": -0.0157792718228158
+  },
+  "limitations": [
+    "The strategy ignores transaction costs, spread, slippage, and execution latency.",
+    "Every model prediction is treated as a long or short trade.",
+    "The reported performance is historical and does not guarantee future results."
+  ]
+}
