@@ -31,8 +31,8 @@ htmlcov/
 Thumbs.db
 
 # Downloaded and processed datasets
-data/raw/*
-data/processed/*
+!data/raw/*
+!data/processed/*
 
 # Generated artifacts
 artifacts/*
