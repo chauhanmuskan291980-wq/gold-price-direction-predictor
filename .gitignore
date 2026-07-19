@@ -35,7 +35,12 @@ data/raw/*
 data/processed/*
 
 # Generated artifacts
-artifacts/*.joblib
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/gold_direction_pipeline.joblib
+!artifacts/evaluation_metrics.json
+!artifacts/cumulative_returns.png
+!artifacts/test_period_trades.csv
 
 # Keep empty directories
 !data/raw/.gitkeep
