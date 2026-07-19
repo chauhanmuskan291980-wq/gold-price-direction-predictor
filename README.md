@@ -14,6 +14,12 @@ The project includes the complete workflow:
 * Automated testing
 * Docker containerization
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![Tests](https://img.shields.io/badge/tests-50%20passed-brightgreen)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)
+
 ## Project Objective
 
 The goal of this project is to predict the direction of the next hourly gold-price candle.
@@ -25,26 +31,23 @@ The model does not predict the exact future price. It predicts one of two classe
 
 The prediction is based on technical features calculated using current and historical hourly market data.
 
+
+
 ## Project Workflow
 
-```text
-Hourly XAU/USD Data
-        ↓
-Data Validation
-        ↓
-Data Preprocessing
-        ↓
-Feature Engineering
-        ↓
-Chronological Train-Test Split
-        ↓
-Logistic Regression Model
-        ↓
-Model Evaluation
-        ↓
-Trading Strategy Backtest
-        ↓
-FastAPI Prediction Service
+```mermaid
+erDiagram
+
+    RAW_DATA ||--|| VALIDATED_DATA : validates
+    VALIDATED_DATA ||--|| PROCESSED_DATA : preprocesses
+    PROCESSED_DATA ||--|| FEATURE_SET : generates
+    FEATURE_SET ||--|| TRAIN_TEST_SPLIT : splits
+    TRAIN_TEST_SPLIT ||--|| LOGISTIC_REGRESSION : trains
+    LOGISTIC_REGRESSION ||--o{ EVALUATION : evaluates
+    LOGISTIC_REGRESSION ||--o{ BACKTEST : backtests
+    LOGISTIC_REGRESSION ||--|| MODEL_ARTIFACT : saves
+    MODEL_ARTIFACT ||--|| FASTAPI : loads
+    FASTAPI ||--o{ PREDICTION : returns
 ```
 
 ## Features Used
@@ -460,6 +463,200 @@ Detailed system architecture, data flow, API sequence, Docker workflow, and mode
 
 [View Architecture Documentation](/architecture.md)
 
+
+## Docker
+
+The application is containerized using Docker, making it easy to run the prediction API in any environment.
+
+### Pull from Docker Hub
+
+```bash
+docker pull muskanchauhan2890/gold-direction-api:latest
+```
+
+Run the container:
+
+```bash
+docker run -d \
+  --name gold-direction-api \
+  -p 8000:8000 \
+  muskanchauhan2890/gold-direction-api:latest
+```
+
+### Pull from GitHub Container Registry
+
+```bash
+docker pull ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest
+```
+
+Run the container:
+
+```bash
+docker run -d \
+  --name gold-direction-ghcr \
+  -p 8000:8000 \
+  ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest
+```
+
+After starting the container, open:
+
+* API documentation: `http://127.0.0.1:8000/docs`
+* Health endpoint: `http://127.0.0.1:8000/health`
+* Model information: `http://127.0.0.1:8000/model/info`
+
+### Build Locally
+
+```bash
+docker build -t gold-direction-api:latest .
+```
+
+Run the locally built image:
+
+```bash
+docker run -d \
+  --name gold-direction-api \
+  -p 8000:8000 \
+  gold-direction-api:latest
+```
+
+### Stop and Remove the Container
+
+```bash
+docker stop gold-direction-api
+docker rm gold-direction-api
+```
+
+---
+
+## CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and container delivery.
+
+The pipeline runs automatically on:
+
+* Pushes to the `main` branch
+* Pull requests targeting the `main` branch
+
+The workflow performs the following steps:
+
+1. Installs Python dependencies
+2. Runs Ruff code-quality checks
+3. Runs Mypy static type checking
+4. Executes the Pytest test suite
+5. Builds the Docker image
+6. Starts the container
+7. Verifies the `/health` endpoint
+8. Publishes the image to Docker Hub
+9. Publishes the image to GitHub Container Registry
+
+Docker images are published only after all quality checks, tests, and container health checks pass.
+
+### Published Images
+
+| Registry                  | Image                                                                  |
+| ------------------------- | ---------------------------------------------------------------------- |
+| Docker Hub                | `muskanchauhan2890/gold-direction-api:latest`                          |
+| GitHub Container Registry | `ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest` |
+
+Each successful push to `main` publishes:
+
+* A `latest` tag
+* A commit-specific tag using the Git commit SHA
+
+Example:
+
+```bash
+docker pull muskanchauhan2890/gold-direction-api:<commit-sha>
+```
+
+```bash
+docker pull ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:<commit-sha>
+```
+
+---
+
+## Testing
+
+Run all tests:
+
+```bash
+pytest
+```
+
+Run code-quality checks:
+
+```bash
+ruff check .
+```
+
+Run static type checking:
+
+```bash
+mypy app src
+```
+
+Run tests with coverage:
+
+```bash
+pytest --cov=app --cov=src --cov-report=term-missing
+```
+
+The project currently includes tests for:
+
+* API endpoints
+* Health checks
+* Input validation
+* Data downloading and validation
+* Data preprocessing
+* Feature engineering
+* Model training
+* Time-series validation
+* Model prediction
+* Model artifact loading
+
+---
+
+## API Usage
+
+### Health Check
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+### Model Information
+
+```bash
+curl http://127.0.0.1:8000/model/info
+```
+
+### Prediction
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "return_1": 0.0012,
+    "ma_gap": -0.0021,
+    "volatility_10": 0.0045,
+    "candle_body_ratio": 0.62,
+    "rsi_14": 54.3
+  }'
+```
+
+Example response:
+
+```json
+{
+  "predicted_direction": "UP",
+  "predicted_class": 1,
+  "probability_up": 0.56,
+  "probability_down": 0.44,
+  "threshold": 0.5
+}
+```
+
+
 ## Limitations
 
 Financial markets are noisy and difficult to predict.
@@ -504,7 +701,7 @@ It is not financial advice and should not be used as the sole basis for real tra
 
 **Muskan Chauhan**
 
-Backend Developer and Applied AI Developer
+Backend Developer and Applied AI/ML Engineer
 
 * GitHub: https://github.com/chauhanmuskan291980-wq
 * LinkedIn: https://www.linkedin.com/in/muskan-chauhan-0783b4325/
