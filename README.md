@@ -697,6 +697,15 @@ This project is for educational and technical demonstration purposes only.
 
 It is not financial advice and should not be used as the sole basis for real trading or investment decisions.
 
+## Technical Documentation
+
+- [Data pipeline](docs/data_pipeline.md)
+- [Feature engineering](docs/feature_engineering.md)
+- [Model training](docs/model_training.md)
+- [Evaluation and backtest](docs/evaluation_and_backtest.md)
+- [FastAPI service](docs/api.md)
+- [Architecture](docs/architecture.md)
+
 ## Author
 
 **Muskan Chauhan**
