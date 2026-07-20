@@ -14,6 +14,7 @@ from app.schemas import (
 )
 from app.services.model_service import ModelService
 
+
 model_service = ModelService()
 
 
@@ -22,18 +23,20 @@ async def lifespan(
     app: FastAPI,
 ) -> AsyncIterator[None]:
     """
-    Load the trained model once when the API starts.
+    Load all trained models once when the API starts.
 
-    The loaded model is reused for every prediction request.
+    The loaded models are reused for every prediction request.
     """
-    del app
 
     try:
         model_service.load()
+        app.state.model_service = model_service
+
     except FileNotFoundError:
-        # The health endpoint will expose that the model
-        # is unavailable instead of preventing API startup.
-        pass
+        # Allow the API to start even when model artifacts
+        # are unavailable. The health endpoint will report
+        # the degraded state.
+        app.state.model_service = model_service
 
     yield
 
@@ -41,10 +44,11 @@ async def lifespan(
 app = FastAPI(
     title="Gold Price Direction Predictor API",
     description=(
-        "Predict the direction of the next hourly XAUUSD "
-        "candle using a trained Logistic Regression pipeline."
+        "Predict the direction of the next hourly Gold candle "
+        "using Logistic Regression, Random Forest, and "
+        "Gradient Boosting classifiers."
     ),
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan,
 )
 
@@ -55,8 +59,10 @@ app = FastAPI(
 )
 def root() -> dict[str, str]:
     """Return basic API information."""
+
     return {
         "message": "Gold Price Direction Predictor API",
+        "version": "2.0.0",
         "documentation": "/docs",
     }
 
@@ -68,9 +74,15 @@ def root() -> dict[str, str]:
 )
 def health() -> HealthResponse:
     """Return API and model health information."""
+
     return HealthResponse(
-        status=("healthy" if model_service.is_loaded else "degraded"),
+        status=(
+            "healthy"
+            if model_service.is_loaded
+            else "degraded"
+        ),
         model_loaded=model_service.is_loaded,
+        loaded_model_count=model_service.loaded_model_count,
         timestamp=datetime.now(timezone.utc),
     )
 
@@ -81,47 +93,58 @@ def health() -> HealthResponse:
     tags=["Model"],
 )
 def model_info() -> ModelInfoResponse:
-    """Return information about the trained model."""
-    return ModelInfoResponse(**model_service.model_info())
+    """Return information about all trained models."""
 
-
-@app.post(
-    "/predict",
-    response_model=PredictionResponse,
-    status_code=status.HTTP_200_OK,
-    tags=["Prediction"],
-)
-def predict(
-    request: PredictionRequest,
-) -> PredictionResponse:
-    """Predict the next hourly Gold candle direction."""
     if not model_service.is_loaded:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=(
-                "The prediction model is unavailable. "
-                "Train the model before starting the API."
+                "The prediction models are unavailable. "
+                "Train the models before requesting model information."
+            ),
+        )
+
+    return ModelInfoResponse(
+        **model_service.model_info()
+    )
+
+
+@app.post(
+    "/predict/compare",
+    response_model=PredictionResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Prediction"],
+)
+def compare_predictions(
+    request: PredictionRequest,
+) -> PredictionResponse:
+    """
+    Return predictions from all trained models
+    and calculate the majority-vote result.
+    """
+
+    if not model_service.is_loaded:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=(
+                "The prediction models are unavailable. "
+                "Train the models before starting the API."
             ),
         )
 
     try:
-        result = model_service.predict(request)
+        result = model_service.predict_all(request)
+
     except ValueError as error:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=str(error),
         ) from error
+
     except RuntimeError as error:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=str(error),
         ) from error
 
-    return PredictionResponse(
-        predicted_class=int(result["predicted_class"]),
-        direction=str(result["direction"]),
-        probability_up=float(result["probability_up"]),
-        probability_down=float(result["probability_down"]),
-        confidence=float(result["confidence"]),
-        threshold=float(result["threshold"]),
-    )
+    return PredictionResponse(**result)
