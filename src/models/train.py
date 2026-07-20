@@ -3,7 +3,7 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-from src.models.model_factory import build_model
+from src.models.model_factory import build_models
 
 
 FEATURE_COLUMNS =[
@@ -58,7 +58,7 @@ def train_all_models(
         X_train:pd.DataFrame,
         y_train:pd.Series,
 ) -> dict:
-    models = build_model()
+    models = build_models()
     trained_models = {}
 
     ARTIFACT_DIR.mkdir(
