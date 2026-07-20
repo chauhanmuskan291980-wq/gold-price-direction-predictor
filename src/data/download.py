@@ -13,7 +13,7 @@ class DownloadConfig:
     """Configuration used to download hourly Gold market data."""
 
     symbol: str = "GC=F"
-    period: str = "60d"
+    period: str = "180d"
     interval: str = "1h"
     output_path: Path = Path("data/raw/gold_hourly.csv")
 
@@ -161,7 +161,7 @@ def parse_arguments() -> argparse.Namespace:
 
     parser.add_argument(
         "--period",
-        default="60d",
+        default="180d",
         help="Historical period to download.",
     )
 
