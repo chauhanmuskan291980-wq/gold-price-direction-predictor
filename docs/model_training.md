@@ -1,26 +1,44 @@
-# `docs/model_training.md`
-
 # Model Training
 
 ## Purpose
 
-The model-training stage teaches a classifier to predict whether the next hourly Gold candle will close higher or lower.
+The model-training stage teaches three classifiers to predict whether the next hourly Gold candle will close higher or lower.
 
-The project uses logistic regression as a simple and interpretable baseline model.
+The project evolved through three stages:
+
+1. Approximately **3 months of hourly data** with Logistic Regression
+2. Approximately **6 months of hourly data** with Logistic Regression
+3. Approximately **6 months of hourly data** with three-model comparison
+
+The final models are:
+
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
+
+Logistic Regression remains the interpretable baseline, while Random Forest and Gradient Boosting test whether nonlinear tree-based approaches improve performance.
+
+---
 
 ## Pipeline Position
 
 ```text
 Engineered features
     ↓
-Time-based train/test split
+Chronological train-test split
     ↓
-Feature scaling
+Train Logistic Regression
+Train Random Forest
+Train Gradient Boosting
     ↓
-Logistic Regression training
+Generate test predictions
     ↓
-Saved model artifact
+Compare evaluation metrics
+    ↓
+Save three model artifacts
 ```
+
+---
 
 ## Main File
 
@@ -28,24 +46,36 @@ Saved model artifact
 src/models/train.py
 ```
 
+Supporting files may include:
+
+```text
+src/models/validate.py
+src/models/evaluate.py
+src/models/predict.py
+```
+
+---
+
 ## File Responsibility
 
-This file is responsible for:
+The training module is responsible for:
 
-* loading the feature dataset
-* selecting model input columns
-* separating features and target
-* performing a time-based split
-* building the training pipeline
-* fitting the model
-* saving the trained artifact
-* returning predictions or training information
+- Loading the feature dataset
+- Selecting model input columns
+- Separating features and target
+- Performing a chronological split
+- Building three classifiers
+- Fitting all models
+- Generating test predictions and probabilities
+- Saving model artifacts
+- Saving training metadata
+- Returning split and model information
 
-It does not serve HTTP requests. API prediction is handled separately.
+HTTP requests are handled separately by the FastAPI application.
+
+---
 
 ## Model Inputs
-
-The model uses:
 
 ```python
 FEATURE_COLUMNS = [
@@ -55,11 +85,7 @@ FEATURE_COLUMNS = [
     "candle_body_ratio",
     "rsi_14",
 ]
-```
 
-The target is:
-
-```python
 TARGET_COLUMN = "target"
 ```
 
@@ -75,38 +101,26 @@ Target vector:
 y = data[TARGET_COLUMN]
 ```
 
-`X` contains the values used to make predictions.
+`X` contains the five engineered feature values.
 
-`y` contains the correct historical answers.
-
-## Why Logistic Regression Is Used
-
-Logistic regression is appropriate as a baseline because it is:
-
-* simple
-* fast to train
-* suitable for binary classification
-* easy to reproduce
-* interpretable
-* able to return probabilities
-
-The model estimates the probability that:
+`y` contains the known historical next-candle direction:
 
 ```text
-target = 1
+1 = next close is higher
+0 = next close is lower or equal
 ```
 
-meaning that the next candle closes higher.
+---
 
 ## Time-Based Split
 
-Financial data must not be randomly shuffled.
+Financial observations must not be randomly shuffled.
 
-A time-based split should follow this structure:
+The project uses:
 
 ```text
-Older observations → training set
-Newer observations → test set
+Older observations → Training set
+Newer observations → Test set
 ```
 
 Example:
@@ -114,48 +128,68 @@ Example:
 ```python
 split_index = int(len(data) * 0.80)
 
-train_data = data.iloc[:split_index]
-test_data = data.iloc[split_index:]
+train_data = data.iloc[:split_index].copy()
+test_data = data.iloc[split_index:].copy()
 ```
 
-This uses approximately:
+The approximate split is:
 
 ```text
-80% older data for training
-20% newer data for testing
+80% training
+20% testing
 ```
+
+A recent run produced:
+
+```text
+Rows after feature engineering: 3327
+Training rows: 2661
+Testing rows: 666
+```
+
+Exact counts may vary when Yahoo Finance returns updated data.
+
+---
 
 ## Why Random Splitting Is Avoided
 
-A random split can mix future candles into the training data while older candles appear in the test set.
+Random splitting can mix future observations into training data.
 
-That would create an unrealistic evaluation because a live model cannot learn from future information.
+That would create an unrealistic evaluation because a live system cannot train on future candles.
 
-The correct order is:
+Correct order:
 
 ```text
-Past → train
-Future → test
+Past → Training
+Future → Testing
 ```
 
-## Feature Scaling
+The final test period must remain unseen during fitting.
 
-Logistic regression performs better when numerical features have comparable scales.
+---
 
-The project can use:
+# Models
 
-```python
-StandardScaler()
-```
+## 1. Logistic Regression
 
-A typical pipeline is:
+Logistic Regression is used as the baseline because it is:
+
+- Simple
+- Fast to train
+- Suitable for binary classification
+- Easy to reproduce
+- Interpretable
+- Able to return class probabilities
+
+Because the input features use different numerical scales, Logistic Regression is stored in a scikit-learn pipeline with `StandardScaler`.
 
 ```python
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-model = Pipeline(
+
+logistic_regression = Pipeline(
     steps=[
         ("scaler", StandardScaler()),
         (
@@ -169,153 +203,545 @@ model = Pipeline(
 )
 ```
 
-## Why a Pipeline Is Used
-
-The pipeline combines preprocessing and model training.
-
-This ensures that:
-
-* the same scaling is used during training and prediction
-* the scaler is fitted only on training data
-* the API does not need separate scaling logic
-* the complete prediction workflow can be saved as one artifact
-
-## Training
-
-The model is trained using:
+Train:
 
 ```python
-model.fit(X_train, y_train)
+logistic_regression.fit(X_train, y_train)
 ```
 
-Meaning:
+Probabilities:
+
+```python
+logistic_probabilities = logistic_regression.predict_proba(X_test)[:, 1]
+```
+
+---
+
+## 2. Random Forest
+
+Random Forest is an ensemble of decision trees trained on different samples and feature combinations.
+
+It is included because it can model nonlinear relationships and feature interactions without requiring feature scaling.
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+
+random_forest = RandomForestClassifier(
+    n_estimators=200,
+    random_state=42,
+    n_jobs=-1,
+)
+```
+
+Train:
+
+```python
+random_forest.fit(X_train, y_train)
+```
+
+Probabilities:
+
+```python
+random_forest_probabilities = random_forest.predict_proba(X_test)[:, 1]
+```
+
+Possible hyperparameters may differ in the current code. The documentation should match the exact values used in `train.py`.
+
+---
+
+## 3. Gradient Boosting
+
+Gradient Boosting builds decision trees sequentially.
+
+Each new tree attempts to correct prediction errors from the previous ensemble.
+
+```python
+from sklearn.ensemble import GradientBoostingClassifier
+
+
+gradient_boosting = GradientBoostingClassifier(
+    random_state=42,
+)
+```
+
+Train:
+
+```python
+gradient_boosting.fit(X_train, y_train)
+```
+
+Probabilities:
+
+```python
+gradient_boosting_probabilities = (
+    gradient_boosting.predict_proba(X_test)[:, 1]
+)
+```
+
+Gradient Boosting does not require `StandardScaler`.
+
+---
+
+## Recommended Model Factory
+
+A reusable factory can keep model creation consistent:
+
+```python
+from sklearn.ensemble import (
+    GradientBoostingClassifier,
+    RandomForestClassifier,
+)
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+
+def build_models() -> dict[str, object]:
+    return {
+        "logistic_regression": Pipeline(
+            steps=[
+                ("scaler", StandardScaler()),
+                (
+                    "classifier",
+                    LogisticRegression(
+                        max_iter=1000,
+                        random_state=42,
+                    ),
+                ),
+            ]
+        ),
+        "random_forest": RandomForestClassifier(
+            n_estimators=200,
+            random_state=42,
+            n_jobs=-1,
+        ),
+        "gradient_boosting": GradientBoostingClassifier(
+            random_state=42,
+        ),
+    }
+```
+
+For Python 3.10 compatibility, add:
+
+```python
+from __future__ import annotations
+```
+
+at the top of modules that use modern annotations evaluated at runtime.
+
+---
+
+## Training All Models
+
+```python
+models = build_models()
+trained_models = {}
+
+for model_name, model in models.items():
+    model.fit(X_train, y_train)
+    trained_models[model_name] = model
+```
+
+Predictions:
+
+```python
+predictions = {
+    model_name: model.predict(X_test)
+    for model_name, model in trained_models.items()
+}
+```
+
+Probabilities:
+
+```python
+probabilities = {
+    model_name: model.predict_proba(X_test)[:, 1]
+    for model_name, model in trained_models.items()
+}
+```
+
+---
+
+## Type-Annotation Compatibility
+
+On some Python 3.10 and pandas combinations, annotations such as:
+
+```python
+y_test: pd.Series[Any]
+```
+
+may raise:
 
 ```text
-X_train = historical feature values
-y_train = known next-candle directions
+TypeError: 'type' object is not subscriptable
 ```
 
-During training, the model learns how each feature relates to the probability of an upward candle.
-
-## Predictions
-
-Class predictions:
+Recommended fix:
 
 ```python
-predictions = model.predict(X_test)
+from __future__ import annotations
 ```
 
-Possible result:
+Place it at the first line of the module.
 
-```text
-0
-1
-1
-0
-```
-
-Probability predictions:
+A simpler alternative is:
 
 ```python
-probabilities = model.predict_proba(X_test)[:, 1]
+y_test: pd.Series
 ```
 
-The second probability column represents the probability of class `1`.
+The future import is preferred because it postpones runtime evaluation of annotations.
 
-Example:
+---
 
-```text
-0.62 = 62% estimated probability of an upward next candle
-```
+## Saving Model Artifacts
 
-This does not mean the prediction is certain.
-
-## Saving the Model
-
-The trained pipeline is saved using Joblib:
+Each trained model is saved separately.
 
 ```python
+from pathlib import Path
+
 import joblib
 
-joblib.dump(model, output_path)
+
+MODEL_DIR = Path("artifacts/models")
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+for model_name, model in trained_models.items():
+    output_path = MODEL_DIR / f"{model_name}.joblib"
+    joblib.dump(model, output_path)
 ```
 
-Example artifact path:
+Generated artifacts:
 
 ```text
-artifacts/model.joblib
+artifacts/models/
+├── logistic_regression.joblib
+├── random_forest.joblib
+└── gradient_boosting.joblib
 ```
 
-The saved object should include both:
+This replaces the older single-model artifact structure.
 
-```text
-StandardScaler
-LogisticRegression
-```
-
-because they are part of the same pipeline.
+---
 
 ## Saving Metadata
 
-Useful model metadata may include:
+Training metadata can be saved as JSON.
 
 ```python
 metadata = {
     "feature_columns": FEATURE_COLUMNS,
+    "target_column": TARGET_COLUMN,
     "train_rows": len(X_train),
     "test_rows": len(X_test),
     "split_index": split_index,
+    "models": list(trained_models),
+    "data_source": "Yahoo Finance",
+    "symbol": "GC=F",
+    "interval": "1h",
 }
 ```
 
-This helps the API and reviewer understand how the artifact was produced.
+Useful metadata includes:
+
+- Feature names
+- Target name
+- Training rows
+- Testing rows
+- Split index
+- Model names
+- Data symbol
+- Data interval
+- Training timestamp
+- Library versions
+
+---
+
+## Evaluation Metrics
+
+Each model is evaluated using:
+
+- Accuracy
+- Balanced accuracy
+- Precision
+- Recall
+- F1 score
+- ROC-AUC
+
+Example metric function:
+
+```python
+from sklearn.metrics import (
+    accuracy_score,
+    balanced_accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
+
+
+def calculate_metrics(
+    y_true,
+    y_pred,
+    y_probability,
+) -> dict[str, float]:
+    return {
+        "accuracy": accuracy_score(y_true, y_pred),
+        "balanced_accuracy": balanced_accuracy_score(
+            y_true,
+            y_pred,
+        ),
+        "precision": precision_score(
+            y_true,
+            y_pred,
+            zero_division=0,
+        ),
+        "recall": recall_score(
+            y_true,
+            y_pred,
+            zero_division=0,
+        ),
+        "f1": f1_score(
+            y_true,
+            y_pred,
+            zero_division=0,
+        ),
+        "roc_auc": roc_auc_score(
+            y_true,
+            y_probability,
+        ),
+    }
+```
+
+---
+
+## Final Model Comparison
+
+| Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
+|:---|---:|---:|---:|---:|---:|---:|
+| **Logistic Regression** | **51.50%** | **51.56%** | **48.22%** | 52.41% | 50.23% | **52.47%** |
+| Random Forest | 50.30% | 50.45% | 47.13% | 52.73% | 49.77% | 52.42% |
+| Gradient Boosting | 50.30% | 51.11% | 47.58% | **63.34%** | **54.34%** | 51.55% |
+
+### Results Interpretation
+
+- **Logistic Regression** achieved the highest accuracy, balanced accuracy, and ROC-AUC.
+- **Gradient Boosting** achieved the highest recall and F1 score.
+- **Random Forest** achieved a similar ROC-AUC to Logistic Regression but lower overall accuracy.
+- No model produced a strong predictive advantage.
+- Performance near 50% should be interpreted carefully because short-term financial direction is highly noisy.
+
+---
+
+## Saving the Comparison Table
+
+```python
+import pandas as pd
+
+
+comparison_rows = []
+
+for model_name, model_metrics in metrics_by_model.items():
+    comparison_rows.append(
+        {
+            "model": model_name,
+            **model_metrics,
+        }
+    )
+
+comparison = pd.DataFrame(comparison_rows)
+comparison.to_csv(
+    "artifacts/model_comparison.csv",
+    index=False,
+)
+```
+
+Expected CSV columns:
+
+```text
+model
+accuracy
+balanced_accuracy
+precision
+recall
+f1
+roc_auc
+```
+
+---
+
+## Model Selection
+
+There is no single best model across every metric.
+
+For this project:
+
+- Logistic Regression is the strongest general baseline.
+- Gradient Boosting is strongest when recall and F1 are prioritized.
+- Random Forest provides an additional nonlinear comparison.
+
+The API therefore returns:
+
+1. Logistic Regression prediction
+2. Random Forest prediction
+3. Gradient Boosting prediction
+4. Ensemble majority vote
+
+This is more transparent than hiding the differences behind one selected model.
+
+---
+
+## Ensemble Majority Vote
+
+```python
+model_classes = [
+    logistic_prediction,
+    random_forest_prediction,
+    gradient_boosting_prediction,
+]
+
+ensemble_class = int(sum(model_classes) >= 2)
+```
+
+Example:
+
+```text
+Logistic Regression → 1
+Random Forest       → 0
+Gradient Boosting   → 1
+Ensemble            → 1
+```
+
+The ensemble does not guarantee higher accuracy. It summarizes agreement among the three classifiers.
+
+---
 
 ## Reproducibility
 
-The training process should use a fixed random state when supported:
+Fixed random states are used where supported:
 
 ```python
-random_state=42
+random_state = 42
 ```
 
-This reduces unnecessary differences between repeated runs.
+This improves reproducibility for:
 
-The time-based split itself is deterministic because it depends on row order.
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
+
+The chronological split is deterministic because it depends on row order.
+
+---
 
 ## Leakage Prevention
 
-The following rules are important:
+The training process follows these rules:
 
-1. Sort observations by timestamp before splitting.
-2. Create the target without adding future values to model inputs.
-3. Fit the scaler using only `X_train`.
-4. Evaluate only on later unseen observations.
-5. Do not tune the model using final test results repeatedly.
+1. Sort observations by timestamp.
+2. Build features using only current and historical values.
+3. Use future close only to create the target.
+4. Remove future-price columns from model inputs.
+5. Split chronologically.
+6. Fit scaling only on `X_train`.
+7. Evaluate only on later unseen observations.
+8. Avoid repeatedly tuning models against the final test set.
 
-Using a scikit-learn pipeline ensures that the scaler learns only from training data when `fit()` is called on `X_train`.
+---
 
 ## Output
 
 The training stage produces:
 
 ```text
-Trained model pipeline
-Test predictions
-Prediction probabilities
-Model artifact
-Train/test split information
+Three trained model artifacts
+Test predictions for each model
+Prediction probabilities for each model
+Training metadata
+Chronological split information
+Model comparison metrics
 ```
 
-The saved artifact is later loaded by:
+The saved models are later loaded by the FastAPI model service.
 
-```text
-app/services/prediction_service.py
+---
+
+## API Integration
+
+The trained models support two prediction workflows.
+
+### Manual comparison
+
+```http
+POST /predict/compare
 ```
+
+The caller supplies the five feature values. The API returns predictions from all models and an ensemble vote.
+
+### Latest market prediction
+
+```http
+GET /predict/latest
+```
+
+The API downloads recent `GC=F` hourly data, calculates the latest features, and runs all three models.
+
+---
+
+## Running Training and Evaluation
+
+Train all models:
+
+```bash
+python -m src.models.train
+```
+
+Run chronological validation:
+
+```bash
+python -m src.models.validate
+```
+
+Run final evaluation:
+
+```bash
+python -m src.models.evaluate
+```
+
+---
 
 ## Limitations
 
-* Logistic regression models mainly linear relationships.
-* The model does not directly understand market regimes.
-* Predictive performance close to 50% may still be weak.
-* Historical results do not guarantee live profitability.
-* Transaction costs are not included in basic model training.
+- Six months of hourly data is still a small financial dataset.
+- Only five engineered features are used.
+- Hyperparameter tuning is limited.
+- Metrics remain close to random classification.
+- Market regimes can change over time.
+- Historical results do not guarantee live performance.
+- Transaction costs are not included in basic classification metrics.
+- The ensemble vote is not guaranteed to outperform each individual model.
+
+---
+
+## Summary
+
+```text
+Approximately 6 months of Yahoo Finance GC=F data
+    ↓
+Five engineered features
+    ↓
+Chronological 80/20 split
+    ↓
+Logistic Regression
+Random Forest
+Gradient Boosting
+    ↓
+Classification and trading evaluation
+    ↓
+Three saved model artifacts
+    ↓
+FastAPI comparison and latest prediction
+```

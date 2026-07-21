@@ -2,138 +2,198 @@
 
 ## 1. Purpose
 
-This document explains the architecture and execution sequence of the Gold Price Direction Predictor.
+This document explains the architecture and end-to-end execution flow of the **Gold Price Direction Predictor**.
 
-The application predicts whether the next hourly XAU/USD closing price will move:
+The system predicts whether the next hourly Gold candle will move:
 
-* `UP`
-* `DOWN_OR_FLAT`
+- `UP`
+- `DOWN_OR_FLAT`
 
-The system contains two main parts:
+The project performs binary classification. It does not predict the exact future Gold price.
 
-1. Machine-learning pipeline
-2. FastAPI prediction service
+The implementation contains two main subsystems:
 
-The project does not predict the exact future gold price. It performs binary classification using engineered market features.
+1. A machine-learning experimentation and evaluation pipeline
+2. A FastAPI inference service
+
+The project started with approximately **3 months of hourly data and one Logistic Regression model**. It was later expanded to approximately **6 months of hourly data**, and three models were trained under the same chronological evaluation setup:
+
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
 
 ---
 
-## 2. High-Level Architecture
+## 2. Technology Stack
+
+| Area | Technology |
+|---|---|
+| Language | Python |
+| Data source | Yahoo Finance |
+| Data package | `yfinance` |
+| Data processing | pandas, NumPy |
+| Machine learning | scikit-learn |
+| API | FastAPI |
+| Server | Uvicorn |
+| Model persistence | Joblib |
+| Testing | Pytest |
+| Static analysis | Ruff and Mypy |
+| Containerization | Docker |
+| CI/CD | GitHub Actions |
+
+---
+
+## 3. Data Source
+
+The pipeline downloads hourly Gold Futures data from Yahoo Finance.
+
+```text
+Symbol: GC=F
+Interval: 1h
+Final history window: approximately 6 months
+```
+
+`GC=F` represents Gold Futures. It is used as a freely available and liquid proxy for the Gold market, but it is not identical to broker-specific spot `XAU/USD`.
+
+---
+
+## 4. High-Level Architecture
 
 ```mermaid
 flowchart LR
-    A[Hourly XAU/USD Data] --> B[Data Download]
-    B --> C[Data Validation]
-    C --> D[Data Preprocessing]
-    D --> E[Feature Engineering]
-    E --> F[Chronological Split]
-    F --> G[Model Training]
-    G --> H[Time-Series Validation]
-    H --> I[Final Evaluation]
-    I --> J[Saved Model Artifact]
+    A[Yahoo Finance GC=F] --> B[Hourly Data Download]
+    B --> C[Validation and Preprocessing]
+    C --> D[Feature Engineering]
+    D --> E[Chronological Train-Test Split]
+
+    E --> F1[Logistic Regression]
+    E --> F2[Random Forest]
+    E --> F3[Gradient Boosting]
+
+    F1 --> G[Model Comparison]
+    F2 --> G
+    F3 --> G
+
+    G --> H[Classification Evaluation]
+    G --> I[Trading Backtest]
+    H --> J[Saved Metrics and Artifacts]
+    I --> J
+
     J --> K[FastAPI Service]
-    K --> L[Prediction Response]
+    K --> L1[POST /predict/compare]
+    K --> L2[GET /predict/latest]
 ```
 
 ---
 
-## 3. Main System Components
-
-The application is divided into the following modules.
+## 5. Main Project Components
 
 ```text
-src/data/
-    download.py
-    preprocess.py
-
-src/features/
-    build_features.py
-
-src/models/
-    train.py
-    validate.py
-    evaluate.py
-    predict.py
+src/
+├── data/
+│   ├── download.py
+│   └── preprocess.py
+├── features/
+│   └── build_features.py
+├── models/
+│   ├── train.py
+│   ├── validate.py
+│   ├── evaluate.py
+│   └── predict.py
+└── evaluation/
 
 app/
-    main.py
-    schemas.py
-    services/model_service.py
+├── main.py
+├── schemas.py
+└── services/
 
-tests/
-    Unit and API tests
+data/
+├── raw/
+└── processed/
 
 artifacts/
-    Trained model and evaluation outputs
+├── models/
+│   ├── logistic_regression.joblib
+│   ├── random_forest.joblib
+│   └── gradient_boosting.joblib
+├── model_comparison.csv
+├── evaluation_metrics.json
+├── cumulative_returns.png
+└── test_period_trades.csv
+
+tests/
+docs/
+Dockerfile
+requirements.txt
+pyproject.toml
+README.md
 ```
 
 ---
 
-## 4. Complete Application Sequence
-
-The complete application workflow is:
+## 6. End-to-End Application Flow
 
 ```mermaid
 flowchart TD
-    A[Start] --> B[Download Hourly Gold Data]
-    B --> C{Is Data Valid?}
+    A[Start] --> B[Download Hourly GC=F Data]
+    B --> C{Valid Dataset?}
 
     C -- No --> D[Raise Validation Error]
-    C -- Yes --> E[Clean and Sort Data]
+    C -- Yes --> E[Normalize and Clean Data]
 
-    E --> F[Create Next-Hour Direction Target]
-    F --> G[Build Technical Features]
-    G --> H[Remove Rows with Missing Features]
+    E --> F[Create Next-Hour Target]
+    F --> G[Build Five Technical Features]
+    G --> H[Remove Unusable Rolling Rows]
 
-    H --> I[Chronological Train-Test Split]
-    I --> J[Train Logistic Regression Pipeline]
-    J --> K[Run Time-Series Validation]
-    K --> L[Evaluate on Unseen Test Data]
+    H --> I[Chronological 80/20 Split]
+    I --> J1[Train Logistic Regression]
+    I --> J2[Train Random Forest]
+    I --> J3[Train Gradient Boosting]
 
-    L --> M[Calculate Classification Metrics]
-    M --> N[Calculate Trading Metrics]
-    N --> O[Generate Cumulative Return Curve]
+    J1 --> K[Generate Test Predictions]
+    J2 --> K
+    J3 --> K
 
-    O --> P[Save Trained Model]
-    P --> Q[Start FastAPI Application]
-    Q --> R[Load Saved Model]
-    R --> S[Accept Feature Input]
-    S --> T[Generate Prediction]
-    T --> U[Return Direction and Probability]
+    K --> L[Compare Classification Metrics]
+    L --> M[Run Trading Evaluation]
+    M --> N[Save Models, Metrics and Charts]
+
+    N --> O[Start FastAPI]
+    O --> P[Load Three Model Artifacts]
+    P --> Q1[Manual Feature Comparison]
+    P --> Q2[Latest Yahoo Finance Prediction]
+    Q1 --> R[Structured JSON Response]
+    Q2 --> R
 ```
 
 ---
 
 # Part 1: Data Pipeline
 
-## 5. Data Download Sequence
-
-The data-download module retrieves hourly XAU/USD market data.
+## 7. Data Download Sequence
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Download as download.py
-    participant Provider as Market Data Provider
+    participant Yahoo as Yahoo Finance
     participant Validator
-    participant Storage as Raw CSV Storage
+    participant Storage as Raw CSV
 
     User->>Download: Run download command
-    Download->>Provider: Request hourly XAU/USD data
-    Provider-->>Download: Return OHLC market data
-    Download->>Validator: Validate columns and values
+    Download->>Yahoo: Request GC=F hourly data
+    Yahoo-->>Download: Return OHLCV candles
+    Download->>Validator: Validate returned data
 
-    alt Data is valid
+    alt Valid data
         Validator-->>Download: Validation passed
-        Download->>Storage: Save raw dataset
+        Download->>Storage: Save gold_hourly.csv
         Storage-->>User: Raw data saved
-    else Data is invalid
+    else Invalid or empty data
         Validator-->>Download: Validation failed
         Download-->>User: Raise descriptive error
     end
 ```
-
-### Required market columns
 
 The raw dataset contains:
 
@@ -146,123 +206,89 @@ close
 volume
 ```
 
-Depending on the data source, volume may be optional.
+Depending on Yahoo Finance output, adjusted-close columns may also be returned and normalized during preprocessing.
 
 ---
 
-## 6. Data Validation
+## 8. Dataset Evolution
 
-Before saving or processing the data, the application validates:
+The project was developed in multiple stages.
 
-* Required columns exist
-* Timestamps are valid
-* Timestamps are unique
-* Data is chronologically ordered
-* OHLC prices are numeric
-* High price is not below open, close, or low
-* Low price is not above open, close, or high
-* Missing or invalid rows are handled
+| Stage | Dataset | Models | Purpose |
+|---|---|---|---|
+| Initial baseline | Approximately 3 months | Logistic Regression | Establish a simple, interpretable baseline |
+| Expanded experiment | Approximately 6 months | Logistic Regression | Test whether additional history improves stability |
+| Final comparison | Approximately 6 months | Logistic Regression, Random Forest, Gradient Boosting | Compare linear and nonlinear classifiers fairly |
+
+All final models use the same:
+
+- Hourly dataset
+- Five engineered features
+- Chronological train/test split
+- Target definition
+- Test period
+
+This makes the model comparison consistent and reproducible.
+
+---
+
+## 9. Data Validation
+
+Before saving or processing the data, the application checks that:
+
+- Required columns exist
+- The dataset is not empty
+- Timestamps are valid
+- Timestamps are unique or safely deduplicated
+- Records are chronologically ordered
+- OHLC values are numeric
+- `high` is not lower than `open`, `close`, or `low`
+- `low` is not higher than `open`, `close`, or `high`
+- Missing or invalid rows are handled
 
 ```mermaid
 flowchart TD
-    A[Raw DataFrame] --> B{Required Columns Present?}
+    A[Raw Yahoo Finance Data] --> B{Required Columns Present?}
     B -- No --> X[Reject Dataset]
     B -- Yes --> C{Valid Timestamps?}
-
     C -- No --> X
-    C -- Yes --> D{Duplicate Timestamps?}
-
-    D -- Yes --> E[Remove or Reject Duplicates]
-    D -- No --> F{Valid OHLC Relationships?}
-
-    E --> F
-
-    F -- No --> X
-    F -- Yes --> G[Sort by Timestamp]
-
-    G --> H[Validated Dataset]
+    C -- Yes --> D[Remove Duplicate Timestamps]
+    D --> E{Valid OHLC Relationships?}
+    E -- No --> X
+    E -- Yes --> F[Sort Chronologically]
+    F --> G[Validated Dataset]
 ```
 
 ---
 
-## 7. Data Preprocessing
+## 10. Target Creation
 
-The preprocessing stage prepares raw market data for feature engineering.
-
-Main operations:
-
-1. Load the raw dataset
-2. Validate required columns
-3. Convert timestamps
-4. Convert price fields to numeric values
-5. Remove duplicate rows
-6. Remove invalid price rows
-7. Sort records chronologically
-8. Create the next-hour target
-9. Save the processed dataset
-
-```mermaid
-flowchart LR
-    A[Raw CSV] --> B[Load Data]
-    B --> C[Clean Invalid Values]
-    C --> D[Remove Duplicates]
-    D --> E[Sort by Timestamp]
-    E --> F[Create Direction Target]
-    F --> G[Processed CSV]
-```
-
----
-
-## 8. Target Creation
-
-The prediction target represents the movement of the next hourly closing price.
+The target represents the direction of the next hourly closing price.
 
 ```python
 target = (next_close > current_close).astype(int)
 ```
 
-Target values:
+| Target | Meaning |
+|---:|---|
+| `1` | The next hourly close is higher |
+| `0` | The next hourly close is lower or equal |
 
-| Value | Meaning                                         |
-| ----: | ----------------------------------------------- |
-|   `1` | The next hourly closing price is higher         |
-|   `0` | The next hourly closing price is lower or equal |
-
-Example:
-
-| Current Close | Next Close | Target |
-| ------------: | ---------: | -----: |
-|          3300 |       3310 |      1 |
-|          3310 |       3305 |      0 |
-|          3305 |       3305 |      0 |
-
-The `next_close` value is used only to create the label.
-
-It is removed before model training to prevent data leakage.
-
-```mermaid
-flowchart LR
-    A[Current Close] --> C{Next Close > Current Close?}
-    B[Next Close] --> C
-    C -- Yes --> D[Target = 1]
-    C -- No --> E[Target = 0]
-```
+The future close is used only to create the historical label. It is never included in the model input features.
 
 ---
 
 # Part 2: Feature Engineering
 
-## 9. Feature Engineering Sequence
-
-The processed OHLC data is converted into model-ready technical features.
+## 11. Feature Engineering Flow
 
 ```mermaid
 flowchart TD
-    A[Processed OHLC Data] --> B[Calculate 1-Hour Return]
-    A --> C[Calculate Moving Average Gap]
-    A --> D[Calculate Rolling Volatility]
-    A --> E[Calculate Candle Body Ratio]
-    A --> F[Calculate RSI]
+    A[Processed OHLC Data] --> B[return_1]
+    A --> C[ma_gap]
+    A --> D[volatility_10]
+    A --> E[candle_body_ratio]
+    A --> F[rsi_14]
 
     B --> G[Combine Features]
     C --> G
@@ -276,411 +302,352 @@ flowchart TD
 
 ---
 
-## 10. Model Features
+## 12. Model Features
 
-The model uses five input features.
+The final models use five engineered features.
 
-### 10.1 One-Hour Return
+| Feature | Meaning | Reason for inclusion |
+|---|---|---|
+| `return_1` | Previous one-hour percentage return | Captures immediate momentum |
+| `ma_gap` | Distance between current close and moving average | Represents trend position |
+| `volatility_10` | Rolling standard deviation of recent returns | Captures changing market uncertainty |
+| `candle_body_ratio` | Candle body relative to high-low range | Measures intrabar directional strength |
+| `rsi_14` | 14-period Relative Strength Index | Represents recent momentum balance |
 
-```text
-return_1
-```
-
-Measures the percentage price change from the previous hourly candle.
-
-```python
-return_1 = close.pct_change()
-```
-
----
-
-### 10.2 Moving Average Gap
-
-```text
-ma_gap
-```
-
-Measures the distance between the current closing price and its moving average.
-
-It indicates whether the current price is trading above or below its recent average.
-
----
-
-### 10.3 Rolling Volatility
-
-```text
-volatility_10
-```
-
-Measures the standard deviation of recent hourly returns.
-
-Higher values indicate greater price movement and uncertainty.
-
----
-
-### 10.4 Candle Body Ratio
-
-```text
-candle_body_ratio
-```
-
-Measures the size of the candle body relative to the complete high-low range.
-
-```python
-abs(close - open) / (high - low)
-```
-
-A larger value indicates stronger directional movement within that candle.
-
----
-
-### 10.5 Relative Strength Index
-
-```text
-rsi_14
-```
-
-RSI measures recent upward and downward price momentum.
-
-Typical interpretation:
-
-| RSI range | General interpretation |
-| --------: | ---------------------- |
-|  Below 30 | Potentially oversold   |
-|     30–70 | Neutral range          |
-|  Above 70 | Potentially overbought |
-
-The model uses RSI as a numerical input rather than following fixed trading rules.
+All features use only current and historical information.
 
 ---
 
 # Part 3: Model Training
 
-## 11. Training Architecture
+## 13. Training Architecture
 
 ```mermaid
 flowchart LR
     A[Feature Dataset] --> B[Chronological Split]
     B --> C[Training Dataset]
-    B --> D[Test Dataset]
+    B --> D[Unseen Test Dataset]
 
-    C --> E[StandardScaler]
-    E --> F[Logistic Regression]
-    F --> G[Trained Pipeline]
+    C --> E1[StandardScaler + Logistic Regression]
+    C --> E2[Random Forest]
+    C --> E3[Gradient Boosting]
 
-    G --> H[Saved Joblib Model]
-    G --> I[Test Predictions]
+    E1 --> F1[logistic_regression.joblib]
+    E2 --> F2[random_forest.joblib]
+    E3 --> F3[gradient_boosting.joblib]
+
+    F1 --> G[Model Comparison]
+    F2 --> G
+    F3 --> G
+    D --> G
 ```
 
 ---
 
-## 12. Why Chronological Splitting Is Used
+## 14. Why Chronological Splitting Is Required
 
-Random train-test splitting is inappropriate for financial time-series data.
+Random splitting is inappropriate for financial time-series data because it can place future observations in the training set.
 
-A random split could place future observations in the training set and older observations in the testing set.
-
-This would create unrealistic evaluation results.
-
-The project uses:
+The project follows:
 
 ```text
 Older observations → Training set
 Newer observations → Testing set
 ```
 
-```mermaid
-flowchart LR
-    A[Oldest Data] --> B[Training Period]
-    B --> C[Purged Boundary]
-    C --> D[Testing Period]
-    D --> E[Newest Data]
+The split is approximately:
+
+```text
+80% training
+20% testing
 ```
 
-The boundary row is purged to reduce leakage between the training and testing periods.
+A boundary row may be purged to reduce leakage between adjacent training and testing periods.
 
 ---
 
-## 13. Training Sequence
+## 15. Models
+
+### 15.1 Logistic Regression
+
+Logistic Regression is used as the interpretable baseline.
+
+The pipeline applies feature scaling before classification:
+
+```python
+Pipeline(
+    steps=[
+        ("scaler", StandardScaler()),
+        (
+            "classifier",
+            LogisticRegression(
+                max_iter=1000,
+                random_state=42,
+            ),
+        ),
+    ]
+)
+```
+
+### 15.2 Random Forest
+
+Random Forest is included to test whether an ensemble of decision trees can learn nonlinear relationships between the five features and the next-candle direction.
+
+```python
+RandomForestClassifier(
+    n_estimators=200,
+    random_state=42,
+    n_jobs=-1,
+)
+```
+
+Tree-based models do not require feature scaling.
+
+### 15.3 Gradient Boosting
+
+Gradient Boosting builds decision trees sequentially, with each new estimator attempting to correct errors made by previous estimators.
+
+```python
+GradientBoostingClassifier(
+    random_state=42,
+)
+```
+
+It is included to test a second nonlinear learning approach.
+
+---
+
+## 16. Training Sequence
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Train as train.py
-    participant Features as Feature Dataset
-    participant Pipeline as Scikit-learn Pipeline
-    participant Artifact as Model Artifact
+    participant Dataset as Feature Dataset
+    participant LR as Logistic Regression
+    participant RF as Random Forest
+    participant GB as Gradient Boosting
+    participant Artifacts
 
-    User->>Train: Run training command
-    Train->>Features: Load feature dataset
-    Features-->>Train: Return time-ordered records
+    User->>Train: Run python -m src.models.train
+    Train->>Dataset: Load time-ordered feature data
+    Dataset-->>Train: Return features and target
     Train->>Train: Perform chronological split
-    Train->>Pipeline: Fit scaler and classifier
-    Pipeline-->>Train: Return trained pipeline
-    Train->>Artifact: Save model as joblib
-    Artifact-->>User: Training completed
+
+    Train->>LR: Fit baseline pipeline
+    Train->>RF: Fit random forest
+    Train->>GB: Fit gradient boosting
+
+    LR-->>Artifacts: Save logistic_regression.joblib
+    RF-->>Artifacts: Save random_forest.joblib
+    GB-->>Artifacts: Save gradient_boosting.joblib
+
+    Artifacts-->>User: Training completed
 ```
 
 ---
 
-## 14. Machine-Learning Pipeline
+# Part 4: Validation and Evaluation
 
-The model is stored as a Scikit-learn pipeline.
+## 17. Time-Series Validation
 
-```mermaid
-flowchart LR
-    A[Five Input Features] --> B[StandardScaler]
-    B --> C[Logistic Regression]
-    C --> D[Class Probability]
-    D --> E[UP or DOWN_OR_FLAT]
-```
-
-Using a pipeline ensures that the same scaling transformation is used during:
-
-* Training
-* Validation
-* Testing
-* API prediction
-
----
-
-# Part 4: Time-Series Validation
-
-## 15. Validation Process
-
-The project uses multiple chronological validation folds.
-
-```mermaid
-flowchart TD
-    A[Complete Training Period] --> B[Fold 1]
-    A --> C[Fold 2]
-    A --> D[Fold 3]
-
-    B --> E[Train on Past]
-    B --> F[Validate on Future]
-
-    C --> G[Train on Larger Past]
-    C --> H[Validate on Later Future]
-
-    D --> I[Train on Larger Past]
-    D --> J[Validate on Final Validation Window]
-```
-
-Example:
+Validation folds preserve chronological order.
 
 ```text
-Fold 1: Train [1–300]   Validate [301–400]
-Fold 2: Train [1–400]   Validate [401–500]
-Fold 3: Train [1–500]   Validate [501–600]
+Fold 1: Train on early history → validate on later history
+Fold 2: Train on larger history → validate on a later window
+Fold 3: Train on larger history → validate on the final validation window
 ```
 
-The validation data always occurs after the corresponding training data.
+At no point does a model learn from observations that occur after its validation period.
 
 ---
 
-## 16. Baseline Comparison
+## 18. Model Performance Comparison
 
-The model is compared with a simple baseline.
+The models are evaluated on the same unseen chronological test period.
 
-A baseline helps answer:
+| Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
+|:---|---:|---:|---:|---:|---:|---:|
+| **Logistic Regression** | **51.50%** | **51.56%** | **48.22%** | 52.41% | 50.23% | **52.47%** |
+| Random Forest | 50.30% | 50.45% | 47.13% | 52.73% | 49.77% | 52.42% |
+| Gradient Boosting | 50.30% | 51.11% | 47.58% | **63.34%** | **54.34%** | 51.55% |
 
-> Is the machine-learning model learning something useful, or is it performing similarly to a simple prediction rule?
+### Interpretation
 
-Possible baseline behaviour:
+- Logistic Regression achieved the highest accuracy, balanced accuracy, and ROC-AUC.
+- Gradient Boosting achieved the highest recall and F1 score.
+- Random Forest produced a similar ROC-AUC to Logistic Regression but lower overall accuracy.
+- All results remain close to 50%, which reflects the difficulty of predicting short-term financial-market direction.
 
-```text
-Always predict the majority class
-```
-
-The model should be interpreted relative to the baseline rather than using accuracy alone.
+These results must not be interpreted as guaranteed profitability.
 
 ---
 
-# Part 5: Final Evaluation
-
-## 17. Evaluation Sequence
+## 19. Evaluation Sequence
 
 ```mermaid
 sequenceDiagram
     participant Evaluate as evaluate.py
-    participant Model as Saved Model
+    participant Models as Three Saved Models
     participant Test as Unseen Test Data
     participant Metrics
     participant Artifacts
 
-    Evaluate->>Model: Load trained pipeline
+    Evaluate->>Models: Load all model artifacts
     Evaluate->>Test: Load chronological test period
-    Evaluate->>Model: Generate predictions
-    Model-->>Evaluate: Classes and probabilities
-    Evaluate->>Metrics: Calculate classification metrics
-    Evaluate->>Metrics: Calculate trading metrics
-    Evaluate->>Artifacts: Save JSON metrics
-    Evaluate->>Artifacts: Save trade CSV
-    Evaluate->>Artifacts: Save return curve
+    Evaluate->>Models: Generate classes and probabilities
+    Models-->>Evaluate: Return predictions
+
+    Evaluate->>Metrics: Calculate metrics for each model
+    Evaluate->>Artifacts: Save comparison CSV or JSON
+    Evaluate->>Artifacts: Save trade-level results
+    Evaluate->>Artifacts: Save cumulative-return chart
 ```
 
 ---
 
-## 18. Classification Metrics
+## 20. Trading Evaluation
 
-The final model is evaluated using:
-
-* Accuracy
-* Balanced accuracy
-* Precision
-* Recall
-* F1 score
-* ROC-AUC
-
-Final results:
-
-| Metric            | Result |
-| ----------------- | -----: |
-| Accuracy          | 53.10% |
-| Balanced Accuracy | 53.48% |
-| Precision         | 47.06% |
-| Recall            | 56.57% |
-| F1 Score          | 51.38% |
-| ROC-AUC           | 57.57% |
-
----
-
-## 19. Trading Evaluation
-
-The project also evaluates a simplified model-based trading strategy.
+The evaluation module may convert model predictions into a simplified directional strategy.
 
 ```mermaid
 flowchart TD
-    A[Model Prediction] --> B{Predicted Direction}
-
-    B -- Up --> C[Long Position]
-    B -- Down or Flat --> D[Short or Defensive Position]
-
-    C --> E[Calculate Hourly Strategy Return]
+    A[Model Prediction] --> B{Predicted Class}
+    B -- 1 --> C[Long Direction]
+    B -- 0 --> D[Down or Defensive Direction]
+    C --> E[Calculate Strategy Return]
     D --> E
-
-    E --> F[Calculate Win Rate]
-    E --> G[Calculate Cumulative Return]
-    E --> H[Compare with Buy and Hold]
+    E --> F[Win Rate]
+    E --> G[Cumulative Return]
+    E --> H[Buy-and-Hold Comparison]
 ```
 
-Final trading results:
+The backtest does not include:
 
-| Metric               |    Result |
-| -------------------- | --------: |
-| Number of trades     |       226 |
-| Win rate             |    52.65% |
-| Strategy return      |  +1.5437% |
-| Buy-and-hold return  |  -4.0963% |
-| Average trade return | 0.007179% |
-
-Transaction costs, spreads, slippage, and execution delay are not included.
+- Bid-ask spread
+- Brokerage or commissions
+- Slippage
+- Execution delay
+- Market-impact costs
 
 ---
 
-## 20. Evaluation Artifacts
-
-The evaluation stage generates:
+## 21. Generated Artifacts
 
 ```text
 artifacts/
+├── models/
+│   ├── logistic_regression.joblib
+│   ├── random_forest.joblib
+│   └── gradient_boosting.joblib
+├── model_comparison.csv
 ├── evaluation_metrics.json
 ├── cumulative_returns.png
-├── test_period_trades.csv
-└── gold_direction_pipeline.joblib
+└── test_period_trades.csv
 ```
 
-### Artifact responsibilities
-
-| Artifact                         | Purpose                                               |
-| -------------------------------- | ----------------------------------------------------- |
-| `gold_direction_pipeline.joblib` | Stores the trained model pipeline                     |
-| `evaluation_metrics.json`        | Stores classification and strategy metrics            |
-| `cumulative_returns.png`         | Visual comparison of model and benchmark returns      |
-| `test_period_trades.csv`         | Stores individual test-period predictions and returns |
+| Artifact | Purpose |
+|---|---|
+| `logistic_regression.joblib` | Stores the scaled Logistic Regression pipeline |
+| `random_forest.joblib` | Stores the trained Random Forest |
+| `gradient_boosting.joblib` | Stores the trained Gradient Boosting model |
+| `model_comparison.csv` | Stores metrics for all three models |
+| `evaluation_metrics.json` | Stores detailed evaluation information |
+| `cumulative_returns.png` | Compares strategy and benchmark returns |
+| `test_period_trades.csv` | Stores test-period predictions and returns |
 
 ---
 
-# Part 6: FastAPI Prediction Service
+# Part 5: FastAPI Prediction Service
 
-## 21. API Architecture
+## 22. API Architecture
 
 ```mermaid
 flowchart LR
-    A[API Client or Swagger] --> B[FastAPI Endpoint]
+    A[Client or Swagger] --> B[FastAPI Endpoint]
     B --> C[Pydantic Validation]
     C --> D[Model Service]
-    D --> E[Saved Scikit-learn Pipeline]
-    E --> F[Prediction Probability]
-    F --> G[Structured JSON Response]
-    G --> A
+
+    D --> E1[Logistic Regression]
+    D --> E2[Random Forest]
+    D --> E3[Gradient Boosting]
+
+    E1 --> F[Prediction Comparison]
+    E2 --> F
+    E3 --> F
+
+    F --> G[Ensemble Majority Vote]
+    G --> H[Structured JSON Response]
+    H --> A
 ```
 
 ---
 
-## 22. API Startup Sequence
+## 23. API Startup Sequence
 
 ```mermaid
 sequenceDiagram
     participant Uvicorn
-    participant FastAPI as app/main.py
-    participant Service as ModelService
-    participant Artifact as Joblib Model
+    participant API as app/main.py
+    participant Service as Model Service
+    participant Artifacts as Model Artifacts
 
-    Uvicorn->>FastAPI: Start application
-    FastAPI->>Service: Initialize model service
-    Service->>Artifact: Load saved model
+    Uvicorn->>API: Start application
+    API->>Service: Initialize service
+    Service->>Artifacts: Load three saved models
 
-    alt Model exists
-        Artifact-->>Service: Return trained pipeline
-        Service-->>FastAPI: Model loaded successfully
-        FastAPI-->>Uvicorn: Application ready
-    else Model is missing
-        Artifact-->>Service: File not found
-        Service-->>FastAPI: Model unavailable
-        FastAPI-->>Uvicorn: Start with unhealthy model status
+    alt All required models are available
+        Artifacts-->>Service: Return trained models
+        Service-->>API: Models loaded
+        API-->>Uvicorn: Application ready
+    else One or more artifacts are missing
+        Artifacts-->>Service: Loading error
+        Service-->>API: Unhealthy model status
     end
 ```
 
 ---
 
-## 23. Prediction Request Sequence
+## 24. API Endpoints
+
+| Method | Endpoint | Responsibility |
+|---|---|---|
+| `GET` | `/` | Returns API information |
+| `GET` | `/health` | Returns service and model-loading status |
+| `GET` | `/model/info` | Returns model names, metadata, and feature names |
+| `POST` | `/predict/compare` | Compares predictions from all three models using supplied features |
+| `GET` | `/predict/latest` | Downloads recent Yahoo Finance data, builds features, and predicts the latest candle |
+
+---
+
+## 25. Manual Model Comparison Sequence
 
 ```mermaid
 sequenceDiagram
     participant Client
-    participant API as POST /predict
-    participant Schema as PredictionRequest
-    participant Service as ModelService
-    participant Model as Trained Pipeline
+    participant API as POST /predict/compare
+    participant Schema
+    participant Service
+    participant Models as Three Models
 
     Client->>API: Send five feature values
-    API->>Schema: Validate request data
+    API->>Schema: Validate request
 
-    alt Input is invalid
-        Schema-->>Client: Return HTTP 422
-    else Input is valid
-        Schema-->>API: Validated features
-        API->>Service: Request prediction
-        Service->>Model: Run predict_proba
-        Model-->>Service: Up and down probabilities
-        Service->>Service: Apply classification threshold
-        Service-->>API: Prediction result
-        API-->>Client: Return JSON response
+    alt Invalid input
+        Schema-->>Client: HTTP 422
+    else Valid input
+        Schema-->>API: Validated feature vector
+        API->>Service: Compare models
+        Service->>Models: Run predict and predict_proba
+        Models-->>Service: Return three predictions
+        Service->>Service: Calculate majority vote
+        Service-->>API: Comparison result
+        API-->>Client: JSON response
     end
 ```
 
----
-
-## 24. Prediction Endpoint
-
-Endpoint:
-
-```http
-POST /predict
-```
-
-Request:
+Example request:
 
 ```json
 {
@@ -692,63 +659,94 @@ Request:
 }
 ```
 
-Response:
+Example response structure:
 
 ```json
 {
-  "predicted_class": 0,
-  "direction": "down_or_flat",
-  "probability_up": 0.48,
-  "probability_down": 0.52,
-  "confidence": 0.52,
-  "threshold": 0.5
+  "predictions": {
+    "logistic_regression": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.53,
+      "probability_down": 0.47
+    },
+    "random_forest": {
+      "predicted_class": 0,
+      "direction": "down_or_flat",
+      "probability_up": 0.49,
+      "probability_down": 0.51
+    },
+    "gradient_boosting": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.55,
+      "probability_down": 0.45
+    }
+  },
+  "ensemble_prediction": {
+    "predicted_class": 1,
+    "direction": "up"
+  }
 }
 ```
 
-The exact response values depend on the input features and trained model.
+Exact response keys and probability values depend on the current application schema and trained artifacts.
 
 ---
 
-## 25. API Endpoints
+## 26. Latest Prediction Sequence
 
 ```mermaid
-flowchart TD
-    A[FastAPI Application] --> B[GET /]
-    A --> C[GET /health]
-    A --> D[GET /model/info]
-    A --> E[POST /predict]
+sequenceDiagram
+    participant Client
+    participant API as GET /predict/latest
+    participant Yahoo as Yahoo Finance
+    participant Features
+    participant Models as Three Models
 
-    B --> F[API Information]
-    C --> G[Health and Model Status]
-    D --> H[Model Metadata]
-    E --> I[Direction Prediction]
+    Client->>API: Request latest prediction
+    API->>Yahoo: Download recent GC=F hourly candles
+    Yahoo-->>API: Return market data
+    API->>Features: Build latest five features
+    Features-->>API: Return model-ready feature row
+    API->>Models: Run three predictions
+    Models-->>API: Return classes and probabilities
+    API->>API: Calculate ensemble vote
+    API-->>Client: Latest prediction response
 ```
 
-### Endpoint responsibilities
+This endpoint demonstrates the complete inference workflow:
 
-| Endpoint          | Responsibility                            |
-| ----------------- | ----------------------------------------- |
-| `GET /`           | Returns API information                   |
-| `GET /health`     | Returns service and model status          |
-| `GET /model/info` | Returns model details and feature names   |
-| `POST /predict`   | Returns the predicted next-hour direction |
+```text
+Yahoo Finance
+    ↓
+Latest Hourly Candles
+    ↓
+Validation and Feature Engineering
+    ↓
+Three Model Predictions
+    ↓
+Ensemble Majority Vote
+    ↓
+JSON Response
+```
 
 ---
 
-# Part 7: Docker Architecture
+# Part 6: Docker and Testing
 
-## 26. Container Architecture
+## 27. Docker Architecture
 
 ```mermaid
 flowchart LR
     A[Host Computer] -->|Port 8000| B[Docker Container]
 
-    subgraph B[gold-direction-container]
-        C[Python 3.11]
+    subgraph B[gold-direction-api]
+        C[Python]
         D[FastAPI]
         E[Uvicorn]
         F[Application Source]
-        G[Saved ML Model]
+        G[Three Saved Models]
     end
 
     E --> D
@@ -756,162 +754,40 @@ flowchart LR
     F --> G
 ```
 
----
+Build and run:
 
-## 27. Docker Build Sequence
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Docker
-    participant Image
-    participant Container
-    participant API
-
-    User->>Docker: docker build
-    Docker->>Image: Install dependencies
-    Docker->>Image: Copy application source
-    Docker->>Image: Copy saved model
-    Image-->>User: Image created
-
-    User->>Docker: docker run
-    Docker->>Container: Create container
-    Container->>API: Start Uvicorn
-    API-->>User: Service available on port 8000
+```bash
+docker build -t gold-direction-api .
+docker run -d --name gold-direction-container -p 8000:8000 gold-direction-api
 ```
 
 ---
-
-# Part 8: Testing Architecture
 
 ## 28. Testing Strategy
 
-```mermaid
-flowchart TD
-    A[Test Suite] --> B[Data Download Tests]
-    A --> C[Preprocessing Tests]
-    A --> D[Feature Tests]
-    A --> E[Training Tests]
-    A --> F[Validation Tests]
-    A --> G[Prediction Tests]
-    A --> H[API Tests]
+The test suite should verify:
 
-    B --> I[50 Passing Tests]
-    C --> I
-    D --> I
-    E --> I
-    F --> I
-    G --> I
-    H --> I
-```
+- Data download validation
+- Data preprocessing
+- Feature generation
+- Chronological splitting
+- Training all three models
+- Saving all three artifacts
+- Metric calculation
+- Model comparison
+- API health
+- Model metadata
+- `/predict/compare`
+- `/predict/latest`
+- Invalid request handling
 
-The test suite verifies:
-
-* Input data validation
-* Duplicate timestamp handling
-* Invalid price detection
-* Target creation
-* Feature generation
-* Missing-value handling
-* Chronological splitting
-* Model training
-* Model saving
-* Time-series validation
-* Prediction input validation
-* API health
-* API prediction
-* Invalid API requests
-
-Current result:
-
-```text
-50 tests passed
-55% overall coverage
-```
+Because the implementation has changed from one model to three models, tests that expect a single artifact or `/predict` endpoint should also be updated.
 
 ---
 
-# Part 9: Folder Responsibilities
+# Part 7: Execution Order
 
-## 29. Source Folder Responsibilities
-
-### `src/data`
-
-Responsible for:
-
-* Downloading market data
-* Validating raw data
-* Cleaning data
-* Creating the target
-* Saving raw and processed datasets
-
-### `src/features`
-
-Responsible for:
-
-* Calculating technical indicators
-* Producing model-ready features
-* Removing unusable rolling-window rows
-
-### `src/models`
-
-Responsible for:
-
-* Training the classifier
-* Running chronological validation
-* Evaluating model performance
-* Making command-line predictions
-* Saving model artifacts
-
-### `app`
-
-Responsible for:
-
-* Exposing the trained model through FastAPI
-* Validating request and response structures
-* Loading the saved model
-* Returning prediction probabilities
-
-### `tests`
-
-Responsible for:
-
-* Verifying expected behaviour
-* Detecting regressions
-* Testing invalid inputs
-* Testing API endpoints
-
-### `artifacts`
-
-Responsible for storing:
-
-* Trained model
-* Metrics
-* Trading results
-* Charts
-
----
-
-# Part 10: End-to-End Execution Order
-
-## 30. Recommended Command Sequence
-
-Run the project in this order:
-
-```text
-1. Download data
-2. Preprocess data
-3. Build features
-4. Train model
-5. Validate model
-6. Evaluate final test period
-7. Start FastAPI
-8. Test API
-9. Build Docker image
-10. Run Docker container
-```
-
-Commands:
+## 29. Recommended Command Sequence
 
 ```bash
 python -m src.data.download
@@ -923,200 +799,157 @@ python -m src.models.evaluate
 uvicorn app.main:app --reload
 ```
 
-Docker:
+Open:
 
-```bash
-docker build -t gold-direction-api .
-docker run -d --name gold-direction-container -p 8000:8000 gold-direction-api
+```text
+Swagger:          http://127.0.0.1:8000/docs
+Health:           http://127.0.0.1:8000/health
+Model information:http://127.0.0.1:8000/model/info
+Latest prediction:http://127.0.0.1:8000/predict/latest
 ```
 
 ---
 
-# Part 11: Prediction Explanation
+# Part 8: Design Decisions
 
-## 31. What the Model Predicts
+## 30. Why Three Models Are Compared
 
-At prediction time, the model receives five already calculated features.
+The three models represent different learning approaches:
 
-```mermaid
-flowchart LR
-    A[Current and Historical Candles] --> B[Feature Calculation]
-    B --> C[Five Feature Values]
-    C --> D[Trained Model]
-    D --> E[Next-Hour Direction]
+| Model | Learning approach |
+|---|---|
+| Logistic Regression | Linear and interpretable baseline |
+| Random Forest | Bagged nonlinear decision trees |
+| Gradient Boosting | Sequential nonlinear boosting |
+
+Using the same dataset and test period makes it possible to assess whether model complexity provides a meaningful improvement.
+
+The final results show that no single model dominates every metric:
+
+- Logistic Regression performs best on accuracy and ROC-AUC.
+- Gradient Boosting performs best on recall and F1.
+- Random Forest remains competitive but does not lead the comparison.
+
+---
+
+## 31. Why an Ensemble Vote Is Returned
+
+A majority vote summarizes the three model outputs.
+
+For example:
+
+```text
+Logistic Regression → UP
+Random Forest       → DOWN_OR_FLAT
+Gradient Boosting   → UP
+
+Ensemble            → UP
 ```
 
-The current API accepts the feature values directly.
-
-It does not automatically download the latest candle.
-
-This keeps the assignment architecture simple and makes the machine-learning prediction logic easy to demonstrate.
+The ensemble is a comparison aid. It is not proof that the prediction is correct or profitable.
 
 ---
 
-## 32. What the Model Does Not Do
-
-The model does not:
-
-* Predict an exact future gold price
-* Predict using only a date
-* Automatically fetch live market prices
-* Guarantee profitable trades
-* Include news or macroeconomic information
-* Include transaction costs
-* Automatically retrain itself
-
----
-
-# Part 12: Design Decisions
-
-## 33. Why Logistic Regression Was Selected
-
-Logistic Regression provides:
-
-* A simple classification baseline
-* Fast training
-* Probability output
-* Easy interpretation
-* Stable behaviour on small datasets
-* Easy deployment through Scikit-learn
-
-A more complicated model does not automatically produce more reliable financial predictions.
-
----
-
-## 34. Why FastAPI Was Selected
+## 32. Why FastAPI Is Used
 
 FastAPI provides:
 
-* Automatic input validation
-* Interactive Swagger documentation
-* Structured JSON responses
-* Strong Python typing support
-* Easy integration with machine-learning models
-* Simple Docker deployment
+- Automatic request validation
+- Interactive Swagger documentation
+- Structured JSON responses
+- Strong Python typing
+- Easy integration with scikit-learn
+- Straightforward Docker deployment
 
 ---
 
-## 35. Why the Model Is Saved as a Pipeline
+# Part 9: Limitations
 
-Saving the complete pipeline ensures that preprocessing and prediction remain consistent.
+## 33. Technical Limitations
 
-```text
-Input features
-    ↓
-Saved scaler
-    ↓
-Saved classifier
-    ↓
-Prediction
-```
-
-The API does not need to train the model again.
-
-It only loads the saved pipeline and performs inference.
+- Yahoo Finance may return delayed or missing candles.
+- `GC=F` is Gold Futures, not exact broker-specific spot XAU/USD.
+- The dataset is still relatively small.
+- Only five engineered features are used.
+- The latest candle may be incomplete.
+- Hyperparameters are limited and may not be optimized.
+- Automatic retraining and model-drift monitoring are not implemented.
+- The API does not maintain a prediction-history database.
 
 ---
 
-# Part 13: Limitations and Risks
+## 34. Financial Limitations
 
-## 36. Technical Limitations
-
-* Limited historical dataset
-* Only five engineered features
-* Simple linear classifier
-* No live market-data integration
-* No automatic retraining
-* No model-drift monitoring
-* No cloud deployment
-* No persistent prediction database
+- Gold markets are noisy and difficult to predict.
+- Metrics close to 50% indicate a weak directional edge.
+- Historical relationships may not continue.
+- Transaction costs, spread, slippage, and latency are not included.
+- Backtest performance does not guarantee live profitability.
+- This project is for technical demonstration, not financial advice.
 
 ---
 
-## 37. Financial Limitations
+# Part 10: Future Architecture
 
-* Gold markets are noisy and unpredictable
-* Historical patterns may not continue
-* Transaction costs are not included
-* Bid-ask spread is not included
-* Slippage is not included
-* Prediction latency is not included
-* Strategy results are based on historical simulation
-* A small directional advantage may disappear in live trading
-
----
-
-# Part 14: Future Architecture
-
-## 38. Possible Extended Architecture
-
-A future version could use this architecture:
+## 35. Possible Extensions
 
 ```mermaid
 flowchart LR
-    A[Live Market API] --> B[Scheduled Data Collector]
-    B --> C[Feature Service]
-    C --> D[Prediction API]
-    D --> E[Prediction Database]
-    D --> F[Dashboard]
-    D --> G[Notification Service]
+    A[Scheduled Market Collector] --> B[Feature Service]
+    B --> C[Prediction API]
+    C --> D[Prediction Database]
+    C --> E[Dashboard]
+    C --> F[Notification Service]
 
-    H[Model Monitoring] --> I{Performance Degraded?}
-    I -- Yes --> J[Retraining Pipeline]
-    J --> K[Model Registry]
-    K --> D
+    G[Model Monitoring] --> H{Performance Degraded?}
+    H -- Yes --> I[Retraining Pipeline]
+    I --> J[Model Registry]
+    J --> C
 ```
 
-Possible additions:
+Potential future improvements:
 
-* Live hourly data
-* Automated feature calculation
-* `/predict/latest` endpoint
-* Prediction history
-* Model monitoring
-* Scheduled retraining
-* Cloud deployment
-* Dashboard
-* Email or WhatsApp notifications
-
-These additions are outside the current assignment scope.
+- Walk-forward optimization
+- Hyperparameter search
+- XGBoost, LightGBM, or CatBoost
+- Probability calibration
+- Feature-importance reporting
+- Additional technical indicators
+- Macroeconomic and news features
+- Prediction history
+- Scheduled retraining
+- Model-drift monitoring
+- Cloud deployment
+- Dashboard and notifications
 
 ---
 
-# 15. Final Architecture Summary
-
-The application follows a simple and modular architecture:
+## 36. Final Architecture Summary
 
 ```text
-Market Data
+Yahoo Finance GC=F
     ↓
-Validation and Cleaning
+Validation and Preprocessing
     ↓
-Target Creation
+Next-Hour Target Creation
     ↓
-Feature Engineering
+Five-Feature Engineering
     ↓
-Chronological Training
+Chronological Train-Test Split
     ↓
-Time-Series Validation
+Logistic Regression
+Random Forest
+Gradient Boosting
     ↓
-Final Evaluation
+Model Comparison and Backtest
     ↓
-Saved Model
+Saved Models and Evaluation Artifacts
     ↓
-FastAPI Prediction
+FastAPI
+    ↓
+/predict/compare and /predict/latest
     ↓
 Docker Deployment
 ```
 
-The design separates:
-
-* Data processing
-* Feature engineering
-* Model training
-* Evaluation
-* API serving
-* Testing
-* Deployment
-
-This makes the project easier to understand, test, maintain, and extend.
+The architecture separates data acquisition, feature engineering, training, evaluation, serving, testing, and deployment. This makes the project easier to understand, reproduce, test, and extend.
