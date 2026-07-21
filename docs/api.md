@@ -4,180 +4,104 @@
 
 ## Purpose
 
-The FastAPI service exposes the trained Gold-direction model through an HTTP API.
+The FastAPI service exposes the trained **Gold Price Direction Predictor** through a REST API.
 
-Instead of manually loading Python files and calling the model, another application can send candle information to an endpoint and receive a prediction.
+The API loads three trained machine learning models:
+
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
+
+Clients can:
+
+- Compare predictions from all three models using manually supplied feature values.
+- Generate predictions for the latest hourly Gold Futures (`GC=F`) candle downloaded from Yahoo Finance.
+
+The API also returns an **ensemble majority-vote prediction**.
+
+---
 
 ## Pipeline Position
 
 ```text
-Client request
-    ↓
-FastAPI endpoint
-    ↓
-Request validation
-    ↓
-Prediction service
-    ↓
-Saved model artifact
-    ↓
-JSON response
+Client Request
+      ↓
+FastAPI Endpoint
+      ↓
+Pydantic Validation
+      ↓
+Prediction Service
+      ↓
+Three Saved Models
+      ↓
+Model Comparison
+      ↓
+Ensemble Majority Vote
+      ↓
+JSON Response
 ```
+
+---
 
 ## Main Files
 
 ```text
-app/main.py
-app/schemas.py
-app/api/routes.py
-app/services/prediction_service.py
+app/
+├── main.py
+├── schemas.py
+├── api/routes.py
+└── services/model_service.py
 ```
 
-## `app/main.py`
+---
 
-This file creates the FastAPI application.
+## API Endpoints
 
-Typical structure:
+| Method | Endpoint | Purpose |
+|---------|----------|---------|
+| GET | `/` | API information |
+| GET | `/health` | Health status |
+| GET | `/model/info` | Loaded models and feature information |
+| POST | `/predict/compare` | Compare predictions from all three models |
+| GET | `/predict/latest` | Download latest Yahoo Finance data and predict |
 
-```python
-from fastapi import FastAPI
+---
 
-from app.api.routes import router
+## Prediction Service
 
-app = FastAPI(
-    title="Gold Direction Predictor API",
-    version="1.0.0",
-)
+The model service is responsible for:
 
-app.include_router(router)
-```
+- Loading all trained Joblib models
+- Preserving feature order
+- Creating model-ready DataFrames
+- Running inference
+- Returning predictions from all models
+- Calculating the ensemble majority vote
 
-Responsibilities:
-
-* create the FastAPI instance
-* set API metadata
-* register application routes
-* serve as the Uvicorn entry point
-
-Application command:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Meaning:
-
-```text
-app.main = Python module
-app = FastAPI object
---reload = restart server after code changes
-```
-
-## `app/schemas.py`
-
-This file defines request and response structures using Pydantic.
-
-A request schema may look like:
-
-```python
-from pydantic import BaseModel, Field
-
-
-class PredictionRequest(BaseModel):
-    return_1: float
-    ma_gap: float
-    volatility_10: float = Field(ge=0)
-    candle_body_ratio: float
-    rsi_14: float = Field(ge=0, le=100)
-```
-
-Responsibilities:
-
-* define required fields
-* validate incoming values
-* reject invalid request bodies
-* document the API automatically
-
-A response schema may look like:
-
-```python
-class PredictionResponse(BaseModel):
-    prediction: int
-    direction: str
-    probability_up: float
-```
-
-## `app/api/routes.py`
-
-This file defines HTTP endpoints.
-
-### Health Endpoint
-
-```python
-@router.get("/health")
-def health_check() -> dict[str, str]:
-    return {"status": "healthy"}
-```
-
-Purpose:
-
-* confirm the API is running
-* support Docker health checks
-* support deployment monitoring
-* provide a simple test endpoint
-
-Example response:
-
-```json
-{
-  "status": "healthy"
-}
-```
-
-### Prediction Endpoint
-
-```python
-@router.post(
-    "/predict",
-    response_model=PredictionResponse,
-)
-def predict_direction(
-    request: PredictionRequest,
-) -> PredictionResponse:
-    return prediction_service.predict(request)
-```
-
-Purpose:
-
-* receive validated feature values
-* pass them to the prediction service
-* return a structured result
-
-## `app/services/prediction_service.py`
-
-This file contains model-loading and inference logic.
-
-Responsibilities:
-
-* load the saved Joblib artifact
-* preserve the expected feature order
-* convert request data into a DataFrame
-* call the model
-* return class and probability
-
-Example model loading:
+Example:
 
 ```python
 from pathlib import Path
-
 import joblib
 
-MODEL_PATH = Path("artifacts/model.joblib")
+MODEL_DIR = Path("artifacts/models")
 
-model = joblib.load(MODEL_PATH)
+MODELS = {
+    "logistic_regression": joblib.load(
+        MODEL_DIR / "logistic_regression.joblib"
+    ),
+    "random_forest": joblib.load(
+        MODEL_DIR / "random_forest.joblib"
+    ),
+    "gradient_boosting": joblib.load(
+        MODEL_DIR / "gradient_boosting.joblib"
+    ),
+}
 ```
 
-Example feature order:
+---
+
+## Feature Columns
 
 ```python
 FEATURE_COLUMNS = [
@@ -189,46 +113,29 @@ FEATURE_COLUMNS = [
 ]
 ```
 
-Maintaining the same order used during training is essential.
+---
 
-## Prediction Logic
+## Prediction Workflow
 
-Example input conversion:
-
-```python
-features = pd.DataFrame(
-    [
-        {
-            "return_1": request.return_1,
-            "ma_gap": request.ma_gap,
-            "volatility_10": request.volatility_10,
-            "candle_body_ratio": request.candle_body_ratio,
-            "rsi_14": request.rsi_14,
-        }
-    ],
-    columns=FEATURE_COLUMNS,
-)
+```text
+Receive request
+      ↓
+Validate input
+      ↓
+Create DataFrame
+      ↓
+Run Logistic Regression
+      ↓
+Run Random Forest
+      ↓
+Run Gradient Boosting
+      ↓
+Calculate Ensemble Vote
+      ↓
+Return JSON
 ```
 
-Prediction:
-
-```python
-prediction = int(model.predict(features)[0])
-```
-
-Probability:
-
-```python
-probability_up = float(
-    model.predict_proba(features)[0, 1]
-)
-```
-
-Direction label:
-
-```python
-direction = "up" if prediction == 1 else "down"
-```
+---
 
 ## Prediction Request Example
 
@@ -242,37 +149,63 @@ direction = "up" if prediction == 1 else "down"
 }
 ```
 
+---
+
 ## Prediction Response Example
 
 ```json
 {
-  "prediction": 1,
-  "direction": "up",
-  "probability_up": 0.5634
+  "predictions": {
+    "logistic_regression": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.53
+    },
+    "random_forest": {
+      "predicted_class": 0,
+      "direction": "down_or_flat",
+      "probability_up": 0.49
+    },
+    "gradient_boosting": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.55
+    }
+  },
+  "ensemble_prediction": {
+    "predicted_class": 1,
+    "direction": "up"
+  }
 }
 ```
 
-Interpretation:
+---
 
-```text
-prediction = 1
-predicted direction = upward
-estimated probability = 56.34%
-```
-
-This is a model estimate, not a guarantee.
-
-## Running the API
-
-Install dependencies:
+## Latest Prediction Endpoint
 
 ```bash
-pip install -r requirements.txt
+curl http://127.0.0.1:8000/predict/latest
 ```
 
-Train the model first so that the artifact exists.
+Workflow
 
-Start the server:
+```text
+Yahoo Finance
+      ↓
+Download latest GC=F candle
+      ↓
+Feature engineering
+      ↓
+Three model predictions
+      ↓
+Ensemble vote
+      ↓
+JSON response
+```
+
+---
+
+## Running the API
 
 ```bash
 uvicorn app.main:app --reload
@@ -282,111 +215,67 @@ Open:
 
 ```text
 http://127.0.0.1:8000/docs
+http://127.0.0.1:8000/health
+http://127.0.0.1:8000/model/info
+http://127.0.0.1:8000/predict/latest
 ```
 
-FastAPI automatically provides Swagger documentation.
+---
 
-## Test the Health Endpoint
-
-Using PowerShell:
-
-```powershell
-Invoke-RestMethod `
-  -Uri "http://127.0.0.1:8000/health" `
-  -Method Get
-```
-
-Using curl:
+## Test Manual Prediction
 
 ```bash
-curl http://127.0.0.1:8000/health
+curl -X POST "http://127.0.0.1:8000/predict/compare" \
+-H "Content-Type: application/json" \
+-d '{
+  "return_1":0.0015,
+  "ma_gap":0.0032,
+  "volatility_10":0.0048,
+  "candle_body_ratio":0.42,
+  "rsi_14":57.8
+}'
 ```
 
-## Test the Prediction Endpoint
+---
 
-PowerShell example:
-
-```powershell
-$body = @{
-    return_1 = 0.0015
-    ma_gap = 0.0032
-    volatility_10 = 0.0048
-    candle_body_ratio = 0.42
-    rsi_14 = 57.8
-} | ConvertTo-Json
-
-Invoke-RestMethod `
-  -Uri "http://127.0.0.1:8000/predict" `
-  -Method Post `
-  -ContentType "application/json" `
-  -Body $body
-```
-
-Curl example:
+## Test Latest Prediction
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "return_1": 0.0015,
-    "ma_gap": 0.0032,
-    "volatility_10": 0.0048,
-    "candle_body_ratio": 0.42,
-    "rsi_14": 57.8
-  }'
+curl http://127.0.0.1:8000/predict/latest
 ```
+
+---
 
 ## Error Handling
 
-The API should return a clear error when:
+The API returns descriptive validation errors when:
 
-* the model artifact is missing
-* the model cannot be loaded
-* required request fields are absent
-* RSI is outside the valid range
-* the request contains an invalid data type
+- Model artifacts are missing
+- Invalid request types are supplied
+- Required fields are missing
+- RSI is outside the allowed range
+- Input validation fails
 
-Example validation error:
+---
 
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "rsi_14"],
-      "msg": "Input should be less than or equal to 100"
-    }
-  ]
-}
-```
-
-## Docker Usage
-
-Build the image:
+## Docker
 
 ```bash
 docker build -t gold-direction-api .
+
+docker run -d \
+--name gold-direction-container \
+-p 8000:8000 \
+gold-direction-api
 ```
 
-Run the container:
-
-```bash
-docker run \
-  --rm \
-  -p 8000:8000 \
-  gold-direction-api
-```
-
-Then access:
-
-```text
-http://localhost:8000/docs
-```
+---
 
 ## API Limitations
 
-* The endpoint expects already engineered feature values.
-* It does not automatically download live Gold candles.
-* The prediction is based on a simple historical model.
-* The probability is not a calibrated trading guarantee.
-* The API does not place trades.
-* The service should not be treated as financial advice.
+- Predictions are based on historical market data.
+- GC=F is a proxy for spot XAU/USD.
+- Yahoo Finance may return delayed or incomplete candles.
+- Transaction costs and slippage are not included.
+- The ensemble vote is not guaranteed to outperform every individual model.
+- This project is for educational purposes and is not financial advice.
