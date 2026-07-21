@@ -1,9 +1,10 @@
+from __future__ import annotations
+
+from typing import Any
+import pandas as pd
 import json
 from pathlib import Path
-from typing import Any
-
 import joblib
-import pandas as pd
 from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
@@ -27,7 +28,7 @@ METRICS_PATH = Path(
 def evaluate_model(
     model: Any,
     X_test: pd.DataFrame,
-    y_test: pd.Series[Any],
+    y_test: pd.Series,
 ) -> dict[str, float]:
     predictions = model.predict(X_test)
 
@@ -80,7 +81,7 @@ def evaluate_model(
 
 def evaluate_all_models(
     X_test: pd.DataFrame,
-    y_test: pd.Series[Any],
+    y_test: pd.Series,
 ) -> dict[str, dict[str, float]]:
     metrics: dict[str, dict[str, float]] = {}
 

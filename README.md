@@ -463,6 +463,50 @@ Detailed system architecture, data flow, API sequence, Docker workflow, and mode
 
 [View Architecture Documentation](/architecture.md)
 
+## Project Evolution
+
+Rather than training a single model once, I experimented with different datasets and model configurations to understand how historical data and model choice affect prediction performance.
+
+### Phase 1 — Initial Model
+
+- Historical data: **3 Months**
+- Source: Yahoo Finance (`GC=F`)
+- Interval: **1 Hour**
+- Features: 5 engineered technical indicators
+- Model: Logistic Regression
+
+The initial implementation established a simple and interpretable baseline.
+
+### Phase 2 — Extended Dataset
+
+The dataset was expanded to approximately **6 months** of hourly Gold Futures data.
+
+This increased the number of training observations and allowed the models to learn from a wider variety of market conditions.
+
+### Phase 3 — Model Comparison
+
+Instead of relying on a single algorithm, three machine-learning models were trained and evaluated using the same chronological train/test split:
+
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
+
+| Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
+|:------|---------:|------------------:|----------:|--------:|---------:|--------:|
+| **Logistic Regression** | **51.50%** | **51.56%** | **48.22%** | **52.41%** | **50.23%** | **52.47%** |
+| **Random Forest** | **50.30%** | **50.45%** | **47.13%** | **52.73%** | **49.77%** | **52.42%** |
+| **Gradient Boosting** | **50.30%** | **51.11%** | **47.58%** | **63.34%** | **54.34%** | **51.55%** |
+
+This allowed direct comparison of prediction quality while keeping the dataset and feature engineering identical.
+
+### Performance Summary
+
+- **Logistic Regression** achieved the **highest overall accuracy (51.50%)** and **highest ROC-AUC (52.47%)**, making it the strongest baseline model.
+- **Gradient Boosting** achieved the **highest Recall (63.34%)** and **highest F1 Score (54.34%)**, identifying more upward movements at the expense of lower precision.
+- **Random Forest** delivered performance comparable to Logistic Regression but did not outperform it on any primary evaluation metric.
+
+
+- Overall, all three models performed only slightly better than random guessing, highlighting the challenging nature of short-term financial market prediction.
 
 ## Docker
 
@@ -503,6 +547,7 @@ After starting the container, open:
 * API documentation: `http://127.0.0.1:8000/docs`
 * Health endpoint: `http://127.0.0.1:8000/health`
 * Model information: `http://127.0.0.1:8000/model/info`
+* Latest market prediction: `http://127.0.0.1:8000/predict/latest`
 
 ### Build Locally
 
@@ -618,22 +663,49 @@ The project currently includes tests for:
 
 ## API Usage
 
+After starting the container, open:
+
+* Swagger API documentation: `http://127.0.0.1:8000/docs`
+* API health check: `http://127.0.0.1:8000/health`
+* Model information: `http://127.0.0.1:8000/model/info`
+* Latest market prediction: `http://127.0.0.1:8000/predict/latest`
+
 ### Health Check
+
+Checks whether the API is running and whether the trained model artifacts were loaded successfully.
 
 ```bash
 curl http://127.0.0.1:8000/health
 ```
 
+Example response:
+
+```json
+{
+  "status": "healthy",
+  "models_loaded": true
+}
+```
+
 ### Model Information
+
+Returns the available trained models, expected input features, and model metadata.
 
 ```bash
 curl http://127.0.0.1:8000/model/info
 ```
 
-### Prediction
+### Compare Model Predictions
+
+This endpoint accepts manually provided feature values and returns predictions from:
+
+* Logistic Regression
+* Random Forest
+* Gradient Boosting
+* Ensemble majority vote
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/predict" \
+curl -X POST "http://127.0.0.1:8000/predict/compare" \
   -H "Content-Type: application/json" \
   -d '{
     "return_1": 0.0012,
@@ -648,13 +720,102 @@ Example response:
 
 ```json
 {
-  "predicted_direction": "UP",
-  "predicted_class": 1,
-  "probability_up": 0.56,
-  "probability_down": 0.44,
-  "threshold": 0.5
+  "predictions": {
+    "logistic_regression": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.53,
+      "probability_down": 0.47,
+      "confidence": 0.53
+    },
+    "random_forest": {
+      "predicted_class": 0,
+      "direction": "down_or_flat",
+      "probability_up": 0.49,
+      "probability_down": 0.51,
+      "confidence": 0.51
+    },
+    "gradient_boosting": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.55,
+      "probability_down": 0.45,
+      "confidence": 0.55
+    }
+  },
+  "ensemble_prediction": {
+    "predicted_class": 1,
+    "direction": "up",
+    "votes_up": 2,
+    "votes_down_or_flat": 1
+  }
 }
 ```
+
+The exact probabilities depend on the supplied feature values and the trained model artifacts.
+
+### Latest Market Prediction
+
+This endpoint downloads the latest available hourly Gold Futures data from Yahoo Finance, generates the required features, and returns predictions from all trained models.
+
+```bash
+curl http://127.0.0.1:8000/predict/latest
+```
+
+Example response:
+
+```json
+{
+  "symbol": "GC=F",
+  "interval": "1h",
+  "latest_candle_timestamp": "2026-07-20T18:00:00Z",
+  "features": {
+    "return_1": 0.0012,
+    "ma_gap": -0.0021,
+    "volatility_10": 0.0045,
+    "candle_body_ratio": 0.62,
+    "rsi_14": 54.3
+  },
+  "predictions": {
+    "logistic_regression": {
+      "predicted_class": 1,
+      "direction": "up",
+      "confidence": 0.53
+    },
+    "random_forest": {
+      "predicted_class": 0,
+      "direction": "down_or_flat",
+      "confidence": 0.51
+    },
+    "gradient_boosting": {
+      "predicted_class": 1,
+      "direction": "up",
+      "confidence": 0.55
+    }
+  },
+  "ensemble_prediction": {
+    "predicted_class": 1,
+    "direction": "up"
+  }
+}
+```
+
+The `/predict/latest` endpoint demonstrates the complete inference workflow:
+
+```text
+Yahoo Finance Data
+        ↓
+Data Validation
+        ↓
+Feature Engineering
+        ↓
+Three Model Predictions
+        ↓
+Ensemble Majority Vote
+        ↓
+JSON Response
+```
+
 
 
 ## Limitations
