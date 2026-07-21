@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -114,3 +115,19 @@ class ModelInfoResponse(BaseModel):
     feature_columns: list[str]
     models: list[ModelDetails]
     recommended_model: RecommendedModel | None = None
+
+
+class LatestPredictionMetadata(BaseModel):
+    """Metadata describing the latest market observation."""
+
+    ticker: str = Field(examples=["GC=F"])
+    market_timestamp: str
+    generated_at: str
+
+
+class LatestPredictionResponse(BaseModel):
+    """Response returned by the latest prediction endpoint."""
+
+    metadata: LatestPredictionMetadata
+    features: dict[str, float]
+    predictions: dict[str, Any]

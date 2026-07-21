@@ -8,9 +8,18 @@ from fastapi import FastAPI, HTTPException, status
 
 from app.schemas import (
     HealthResponse,
+    LatestPredictionMetadata,
+    LatestPredictionResponse,
     ModelInfoResponse,
     PredictionRequest,
     PredictionResponse,
+)
+from app.services.latest_prediction_service import (
+    GOLD_TICKER,
+    LatestPredictionError,
+    build_latest_feature_row,
+    current_utc_timestamp,
+    serialize_features,
 )
 from app.services.model_service import ModelService
 
@@ -147,3 +156,50 @@ def compare_predictions(
         ) from error
 
     return PredictionResponse(**result)
+
+
+@app.get(
+    "/predict/latest",
+    response_model=LatestPredictionResponse,
+    tags=["Predictions"],
+)
+def predict_latest() -> LatestPredictionResponse:
+    try:
+        market_timestamp, feature_row = build_latest_feature_row()
+
+        feature_values = serialize_features(feature_row)
+
+        prediction_request = PredictionRequest(
+            **feature_values
+        )
+
+        predictions = model_service.predict_all(
+            prediction_request
+        )
+
+        return LatestPredictionResponse(
+            metadata=LatestPredictionMetadata(
+                ticker=GOLD_TICKER,
+                market_timestamp=market_timestamp.isoformat(),
+                generated_at=current_utc_timestamp(),
+            ),
+            features=feature_values,
+            predictions=predictions,
+        )
+
+    except LatestPredictionError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=str(exc),
+        ) from exc
+
+    except Exception as exc:
+        print(
+            "Latest prediction failed: "
+            f"{type(exc).__name__}: {exc}"
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(exc).__name__}: {exc}",
+        ) from exc
