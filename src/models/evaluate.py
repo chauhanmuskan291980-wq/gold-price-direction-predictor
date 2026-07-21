@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import Any
-import pandas as pd
 import json
 from pathlib import Path
+from typing import Any
+
 import joblib
+import pandas as pd
 from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
