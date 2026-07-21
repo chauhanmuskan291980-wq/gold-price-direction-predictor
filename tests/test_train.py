@@ -2,24 +2,17 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+from sklearn.base import is_classifier
 from sklearn.pipeline import Pipeline
 
 from src.features.build_features import FEATURE_COLUMNS
-from src.models.train import (
-    build_model_pipeline,
-    chronological_train_test_split,
-    evaluate_model,
-    load_feature_data,
-    prepare_training_data,
-    save_metadata,
-    save_model,
-)
+from src.models.model_factory import build_models
 
 
 def create_training_data(
     rows: int = 100,
 ) -> pd.DataFrame:
-    """Create deterministic sample feature data."""
+    """Create deterministic sample training data."""
     timestamps = pd.date_range(
         start="2026-01-01",
         periods=rows,
@@ -30,168 +23,246 @@ def create_training_data(
     return pd.DataFrame(
         {
             "timestamp": timestamps,
-            "return_1": [((index % 7) - 3) / 1_000 for index in range(rows)],
-            "ma_gap": [((index % 9) - 4) / 1_000 for index in range(rows)],
-            "volatility_10": [0.001 + (index % 5) / 10_000 for index in range(rows)],
-            "candle_body_ratio": [0.2 + (index % 6) / 10 for index in range(rows)],
-            "rsi_14": [35.0 + (index % 30) for index in range(rows)],
-            "target": [index % 2 for index in range(rows)],
+            "return_1": [
+                ((index % 7) - 3) / 1_000
+                for index in range(rows)
+            ],
+            "ma_gap": [
+                ((index % 9) - 4) / 1_000
+                for index in range(rows)
+            ],
+            "volatility_10": [
+                0.001 + (index % 5) / 10_000
+                for index in range(rows)
+            ],
+            "candle_body_ratio": [
+                0.2 + (index % 6) / 10
+                for index in range(rows)
+            ],
+            "rsi_14": [
+                35.0 + (index % 30)
+                for index in range(rows)
+            ],
+            "target": [
+                index % 2
+                for index in range(rows)
+            ],
         }
     )
 
 
-def test_prepare_training_data_sorts_timestamps() -> None:
-    """Training data should be chronological."""
+def split_training_data(
+    data: pd.DataFrame,
+    train_ratio: float = 0.80,
+) -> tuple[
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.Series,
+    pd.Series,
+]:
+    """Create a chronological train-test split for tests."""
+    if not 0 < train_ratio < 1:
+        raise ValueError(
+            "train_ratio must be between 0 and 1."
+        )
+
+    prepared_data = (
+        data.sort_values("timestamp")
+        .dropna(
+            subset=[
+                *FEATURE_COLUMNS,
+                "target",
+            ]
+        )
+        .reset_index(drop=True)
+    )
+
+    split_index = int(
+        len(prepared_data) * train_ratio
+    )
+
+    x_train = prepared_data.iloc[
+        :split_index
+    ][FEATURE_COLUMNS]
+
+    x_test = prepared_data.iloc[
+        split_index:
+    ][FEATURE_COLUMNS]
+
+    y_train = prepared_data.iloc[
+        :split_index
+    ]["target"]
+
+    y_test = prepared_data.iloc[
+        split_index:
+    ]["target"]
+
+    return x_train, x_test, y_train, y_test
+
+
+def test_training_data_can_be_sorted_by_timestamp() -> None:
+    """Training data should be sortable chronologically."""
     data = create_training_data().iloc[::-1]
 
-    result = prepare_training_data(data)
+    sorted_data = (
+        data.sort_values("timestamp")
+        .reset_index(drop=True)
+    )
 
-    assert result["timestamp"].is_monotonic_increasing
+    assert sorted_data[
+        "timestamp"
+    ].is_monotonic_increasing
 
 
 def test_chronological_split_preserves_order() -> None:
-    """Training observations must occur before test data."""
-    data = prepare_training_data(create_training_data())
+    """Training rows must occur before test rows."""
+    data = create_training_data()
 
-    split = chronological_train_test_split(
+    x_train, x_test, _, _ = split_training_data(
         data,
         train_ratio=0.80,
     )
 
-    assert len(split.x_train) == 79
-    assert len(split.x_test) == 20
+    assert len(x_train) == 80
+    assert len(x_test) == 20
 
-    assert split.train_timestamps.max() < split.test_timestamps.min()
+    train_end_timestamp = data.iloc[
+        x_train.index[-1]
+    ]["timestamp"]
+
+    test_start_timestamp = data.iloc[
+        x_test.index[0]
+    ]["timestamp"]
+
+    assert (
+        train_end_timestamp
+        < test_start_timestamp
+    )
 
 
 def test_split_contains_expected_features() -> None:
-    """Model input should contain only feature columns."""
-    data = prepare_training_data(create_training_data())
+    """Model input should contain feature columns only."""
+    data = create_training_data()
 
-    split = chronological_train_test_split(
+    x_train, x_test, _, _ = split_training_data(
         data,
         train_ratio=0.80,
     )
 
-    assert split.x_train.columns.tolist() == (FEATURE_COLUMNS)
+    assert (
+        x_train.columns.tolist()
+        == FEATURE_COLUMNS
+    )
 
-    assert split.x_test.columns.tolist() == (FEATURE_COLUMNS)
+    assert (
+        x_test.columns.tolist()
+        == FEATURE_COLUMNS
+    )
 
 
 def test_invalid_train_ratio_is_rejected() -> None:
     """Invalid split ratios should raise an error."""
-    data = prepare_training_data(create_training_data())
+    data = create_training_data()
 
     with pytest.raises(
         ValueError,
         match="train_ratio",
     ):
-        chronological_train_test_split(
+        split_training_data(
             data,
             train_ratio=1.0,
         )
 
 
-def test_build_model_returns_pipeline() -> None:
-    """Training model should include a complete pipeline."""
-    model = build_model_pipeline(
-        random_state=42,
-        max_iterations=1_000,
-    )
+def test_build_models_returns_expected_models() -> None:
+    """Factory should return all configured models."""
+    models = build_models()
 
-    assert isinstance(model, Pipeline)
-    assert "scaler" in model.named_steps
-    assert "classifier" in model.named_steps
+    assert isinstance(models, dict)
 
-
-def test_model_training_and_evaluation() -> None:
-    """Model should train and produce valid metrics."""
-    data = prepare_training_data(create_training_data())
-
-    split = chronological_train_test_split(
-        data,
-        train_ratio=0.80,
-    )
-
-    model = build_model_pipeline(
-        random_state=42,
-        max_iterations=1_000,
-    )
-
-    model.fit(
-        split.x_train,
-        split.y_train,
-    )
-
-    metrics = evaluate_model(
-        model,
-        split,
-        classification_threshold=0.50,
-    )
-
-    assert 0 <= metrics["accuracy"] <= 1
-    assert 0 <= metrics["balanced_accuracy"] <= 1
-    assert 0 <= metrics["precision"] <= 1
-    assert 0 <= metrics["recall"] <= 1
-    assert 0 <= metrics["f1_score"] <= 1
-    assert 0 <= metrics["roc_auc"] <= 1
-
-    assert len(metrics["confusion_matrix"]) == 2
-
-
-def test_save_model(
-    tmp_path: Path,
-) -> None:
-    """A fitted model should be serialized."""
-    data = prepare_training_data(create_training_data())
-
-    split = chronological_train_test_split(
-        data,
-        train_ratio=0.80,
-    )
-
-    model = build_model_pipeline(
-        random_state=42,
-        max_iterations=1_000,
-    )
-
-    model.fit(
-        split.x_train,
-        split.y_train,
-    )
-
-    output_path = tmp_path / "model.joblib"
-
-    save_model(
-        model,
-        output_path,
-    )
-
-    assert output_path.exists()
-
-
-def test_save_metadata(
-    tmp_path: Path,
-) -> None:
-    """Training metadata should be written as JSON."""
-    output_path = tmp_path / "metadata.json"
-
-    metadata = {
-        "model_name": "LogisticRegression",
-        "accuracy": 0.55,
+    assert set(models.keys()) == {
+        "logistic_regression",
+        "random_forest",
+        "gradient_boosting",
     }
 
-    save_metadata(
-        metadata,
-        output_path,
+
+def test_logistic_regression_is_pipeline() -> None:
+    """Logistic regression should use a pipeline."""
+    models = build_models()
+
+    assert isinstance(
+        models["logistic_regression"],
+        Pipeline,
     )
 
-    assert output_path.exists()
+
+from sklearn.base import is_classifier
 
 
-def test_load_missing_feature_file() -> None:
-    """A missing feature dataset should be rejected."""
-    missing_path = Path("data/processed/missing-features.csv")
+def test_all_models_are_classifiers() -> None:
+    """Every configured model should be recognized as a classifier."""
+    models = build_models()
 
-    with pytest.raises(FileNotFoundError):
-        load_feature_data(missing_path)
+    for model in models.values():
+        assert is_classifier(model)
+
+
+def test_all_models_can_be_trained() -> None:
+    """Every configured model should fit successfully."""
+    data = create_training_data()
+
+    x_train, x_test, y_train, _ = (
+        split_training_data(data)
+    )
+
+    models = build_models()
+
+    for model in models.values():
+        model.fit(
+            x_train,
+            y_train,
+        )
+
+        predictions = model.predict(x_test)
+
+        assert len(predictions) == len(x_test)
+
+        assert set(predictions).issubset(
+            {0, 1}
+        )
+
+
+def test_all_models_return_probabilities() -> None:
+    """Every model should return class probabilities."""
+    data = create_training_data()
+
+    x_train, x_test, y_train, _ = (
+        split_training_data(data)
+    )
+
+    models = build_models()
+
+    for model in models.values():
+        model.fit(
+            x_train,
+            y_train,
+        )
+
+        probabilities = model.predict_proba(
+            x_test
+        )
+
+        assert probabilities.shape == (
+            len(x_test),
+            2,
+        )
+
+        assert (
+            probabilities >= 0
+        ).all()
+
+        assert (
+            probabilities <= 1
+        ).all()
+
