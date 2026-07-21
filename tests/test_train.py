@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import Any
 
 import pandas as pd
 import pytest
@@ -56,8 +59,8 @@ def split_training_data(
 ) -> tuple[
     pd.DataFrame,
     pd.DataFrame,
-    pd.Series,
-    pd.Series,
+    pd.Series[Any],
+    pd.Series[Any],
 ]:
     """Create a chronological train-test split for tests."""
     if not 0 < train_ratio < 1:

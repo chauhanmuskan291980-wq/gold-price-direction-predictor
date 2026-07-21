@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any
 
 import joblib
 import pandas as pd
@@ -24,86 +25,89 @@ METRICS_PATH = Path(
 
 
 def evaluate_model(
-        model , 
-        X_test : pd.DataFrame,
-        y_test : pd.Series,
-) -> dict[str,float] :
+    model: Any,
+    X_test: pd.DataFrame,
+    y_test: pd.Series[Any],
+) -> dict[str, float]:
     predictions = model.predict(X_test)
+
     probabilities = model.predict_proba(
         X_test
-    )[:,1]
+    )[:, 1]
 
     return {
-        "accuracy":float(
+        "accuracy": float(
             accuracy_score(
                 y_test,
-                predictions
+                predictions,
             )
         ),
-        "balanced_accuracy":float(
+        "balanced_accuracy": float(
             balanced_accuracy_score(
                 y_test,
-                predictions
+                predictions,
             )
         ),
-        "precision":float(
+        "precision": float(
             precision_score(
                 y_test,
                 predictions,
                 zero_division=0,
             )
         ),
-        "recall":float(
+        "recall": float(
             recall_score(
                 y_test,
                 predictions,
-                zero_division=0
+                zero_division=0,
             )
         ),
-        "f1":float(
+        "f1": float(
             f1_score(
                 y_test,
                 predictions,
-                zero_division=0
+                zero_division=0,
             )
         ),
-        "roc_auc":float(
+        "roc_auc": float(
             roc_auc_score(
                 y_test,
-                probabilities
+                probabilities,
             )
-        )
+        ),
     }
 
 
 def evaluate_all_models(
-        X_test:pd.DataFrame,
-        y_test:pd.Series,
-) -> dict:
-    metrics = {}
+    X_test: pd.DataFrame,
+    y_test: pd.Series[Any],
+) -> dict[str, dict[str, float]]:
+    metrics: dict[str, dict[str, float]] = {}
 
     for model_path in MODEL_DIR.glob("*.joblib"):
         model_name = model_path.stem
         model = joblib.load(model_path)
 
         metrics[model_name] = evaluate_model(
-            model = model , 
-             X_test=X_test,
+            model=model,
+            X_test=X_test,
             y_test=y_test,
         )
 
     return metrics
 
 
-def save_metrics(metrics:dict) -> None:
+def save_metrics(
+    metrics: dict[str, dict[str, float]],
+) -> None:
     METRICS_PATH.parent.mkdir(
         parents=True,
-        exist_ok=True
+        exist_ok=True,
     )
 
     with METRICS_PATH.open(
         "w",
-        encoding="utf-8"
+        encoding="utf-8",
     ) as file:
         json.dump(
             metrics,
@@ -117,30 +121,16 @@ def main() -> None:
         "data/processed/gold_features.csv"
     )
 
-    _, X_test, _, y_test = chronological_split(data)
+    _, X_test, _, y_test = chronological_split(
+        data
+    )
 
     metrics = evaluate_all_models(
         X_test=X_test,
         y_test=y_test,
     )
 
-    metrics_dir = Path("artifacts/metrics")
-    metrics_dir.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    metrics_path = metrics_dir / "model_metrics.json"
-
-    with metrics_path.open(
-        "w",
-        encoding="utf-8",
-    ) as file:
-        json.dump(
-            metrics,
-            file,
-            indent=2,
-        )
+    save_metrics(metrics)
 
     comparison = pd.DataFrame.from_dict(
         metrics,
@@ -150,7 +140,8 @@ def main() -> None:
     comparison.index.name = "model"
 
     comparison.to_csv(
-        metrics_dir / "model_comparison.csv"
+        METRICS_PATH.parent
+        / "model_comparison.csv"
     )
 
     for model_name, scores in metrics.items():
@@ -163,13 +154,15 @@ def main() -> None:
 
     print(
         "\nMetrics saved to:",
-        metrics_path,
+        METRICS_PATH,
     )
 
     print(
         "Comparison saved to:",
-        metrics_dir / "model_comparison.csv",
+        METRICS_PATH.parent
+        / "model_comparison.csv",
     )
+
 
 if __name__ == "__main__":
     main()

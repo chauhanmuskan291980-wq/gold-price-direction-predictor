@@ -20,24 +20,84 @@ from sklearn.metrics import (
 from sklearn.model_selection import TimeSeriesSplit
 
 from src.features.build_features import FEATURE_COLUMNS
-from src.models.train import (
-    TARGET_COLUMN,
-    TIMESTAMP_COLUMN,
-    build_model_pipeline,
-    load_feature_data,
-    prepare_training_data,
-)
+from src.models.model_factory import build_models
+from src.models.train import TARGET_COLUMN
+
+TIMESTAMP_COLUMN = "timestamp"
 
 MetricValue = float | None
 Metrics = dict[str, MetricValue]
 
 
+def load_feature_data(
+    path: str | Path,
+) -> pd.DataFrame:
+    """Load feature data from a CSV file."""
+    input_path = Path(path)
+
+    if not input_path.exists():
+        raise FileNotFoundError(
+            f"Feature dataset not found: {input_path}"
+        )
+
+    return pd.read_csv(input_path)
+
+
+def prepare_training_data(
+    data: pd.DataFrame,
+) -> pd.DataFrame:
+    """Validate, clean, parse and sort data for time-series validation."""
+    required_columns = [
+        TIMESTAMP_COLUMN,
+        TARGET_COLUMN,
+        *FEATURE_COLUMNS,
+    ]
+
+    missing_columns = [
+        column
+        for column in required_columns
+        if column not in data.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(
+            f"Missing required columns: {missing_columns}"
+        )
+
+    prepared_data = data.copy()
+
+    prepared_data[TIMESTAMP_COLUMN] = pd.to_datetime(
+        prepared_data[TIMESTAMP_COLUMN],
+        errors="coerce",
+        utc=True,
+    )
+
+    prepared_data = prepared_data.dropna(
+        subset=required_columns
+    )
+
+    prepared_data = prepared_data.sort_values(
+        TIMESTAMP_COLUMN
+    ).reset_index(drop=True)
+
+    if prepared_data.empty:
+        raise ValueError(
+            "No valid rows remain after preparing the dataset."
+        )
+
+    prepared_data[TARGET_COLUMN] = prepared_data[
+        TARGET_COLUMN
+    ].astype(int)
+
+    return prepared_data
+
+
 def safe_roc_auc(
-    y_true: pd.Series,
-    probabilities: np.ndarray,
+    y_true: pd.Series[Any],
+    probabilities: np.ndarray[Any, Any],
 ) -> float | None:
     """
-    Calculate ROC-AUC when both target classes exist.
+    Calculate ROC-AUC only when both target classes exist.
 
     ROC-AUC cannot be calculated when a test fold contains
     only one target class.
@@ -54,9 +114,9 @@ def safe_roc_auc(
 
 
 def calculate_metrics(
-    y_true: pd.Series,
-    predictions: np.ndarray,
-    probabilities: np.ndarray | None = None,
+    y_true: pd.Series[Any],
+    predictions: np.ndarray[Any, Any],
+    probabilities: np.ndarray[Any, Any] | None = None,
 ) -> Metrics:
     """Calculate classification metrics for one fold."""
     metrics: Metrics = {
@@ -112,13 +172,15 @@ def require_metric(
     """
     Return a metric value that must not be None.
 
-    ROC-AUC may legitimately be None, but metrics such as
-    accuracy and balanced accuracy should always be available.
+    ROC-AUC may legitimately be None, but accuracy and
+    balanced accuracy should always be available.
     """
     value = metrics.get(metric_name)
 
     if value is None:
-        raise ValueError(f"Metric could not be calculated: {metric_name}")
+        raise ValueError(
+            f"Metric could not be calculated: {metric_name}"
+        )
 
     return value
 
@@ -132,17 +194,46 @@ def validate_with_time_series_splits(
     max_iterations: int = 1_000,
 ) -> list[dict[str, Any]]:
     """
-    Evaluate Logistic Regression and a dummy baseline
-    across expanding chronological folds.
+    Evaluate logistic regression and a dummy baseline across
+    expanding chronological folds.
+
+    random_state and max_iterations are retained for compatibility
+    with the previous validation function signature.
     """
+    _ = random_state, max_iterations
+
     if n_splits < 2:
-        raise ValueError("n_splits must be at least 2.")
+        raise ValueError(
+            "n_splits must be at least 2."
+        )
 
     if gap < 1:
-        raise ValueError("gap must be at least 1 to prevent target-boundary leakage.")
+        raise ValueError(
+            "gap must be at least 1 to prevent "
+            "target-boundary leakage."
+        )
 
     if not 0 < threshold < 1:
-        raise ValueError("threshold must be between 0 and 1.")
+        raise ValueError(
+            "threshold must be between 0 and 1."
+        )
+
+    required_columns = [
+        TIMESTAMP_COLUMN,
+        TARGET_COLUMN,
+        *FEATURE_COLUMNS,
+    ]
+
+    missing_columns = [
+        column
+        for column in required_columns
+        if column not in data.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(
+            f"Missing required columns: {missing_columns}"
+        )
 
     features = data[FEATURE_COLUMNS]
     target = data[TARGET_COLUMN].astype(int)
@@ -173,22 +264,32 @@ def validate_with_time_series_splits(
 
         if y_train.nunique() < 2:
             raise ValueError(
-                f"Fold {fold_number} training data contains only one class."
+                f"Fold {fold_number} training data "
+                "contains only one class."
             )
 
-        model = build_model_pipeline(
-            random_state=random_state,
-            max_iterations=max_iterations,
-        )
+        models = build_models()
+
+        if "logistic_regression" not in models:
+            raise KeyError(
+                "The model factory does not contain "
+                "'logistic_regression'."
+            )
+
+        model = models["logistic_regression"]
 
         model.fit(
             x_train,
             y_train,
         )
 
-        model_probabilities = model.predict_proba(x_test)[:, 1]
+        model_probabilities = model.predict_proba(
+            x_test
+        )[:, 1]
 
-        model_predictions = (model_probabilities >= threshold).astype(int)
+        model_predictions = (
+            model_probabilities >= threshold
+        ).astype(int)
 
         model_metrics = calculate_metrics(
             y_true=y_test,
@@ -205,7 +306,9 @@ def validate_with_time_series_splits(
             y_train,
         )
 
-        dummy_predictions = dummy_model.predict(x_test)
+        dummy_predictions = dummy_model.predict(
+            x_test
+        )
 
         dummy_metrics = calculate_metrics(
             y_true=y_test,
@@ -216,6 +319,7 @@ def validate_with_time_series_splits(
             model_metrics,
             "accuracy",
         )
+
         baseline_accuracy = require_metric(
             dummy_metrics,
             "accuracy",
@@ -225,6 +329,7 @@ def validate_with_time_series_splits(
             model_metrics,
             "balanced_accuracy",
         )
+
         baseline_balanced_accuracy = require_metric(
             dummy_metrics,
             "balanced_accuracy",
@@ -236,26 +341,37 @@ def validate_with_time_series_splits(
             "testing_rows": len(x_test),
             "gap_rows": gap,
             "training_period": {
-                "start": (train_timestamps.min().isoformat()),
-                "end": (train_timestamps.max().isoformat()),
+                "start": train_timestamps.min().isoformat(),
+                "end": train_timestamps.max().isoformat(),
             },
             "testing_period": {
-                "start": (test_timestamps.min().isoformat()),
-                "end": (test_timestamps.max().isoformat()),
+                "start": test_timestamps.min().isoformat(),
+                "end": test_timestamps.max().isoformat(),
             },
             "training_class_distribution": {
                 str(key): int(value)
-                for key, value in (y_train.value_counts().sort_index().items())
+                for key, value in (
+                    y_train.value_counts()
+                    .sort_index()
+                    .items()
+                )
             },
             "testing_class_distribution": {
                 str(key): int(value)
-                for key, value in (y_test.value_counts().sort_index().items())
+                for key, value in (
+                    y_test.value_counts()
+                    .sort_index()
+                    .items()
+                )
             },
             "model_metrics": model_metrics,
             "baseline_metrics": dummy_metrics,
-            "accuracy_improvement": (model_accuracy - baseline_accuracy),
+            "accuracy_improvement": (
+                model_accuracy - baseline_accuracy
+            ),
             "balanced_accuracy_improvement": (
-                model_balanced_accuracy - baseline_balanced_accuracy
+                model_balanced_accuracy
+                - baseline_balanced_accuracy
             ),
         }
 
@@ -269,11 +385,12 @@ def summarize_metric(
     model_key: str,
     metric_name: str,
 ) -> dict[str, float | None]:
-    """Calculate mean and standard deviation for a metric."""
+    """Calculate summary statistics for one metric."""
     values: list[float] = []
 
     for fold in fold_results:
-        metric_value = fold[model_key][metric_name]
+        metrics: Metrics = fold[model_key]
+        metric_value = metrics[metric_name]
 
         if metric_value is not None:
             values.append(float(metric_value))
@@ -286,11 +403,17 @@ def summarize_metric(
             "maximum": None,
         }
 
-    standard_deviation = stdev(values) if len(values) > 1 else 0.0
+    standard_deviation = (
+        stdev(values)
+        if len(values) > 1
+        else 0.0
+    )
 
     return {
         "mean": float(mean(values)),
-        "standard_deviation": float(standard_deviation),
+        "standard_deviation": float(
+            standard_deviation
+        ),
         "minimum": float(min(values)),
         "maximum": float(max(values)),
     }
@@ -332,12 +455,21 @@ def build_validation_summary(
     ties = 0
 
     for fold in fold_results:
+        model_metrics: Metrics = fold[
+            "model_metrics"
+        ]
+
+        baseline_metrics: Metrics = fold[
+            "baseline_metrics"
+        ]
+
         model_accuracy = require_metric(
-            fold["model_metrics"],
+            model_metrics,
             "accuracy",
         )
+
         baseline_accuracy = require_metric(
-            fold["baseline_metrics"],
+            baseline_metrics,
             "accuracy",
         )
 
@@ -384,43 +516,70 @@ def save_validation_results(
 def print_fold_results(
     fold_results: list[dict[str, Any]],
 ) -> None:
-    """Print model and baseline results per fold."""
+    """Print model and baseline results for every fold."""
     print("\nTime-series validation")
     print("----------------------")
 
     for fold in fold_results:
-        model_metrics: Metrics = fold["model_metrics"]
-        baseline_metrics: Metrics = fold["baseline_metrics"]
+        model_metrics: Metrics = fold[
+            "model_metrics"
+        ]
+
+        baseline_metrics: Metrics = fold[
+            "baseline_metrics"
+        ]
 
         model_accuracy = require_metric(
             model_metrics,
             "accuracy",
         )
+
         baseline_accuracy = require_metric(
             baseline_metrics,
             "accuracy",
         )
+
         model_balanced_accuracy = require_metric(
             model_metrics,
             "balanced_accuracy",
         )
+
         baseline_balanced_accuracy = require_metric(
             baseline_metrics,
             "balanced_accuracy",
         )
 
         print(f"\nFold {fold['fold']}")
-        print(f"Training rows: {fold['training_rows']}")
-        print(f"Testing rows:  {fold['testing_rows']}")
-        print(f"Model accuracy:    {model_accuracy:.4f}")
-        print(f"Baseline accuracy: {baseline_accuracy:.4f}")
-        print(f"Model balanced accuracy:    {model_balanced_accuracy:.4f}")
-        print(f"Baseline balanced accuracy: {baseline_balanced_accuracy:.4f}")
+        print(
+            f"Training rows: {fold['training_rows']}"
+        )
+        print(
+            f"Testing rows:  {fold['testing_rows']}"
+        )
+        print(
+            f"Model accuracy:    "
+            f"{model_accuracy:.4f}"
+        )
+        print(
+            f"Baseline accuracy: "
+            f"{baseline_accuracy:.4f}"
+        )
+        print(
+            "Model balanced accuracy:    "
+            f"{model_balanced_accuracy:.4f}"
+        )
+        print(
+            "Baseline balanced accuracy: "
+            f"{baseline_balanced_accuracy:.4f}"
+        )
 
         model_roc_auc = model_metrics["roc_auc"]
 
         if model_roc_auc is not None:
-            print(f"Model ROC-AUC:     {model_roc_auc:.4f}")
+            print(
+                f"Model ROC-AUC: "
+                f"{model_roc_auc:.4f}"
+            )
 
 
 def print_summary(
@@ -434,44 +593,86 @@ def print_summary(
     model_accuracy = model["accuracy"]["mean"]
     baseline_accuracy = baseline["accuracy"]["mean"]
 
-    model_balanced_accuracy = model["balanced_accuracy"]["mean"]
-    baseline_balanced_accuracy = baseline["balanced_accuracy"]["mean"]
+    model_balanced_accuracy = model[
+        "balanced_accuracy"
+    ]["mean"]
+
+    baseline_balanced_accuracy = baseline[
+        "balanced_accuracy"
+    ]["mean"]
 
     if model_accuracy is None:
-        raise ValueError("Model mean accuracy is unavailable.")
+        raise ValueError(
+            "Model mean accuracy is unavailable."
+        )
 
     if baseline_accuracy is None:
-        raise ValueError("Baseline mean accuracy is unavailable.")
+        raise ValueError(
+            "Baseline mean accuracy is unavailable."
+        )
 
     if model_balanced_accuracy is None:
-        raise ValueError("Model mean balanced accuracy is unavailable.")
+        raise ValueError(
+            "Model mean balanced accuracy is unavailable."
+        )
 
     if baseline_balanced_accuracy is None:
-        raise ValueError("Baseline mean balanced accuracy is unavailable.")
+        raise ValueError(
+            "Baseline mean balanced accuracy is unavailable."
+        )
 
     print("\nAggregate results")
     print("-----------------")
 
-    print(f"Model mean accuracy:        {model_accuracy:.4f}")
-    print(f"Baseline mean accuracy:     {baseline_accuracy:.4f}")
-    print(f"Model balanced accuracy:    {model_balanced_accuracy:.4f}")
-    print(f"Baseline balanced accuracy: {baseline_balanced_accuracy:.4f}")
+    print(
+        "Model mean accuracy:        "
+        f"{model_accuracy:.4f}"
+    )
+
+    print(
+        "Baseline mean accuracy:     "
+        f"{baseline_accuracy:.4f}"
+    )
+
+    print(
+        "Model balanced accuracy:    "
+        f"{model_balanced_accuracy:.4f}"
+    )
+
+    print(
+        "Baseline balanced accuracy: "
+        f"{baseline_balanced_accuracy:.4f}"
+    )
 
     roc_auc_mean = model["roc_auc"]["mean"]
 
     if roc_auc_mean is not None:
-        print(f"Model mean ROC-AUC:         {roc_auc_mean:.4f}")
+        print(
+            "Model mean ROC-AUC:         "
+            f"{roc_auc_mean:.4f}"
+        )
 
-    print(f"\nModel wins:    {comparison['model_wins']}")
-    print(f"Baseline wins: {comparison['baseline_wins']}")
-    print(f"Ties:          {comparison['ties']}")
+    print(
+        f"\nModel wins:    "
+        f"{comparison['model_wins']}"
+    )
+
+    print(
+        f"Baseline wins: "
+        f"{comparison['baseline_wins']}"
+    )
+
+    print(
+        f"Ties:          "
+        f"{comparison['ties']}"
+    )
 
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Validate the Gold direction model using "
+            "Validate the gold direction model using "
             "purged time-series cross-validation."
         )
     )
@@ -479,13 +680,17 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path("data/processed/gold_features.csv"),
+        default=Path(
+            "data/processed/gold_features.csv"
+        ),
     )
 
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("artifacts/time_series_validation.json"),
+        default=Path(
+            "artifacts/time_series_validation.json"
+        ),
     )
 
     parser.add_argument(
@@ -513,13 +718,28 @@ def main() -> None:
     """Run purged time-series validation."""
     args = parse_arguments()
 
-    raw_data = load_feature_data(args.input)
+    raw_data = load_feature_data(
+        args.input
+    )
 
-    prepared_data = prepare_training_data(raw_data)
+    prepared_data = prepare_training_data(
+        raw_data
+    )
 
-    print(f"Dataset rows: {len(prepared_data):,}")
-    print(f"Time-series splits: {args.splits}")
-    print(f"Gap between train and test: {args.gap} row(s)")
+    print(
+        f"Dataset rows: "
+        f"{len(prepared_data):,}"
+    )
+
+    print(
+        f"Time-series splits: "
+        f"{args.splits}"
+    )
+
+    print(
+        "Gap between train and test: "
+        f"{args.gap} row(s)"
+    )
 
     fold_results = validate_with_time_series_splits(
         data=prepared_data,
@@ -528,11 +748,13 @@ def main() -> None:
         threshold=args.threshold,
     )
 
-    summary = build_validation_summary(fold_results)
+    summary = build_validation_summary(
+        fold_results
+    )
 
     results: dict[str, Any] = {
-        "model": "LogisticRegression",
-        "baseline": ("DummyClassifier-most_frequent"),
+        "model": "logistic_regression",
+        "baseline": "DummyClassifier-most_frequent",
         "features": FEATURE_COLUMNS,
         "target": TARGET_COLUMN,
         "threshold": args.threshold,
@@ -541,15 +763,23 @@ def main() -> None:
         "summary": summary,
     }
 
-    print_fold_results(fold_results)
-    print_summary(summary)
+    print_fold_results(
+        fold_results
+    )
+
+    print_summary(
+        summary
+    )
 
     save_validation_results(
         results,
         args.output,
     )
 
-    print(f"\nValidation results saved to: {args.output}")
+    print(
+        "\nValidation results saved to: "
+        f"{args.output}"
+    )
 
 
 if __name__ == "__main__":
