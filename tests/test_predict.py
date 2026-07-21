@@ -11,7 +11,7 @@ from src.models.predict import (
     result_to_dictionary,
 )
 from src.models.train import (
-    build_model_pipeline,
+    build_models,
 )
 
 
@@ -38,18 +38,15 @@ def create_feature_data(
 
 
 def create_fitted_model():
-    """Create a fitted model pipeline for prediction tests."""
+
     data = create_feature_data()
 
-    model = build_model_pipeline(
-        random_state=42,
-        max_iterations=1_000,
-    )
+    model = build_models()["logistic_regression"]
 
-    model.fit(
-        data[FEATURE_COLUMNS],
-        data["target"],
-    )
+    x = data[FEATURE_COLUMNS]
+    y = data["target"]
+
+    model.fit(x, y)
 
     return model
 
