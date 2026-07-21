@@ -14,7 +14,6 @@ from app.schemas import (
 )
 from app.services.model_service import ModelService
 
-
 model_service = ModelService()
 
 

@@ -9,7 +9,6 @@ import pandas as pd
 
 from app.schemas import PredictionRequest
 
-
 FEATURE_COLUMNS = [
     "return_1",
     "ma_gap",

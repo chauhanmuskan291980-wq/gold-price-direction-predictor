@@ -5,7 +5,6 @@ import pandas as pd
 
 from src.models.model_factory import build_models
 
-
 FEATURE_COLUMNS =[
     "return_1",
     "ma_gap",

@@ -1,23 +1,18 @@
 import json
 from pathlib import Path
 
-
 import joblib
 import pandas as pd
-
-from sklearn.metrics import(
+from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
     f1_score,
-    precision_score , 
-    recall_score , 
-    roc_auc_score ,
+    precision_score,
+    recall_score,
+    roc_auc_score,
 )
 
-
-from src.models.train import(
-    FEATURE_COLUMNS,
-    TARGET_COLUMN,
+from src.models.train import (
     chronological_split,
     load_training_data,
 )
