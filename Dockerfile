@@ -12,8 +12,11 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY app ./app
 COPY src ./src
-COPY artifacts/gold_direction_pipeline.joblib \
-    ./artifacts/gold_direction_pipeline.joblib
+COPY data ./data
+
+RUN mkdir -p artifacts/models
+
+RUN python -m src.models.train
 
 EXPOSE 8000
 

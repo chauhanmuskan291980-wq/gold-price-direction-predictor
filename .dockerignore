@@ -13,7 +13,6 @@ __pycache__
 htmlcov
 .env
 tests
-data
 artifacts/*
 !artifacts/gold_direction_pipeline.joblib
 README.md
