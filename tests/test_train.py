@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import pandas as pd
 import pytest
@@ -197,7 +196,6 @@ def test_logistic_regression_is_pipeline() -> None:
     )
 
 
-from sklearn.base import is_classifier
 
 
 def test_all_models_are_classifiers() -> None:
