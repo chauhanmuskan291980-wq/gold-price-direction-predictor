@@ -38,6 +38,9 @@ jobs:
       - name: Run Mypy
         run: mypy app src
 
+      - name: Train models
+        run: python -m src.models.train
+
       - name: Run tests
         run: pytest
 

@@ -36,6 +36,7 @@ Thumbs.db
 
 # Generated artifacts
 artifacts/*
+*.joblib
 !artifacts/.gitkeep
 !artifacts/gold_direction_pipeline.joblib
 !artifacts/evaluation_metrics.json
