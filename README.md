@@ -324,7 +324,7 @@ Returns model metadata and the expected feature names.
 ### Prediction endpoint
 
 ```http
-POST /predict
+POST /predict/compare
 ```
 
 Example request:
@@ -340,15 +340,77 @@ Example request:
 ```
 
 Example response:
+```json
+{
+  "predictions": {
+    "logistic_regression": {
+      "predicted_class": 0,
+      "direction": "down_or_flat",
+      "probability_up": 0.48,
+      "probability_down": 0.52,
+      "confidence": 0.52
+    },
+    "random_forest": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.61,
+      "probability_down": 0.39,
+      "confidence": 0.61
+    },
+    "gradient_boosting": {
+      "predicted_class": 1,
+      "direction": "up",
+      "probability_up": 0.57,
+      "probability_down": 0.43,
+      "confidence": 0.57
+    }
+  },
+  "ensemble_prediction": {
+    "predicted_class": 1,
+    "direction": "up",
+    "confidence": 0.67,
+    "majority_vote": "2 of 3 models"
+  },
+  "threshold": 0.5
+}
+```
+
+```http
+GET /predict/latest
+```
+
+### Response
 
 ```json
 {
-  "predicted_class": 0,
-  "direction": "down_or_flat",
-  "probability_up": 0.48,
-  "probability_down": 0.52,
-  "confidence": 0.52,
-  "threshold": 0.5
+  "symbol": "GC=F",
+  "timestamp": "2026-07-21T14:00:00Z",
+  "latest_features": {
+    "return_1": 0.0009,
+    "ma_gap": -0.0015,
+    "volatility_10": 0.0038,
+    "candle_body_ratio": 0.54,
+    "rsi_14": 51.8
+  },
+  "predictions": {
+    "logistic_regression": {
+      "direction": "up",
+      "probability_up": 0.56
+    },
+    "random_forest": {
+      "direction": "up",
+      "probability_up": 0.63
+    },
+    "gradient_boosting": {
+      "direction": "down_or_flat",
+      "probability_up": 0.47
+    }
+  },
+  "ensemble_prediction": {
+    "predicted_class": 1,
+    "direction": "up",
+    "majority_vote": "2 of 3 models"
+  }
 }
 ```
 
