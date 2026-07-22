@@ -1,160 +1,154 @@
 # Gold Price Direction Predictor
 
-A machine-learning project that predicts whether the next hourly XAU/USD gold-price candle will move **up** or **down/flat**.
+A production-style machine learning project that predicts whether the next hourly Gold Futures candle (`GC=F`) is likely to move **up** or **down/flat**.
 
-The project includes the complete workflow:
-
-* Hourly gold-price data collection
-* Data validation and preprocessing
-* Feature engineering
-* Chronological model training
-* Time-series validation
-* Trading-strategy evaluation
-* FastAPI prediction service
-* Automated testing
-* Docker containerization
+The project includes an end-to-end workflow for data collection, validation, feature engineering, chronological model training, model comparison, trading evaluation, FastAPI inference, automated testing, Docker, and CI/CD.
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Scikit-learn](https://img.shields.io/badge/ML-Scikit--learn-orange)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
-![Tests](https://img.shields.io/badge/tests-50%20passed-brightgreen)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)
+
+---
 
 ## Project Objective
 
-The goal of this project is to predict the direction of the next hourly gold-price candle.
+The objective is to classify the direction of the next hourly candle:
 
-The model does not predict the exact future price. It predicts one of two classes:
+- `1` — the next close is higher
+- `0` — the next close is lower or equal
 
-* `1` — Price is expected to move up
-* `0` — Price is expected to move down or remain flat
+The project does **not** predict the exact future gold price. It predicts direction using technical features calculated only from information available at or before the current timestamp.
 
-The prediction is based on technical features calculated using current and historical hourly market data.
+---
 
-
-
-## Project Workflow
+## System Design
 
 ```mermaid
-erDiagram
+flowchart TD
+    A[Yahoo Finance GC=F H1 Data] --> B[Data Validation]
+    B --> C[Preprocessing]
+    C --> D[Feature Engineering]
+    D --> E[Chronological Train/Test Split]
 
-    RAW_DATA ||--|| VALIDATED_DATA : validates
-    VALIDATED_DATA ||--|| PROCESSED_DATA : preprocesses
-    PROCESSED_DATA ||--|| FEATURE_SET : generates
-    FEATURE_SET ||--|| TRAIN_TEST_SPLIT : splits
+    E --> F[Logistic Regression]
+    E --> G[Random Forest]
+    E --> H[Gradient Boosting]
 
-    TRAIN_TEST_SPLIT ||--|| LOGISTIC_REGRESSION : trains
-    TRAIN_TEST_SPLIT ||--|| RANDOM_FOREST : trains
-    TRAIN_TEST_SPLIT ||--|| GRADIENT_BOOSTING : trains
+    F --> I[Model Evaluation]
+    G --> I
+    H --> I
 
-    LOGISTIC_REGRESSION ||--o{ MODEL_EVALUATION : evaluates
-    RANDOM_FOREST ||--o{ MODEL_EVALUATION : evaluates
-    GRADIENT_BOOSTING ||--o{ MODEL_EVALUATION : evaluates
+    I --> J[Model Comparison]
+    J --> K[Trading Evaluation]
+    J --> L[Saved Model Artifacts]
 
-    MODEL_EVALUATION ||--|| MODEL_COMPARISON : compares
-
-    LOGISTIC_REGRESSION ||--o{ BACKTEST : backtests
-    RANDOM_FOREST ||--o{ BACKTEST : backtests
-    GRADIENT_BOOSTING ||--o{ BACKTEST : backtests
-
-    LOGISTIC_REGRESSION ||--|| LOGISTIC_MODEL_ARTIFACT : saves
-    RANDOM_FOREST ||--|| RANDOM_FOREST_ARTIFACT : saves
-    GRADIENT_BOOSTING ||--|| GRADIENT_BOOSTING_ARTIFACT : saves
-
-    LOGISTIC_MODEL_ARTIFACT ||--|| FASTAPI_SERVICE : loads
-    RANDOM_FOREST_ARTIFACT ||--|| FASTAPI_SERVICE : loads
-    GRADIENT_BOOSTING_ARTIFACT ||--|| FASTAPI_SERVICE : loads
-
-    FASTAPI_SERVICE ||--o{ MODEL_PREDICTION : returns
-    MODEL_PREDICTION ||--|| ENSEMBLE_VOTE : combines
-    ENSEMBLE_VOTE ||--o{ API_RESPONSE : returns
+    L --> M[FastAPI Service]
+    M --> N[Individual Predictions]
+    N --> O[Ensemble Majority Vote]
+    O --> P[JSON API Response]
 ```
 
+### Prediction Flow
 
-## Features Used
-
-The model uses five engineered features:
-
-| Feature             | Description                                                     |
-| ------------------- | --------------------------------------------------------------- |
-| `return_1`          | Percentage return from the previous hourly candle               |
-| `ma_gap`            | Difference between the current closing price and moving average |
-| `volatility_10`     | Rolling volatility calculated using recent returns              |
-| `candle_body_ratio` | Ratio of the candle body to the full high-low range             |
-| `rsi_14`            | 14-period Relative Strength Index                               |
-
-All features are calculated using only information available at or before the current timestamp.
-
-## Target Variable
-
-The classification target is created by comparing the next hourly close with the current close.
-
-```python
-target = (next_close > current_close).astype(int)
+```text
+Hourly market data
+        ↓
+Feature generation
+        ↓
+Logistic Regression
+Random Forest
+Gradient Boosting
+        ↓
+Majority-vote ensemble
+        ↓
+FastAPI response
 ```
 
-* `1`: The next hourly close is higher
-* `0`: The next hourly close is lower or equal
+---
 
-The future closing price is used only to create the training target and is removed from the final model input dataset.
+## Why These Features Were Chosen
 
-## Data Leakage Prevention
+The model uses five lightweight and interpretable technical features.
 
-Financial time-series data must not be randomly split because that could allow future information to influence the training process.
+| Feature | Purpose |
+|---|---|
+| `return_1` | Captures immediate short-term momentum |
+| `ma_gap` | Measures the distance between price and its moving average |
+| `volatility_10` | Represents recent market uncertainty |
+| `candle_body_ratio` | Measures directional candle strength |
+| `rsi_14` | Captures relative momentum and overbought/oversold conditions |
 
-This project uses:
+These features were selected because they represent complementary market behaviour:
 
-* Chronological train-test splitting
-* Purged boundary rows
-* Time-ordered validation folds
-* Feature calculations based only on current and past observations
-* No future-price column in the model input
+- **Momentum** — `return_1`, `rsi_14`
+- **Trend** — `ma_gap`
+- **Risk and uncertainty** — `volatility_10`
+- **Price action** — `candle_body_ratio`
 
-The training dataset always occurs before the testing dataset.
+All features are computed from current and historical candles only. Future values are never included in the model inputs.
 
-## Model
+---
 
-The project uses a Scikit-learn pipeline containing:
+## Why Three Algorithms Were Used
 
-* Feature scaling
-* Logistic Regression classifier
+Three classifiers were trained using the same data, features, and chronological split.
 
-Logistic Regression was selected because it is:
+| Model | Reason for Selection |
+|---|---|
+| Logistic Regression | Provides a simple, interpretable baseline |
+| Random Forest | Captures non-linear relationships and feature interactions |
+| Gradient Boosting | Learns sequential corrections and can model complex decision boundaries |
 
-* Easy to interpret
-* Suitable as a classification baseline
-* Fast to train
-* Appropriate for a small financial dataset
-* Able to return class probabilities
+Using multiple models makes it possible to compare different modelling assumptions instead of relying on a single algorithm.
 
-## Final Evaluation Results
+The API also returns an **ensemble prediction** based on majority voting across the three classifiers.
 
-The final model was evaluated on an unseen chronological test period.
+---
 
-### Classification Metrics
+## Preventing Look-Ahead Leakage
 
-| Metric            | Result |
-| ----------------- | -----: |
-| Accuracy          | 53.10% |
-| Balanced Accuracy | 53.48% |
-| Precision         | 47.06% |
-| Recall            | 56.57% |
-| F1 Score          | 51.38% |
-| ROC-AUC           | 57.57% |
+Financial time-series models must preserve time order.
 
-### Trading Metrics
+This project prevents leakage by using:
 
-| Metric                   |    Result |
-| ------------------------ | --------: |
-| Test-period trades       |       226 |
-| Win rate                 |    52.65% |
-| Strategy return          |  +1.5437% |
-| Buy-and-hold return      |  -4.0963% |
-| Average return per trade | 0.007179% |
+- Chronological train/test splitting
+- Time-ordered validation
+- Features based only on current and previous candles
+- Removal of future-price columns before training
+- A target derived from the next close only
+- No random shuffling of financial observations
 
-The model produced a positive strategy return during the test period while the buy-and-hold benchmark produced a negative return.
+The training period always occurs before the final test period.
 
-These results do not guarantee future profitability.
+---
+
+## Model Results
+
+The three models were evaluated on the same unseen chronological test period.
+
+| Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
+|---|---:|---:|---:|---:|---:|---:|
+| Logistic Regression | **51.50%** | **51.56%** | **48.22%** | 52.41% | 50.23% | **52.47%** |
+| Random Forest | 50.30% | 50.45% | 47.13% | 52.73% | 49.77% | 52.42% |
+| Gradient Boosting | 50.30% | 51.11% | 47.58% | **63.34%** | **54.34%** | 51.55% |
+
+### Interpretation
+
+- Logistic Regression achieved the strongest overall accuracy and ROC-AUC.
+- Gradient Boosting produced the highest recall and F1 score.
+- Random Forest performed similarly but did not outperform the other models.
+- Overall performance remained only slightly above random guessing, which reflects the difficulty of short-term financial-market prediction.
+
+The project also evaluates:
+
+- Win rate
+- Strategy return
+- Buy-and-hold return
+- Cumulative return curve
+- Trade-level predictions
+ 
 
 ## Cumulative Return Curve
 
@@ -171,57 +165,52 @@ The generated cumulative-return chart compares:
 gold-price-direction-predictor/
 ├── app/
 │   ├── api/
+│   │   └── routes.py
 │   ├── services/
+│   │   ├── model_service.py
+│   │   └── latest_prediction_service.py
 │   ├── main.py
 │   └── schemas.py
 ├── src/
 │   ├── data/
-│   │   ├── download.py
-│   │   └── preprocess.py
 │   ├── features/
-│   │   └── build_features.py
 │   ├── models/
-│   │   ├── train.py
-│   │   ├── validate.py
-│   │   ├── evaluate.py
-│   │   └── predict.py
 │   └── evaluation/
 ├── tests/
+├── docs/
 ├── artifacts/
-│   ├── gold_direction_pipeline.joblib
-│   ├── evaluation_metrics.json
-│   ├── cumulative_returns.png
-│   └── test_period_trades.csv
 ├── Dockerfile
-├── .dockerignore
-├── .gitignore
 ├── pyproject.toml
 ├── requirements.txt
 └── README.md
 ```
 
-## Installation
+---
+
+## Quick Start
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/gold-price-direction-predictor.git
+git clone https://github.com/chauhanmuskan291980-wq/gold-price-direction-predictor.git
 cd gold-price-direction-predictor
 ```
 
-### 2. Create a virtual environment
+### 2. Create and activate a virtual environment
+
+```bash
+python -m venv .venv
+```
 
 Windows PowerShell:
 
 ```powershell
-python -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
 Linux or macOS:
 
 ```bash
-python -m venv .venv
 source .venv/bin/activate
 ```
 
@@ -231,103 +220,47 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Run the Project Pipeline
-
-The exact commands may depend on the module structure, but the main workflow is:
-
-### Download data
+### 4. Run the project pipeline
 
 ```bash
 python -m src.data.download
-```
-
-### Preprocess data
-
-```bash
 python -m src.data.preprocess
-```
-
-### Build features
-
-```bash
 python -m src.features.build_features
-```
-
-### Train the model
-
-```bash
 python -m src.models.train
-```
-
-### Run time-series validation
-
-```bash
 python -m src.models.validate
-```
-
-### Evaluate the final model
-
-```bash
 python -m src.models.evaluate
 ```
 
-## FastAPI Service
-
-Start the API locally:
+### 5. Start the API
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Open the interactive Swagger documentation:
+Open Swagger documentation:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
+---
+
 ## API Endpoints
 
-### Root endpoint
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | Basic API information |
+| `GET` | `/health` | API and model health status |
+| `GET` | `/model/info` | Loaded model metadata |
+| `POST` | `/predict/compare` | Predictions from all models and the ensemble |
+| `GET` | `/predict/latest` | Prediction using the latest available Gold Futures data |
 
-```http
-GET /
-```
-
-Returns basic information about the API.
-
-### Health endpoint
-
-```http
-GET /health
-```
-
-Returns the API status and confirms whether the model was loaded successfully.
-
-Example:
-
-```json
-{
-  "status": "healthy",
-  "model_loaded": true,
-  "timestamp": "2026-07-18T12:00:00Z"
-}
-```
-
-### Model information
-
-```http
-GET /model/info
-```
-
-Returns model metadata and the expected feature names.
-
-### Prediction endpoint
+### Example Prediction Request
 
 ```http
 POST /predict/compare
+Content-Type: application/json
 ```
-
-Example request:
 
 ```json
 {
@@ -339,166 +272,80 @@ Example request:
 }
 ```
 
-Example response:
+### Example Response
+
 ```json
 {
   "predictions": {
     "logistic_regression": {
+      "predicted_class": 1,
+      "direction": "up",
+      "confidence": 0.53
+    },
+    "random_forest": {
       "predicted_class": 0,
       "direction": "down_or_flat",
-      "probability_up": 0.48,
-      "probability_down": 0.52,
-      "confidence": 0.52
-    },
-    "random_forest": {
-      "predicted_class": 1,
-      "direction": "up",
-      "probability_up": 0.61,
-      "probability_down": 0.39,
-      "confidence": 0.61
+      "confidence": 0.51
     },
     "gradient_boosting": {
       "predicted_class": 1,
       "direction": "up",
-      "probability_up": 0.57,
-      "probability_down": 0.43,
-      "confidence": 0.57
+      "confidence": 0.55
     }
   },
   "ensemble_prediction": {
     "predicted_class": 1,
     "direction": "up",
-    "confidence": 0.67,
-    "majority_vote": "2 of 3 models"
-  },
-  "threshold": 0.5
-}
-```
-
-```http
-GET /predict/latest
-```
-
-### Response
-
-```json
-{
-  "symbol": "GC=F",
-  "timestamp": "2026-07-21T14:00:00Z",
-  "latest_features": {
-    "return_1": 0.0009,
-    "ma_gap": -0.0015,
-    "volatility_10": 0.0038,
-    "candle_body_ratio": 0.54,
-    "rsi_14": 51.8
-  },
-  "predictions": {
-    "logistic_regression": {
-      "direction": "up",
-      "probability_up": 0.56
-    },
-    "random_forest": {
-      "direction": "up",
-      "probability_up": 0.63
-    },
-    "gradient_boosting": {
-      "direction": "down_or_flat",
-      "probability_up": 0.47
-    }
-  },
-  "ensemble_prediction": {
-    "predicted_class": 1,
-    "direction": "up",
-    "majority_vote": "2 of 3 models"
+    "votes_up": 2,
+    "votes_down_or_flat": 1
   }
 }
 ```
 
-The exact probabilities depend on the supplied feature values.
+Exact probabilities depend on the input features and trained model artifacts.
+
+---
 
 ## Run with Docker
 
-### Build the image
+### Build locally
 
 ```bash
-docker build -t gold-direction-api .
+docker build -t gold-direction-api:latest .
 ```
 
 ### Run the container
 
 ```bash
 docker run -d \
-  --name gold-direction-container \
+  --name gold-direction-api \
   -p 8000:8000 \
-  gold-direction-api
+  gold-direction-api:latest
 ```
 
-For Windows PowerShell:
+### Pull the published image
 
-```powershell
-docker run -d `
-  --name gold-direction-container `
-  -p 8000:8000 `
-  gold-direction-api
-```
-
-Open Swagger:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-### View container logs
+Docker Hub:
 
 ```bash
-docker logs gold-direction-container
+docker pull muskanchauhan2890/gold-direction-api:latest
 ```
 
-### Stop the container
+GitHub Container Registry:
 
 ```bash
-docker stop gold-direction-container
+docker pull ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest
 ```
 
-### Remove the container
+---
 
-```bash
-docker rm -f gold-direction-container
-```
+## Testing and Code Quality
 
-## Testing
-
-Run all automated tests:
+Run tests:
 
 ```bash
 pytest
 ```
-
-Current result:
-
-```text
-50 tests passed
-```
-
-Generate test coverage:
-
-```bash
-pytest --cov=app --cov=src
-```
-
-Current overall coverage:
-
-```text
-55%
-```
-
-Core API components have higher coverage:
-
-* API main module: 81%
-* Model service: 90%
-* API schemas: 100%
-
-## Code Quality
 
 Run Ruff:
 
@@ -512,449 +359,88 @@ Run Mypy:
 mypy app src
 ```
 
-Current quality-check status:
-
-```text
-Ruff: All checks passed
-Mypy: No issues found in 22 source files
-Pytest: 50 tests passed
-```
-
-## Generated Artifacts
-
-The project generates the following files:
-
-| File                             | Description                               |
-| -------------------------------- | ----------------------------------------- |
-| `gold_direction_pipeline.joblib` | Saved trained Scikit-learn pipeline       |
-| `evaluation_metrics.json`        | Final classification and trading metrics  |
-| `cumulative_returns.png`         | Strategy and benchmark return chart       |
-| `test_period_trades.csv`         | Test-period predictions and trade returns |
-
-## Assumptions
-
-* Hourly OHLC data is correctly ordered by timestamp.
-* The prediction represents the direction of the next hourly close.
-* Transaction costs, spread, slippage, and execution delays are not included.
-* The evaluation assumes a simplified trading strategy.
-* Historical performance may not continue in live markets.
-* The project is designed as a machine-learning demonstration and not as financial advice.
-
-## Architecture Documentation
-
-Detailed system architecture, data flow, API sequence, Docker workflow, and model lifecycle diagrams are available here:
-
-[View Architecture Documentation](/architecture.md)
-
-## Project Evolution
-
-Rather than training a single model once, I experimented with different datasets and model configurations to understand how historical data and model choice affect prediction performance.
-
-### Phase 1 — Initial Model
-
-- Historical data: **3 Months**
-- Source: Yahoo Finance (`GC=F`)
-- Interval: **1 Hour**
-- Features: 5 engineered technical indicators
-- Model: Logistic Regression
-
-The initial implementation established a simple and interpretable baseline.
-
-### Phase 2 — Extended Dataset
-
-The dataset was expanded to approximately **6 months** of hourly Gold Futures data.
-
-This increased the number of training observations and allowed the models to learn from a wider variety of market conditions.
-
-### Phase 3 — Model Comparison
-
-Instead of relying on a single algorithm, three machine-learning models were trained and evaluated using the same chronological train/test split:
-
-- Logistic Regression
-- Random Forest
-- Gradient Boosting
-
-| Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
-|:------|---------:|------------------:|----------:|--------:|---------:|--------:|
-| **Logistic Regression** | **51.50%** | **51.56%** | **48.22%** | **52.41%** | **50.23%** | **52.47%** |
-| **Random Forest** | **50.30%** | **50.45%** | **47.13%** | **52.73%** | **49.77%** | **52.42%** |
-| **Gradient Boosting** | **50.30%** | **51.11%** | **47.58%** | **63.34%** | **54.34%** | **51.55%** |
-
-This allowed direct comparison of prediction quality while keeping the dataset and feature engineering identical.
-
-### Performance Summary
-
-- **Logistic Regression** achieved the **highest overall accuracy (51.50%)** and **highest ROC-AUC (52.47%)**, making it the strongest baseline model.
-- **Gradient Boosting** achieved the **highest Recall (63.34%)** and **highest F1 Score (54.34%)**, identifying more upward movements at the expense of lower precision.
-- **Random Forest** delivered performance comparable to Logistic Regression but did not outperform it on any primary evaluation metric.
-
-
-- Overall, all three models performed only slightly better than random guessing, highlighting the challenging nature of short-term financial market prediction.
-
-## Docker
-
-The application is containerized using Docker, making it easy to run the prediction API in any environment.
-
-### Pull from Docker Hub
-
-```bash
-docker pull muskanchauhan2890/gold-direction-api:latest
-```
-
-Run the container:
-
-```bash
-docker run -d \
-  --name gold-direction-api \
-  -p 8000:8000 \
-  muskanchauhan2890/gold-direction-api:latest
-```
-
-### Pull from GitHub Container Registry
-
-```bash
-docker pull ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest
-```
-
-Run the container:
-
-```bash
-docker run -d \
-  --name gold-direction-ghcr \
-  -p 8000:8000 \
-  ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest
-```
-
-After starting the container, open:
-
-* API documentation: `http://127.0.0.1:8000/docs`
-* Health endpoint: `http://127.0.0.1:8000/health`
-* Model information: `http://127.0.0.1:8000/model/info`
-* Latest market prediction: `http://127.0.0.1:8000/predict/latest`
-
-### Build Locally
-
-```bash
-docker build -t gold-direction-api:latest .
-```
-
-Run the locally built image:
-
-```bash
-docker run -d \
-  --name gold-direction-api \
-  -p 8000:8000 \
-  gold-direction-api:latest
-```
-
-### Stop and Remove the Container
-
-```bash
-docker stop gold-direction-api
-docker rm gold-direction-api
-```
-
----
-
-## CI/CD Pipeline
-
-The project uses GitHub Actions for continuous integration and container delivery.
-
-The pipeline runs automatically on:
-
-* Pushes to the `main` branch
-* Pull requests targeting the `main` branch
-
-The workflow performs the following steps:
-
-1. Installs Python dependencies
-2. Runs Ruff code-quality checks
-3. Runs Mypy static type checking
-4. Executes the Pytest test suite
-5. Builds the Docker image
-6. Starts the container
-7. Verifies the `/health` endpoint
-8. Publishes the image to Docker Hub
-9. Publishes the image to GitHub Container Registry
-
-Docker images are published only after all quality checks, tests, and container health checks pass.
-
-### Published Images
-
-| Registry                  | Image                                                                  |
-| ------------------------- | ---------------------------------------------------------------------- |
-| Docker Hub                | `muskanchauhan2890/gold-direction-api:latest`                          |
-| GitHub Container Registry | `ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:latest` |
-
-Each successful push to `main` publishes:
-
-* A `latest` tag
-* A commit-specific tag using the Git commit SHA
-
-Example:
-
-```bash
-docker pull muskanchauhan2890/gold-direction-api:<commit-sha>
-```
-
-```bash
-docker pull ghcr.io/chauhanmuskan291980-wq/gold-price-direction-predictor:<commit-sha>
-```
-
----
-
-## Testing
-
-Run all tests:
-
-```bash
-pytest
-```
-
-Run code-quality checks:
-
-```bash
-ruff check .
-```
-
-Run static type checking:
-
-```bash
-mypy app src
-```
-
-Run tests with coverage:
+Run coverage:
 
 ```bash
 pytest --cov=app --cov=src --cov-report=term-missing
 ```
 
-The project currently includes tests for:
-
-* API endpoints
-* Health checks
-* Input validation
-* Data downloading and validation
-* Data preprocessing
-* Feature engineering
-* Model training
-* Time-series validation
-* Model prediction
-* Model artifact loading
+The test suite covers API routes, validation, data processing, feature engineering, model training, prediction, artifact loading, and time-series validation.
 
 ---
 
-## API Usage
+## CI/CD
 
-After starting the container, open:
+GitHub Actions automatically runs on pushes and pull requests to `main`.
 
-* Swagger API documentation: `http://127.0.0.1:8000/docs`
-* API health check: `http://127.0.0.1:8000/health`
-* Model information: `http://127.0.0.1:8000/model/info`
-* Latest market prediction: `http://127.0.0.1:8000/predict/latest`
+The workflow installs dependencies, runs Ruff, Mypy, and Pytest, builds the Docker image, starts the container, verifies the health endpoint, and publishes container images after successful checks.
 
-### Health Check
+---
 
-Checks whether the API is running and whether the trained model artifacts were loaded successfully.
+## Design Decisions
 
-```bash
-curl http://127.0.0.1:8000/health
-```
+- Used hourly Gold Futures data because the assignment required H1 candles.
+- Used chronological splitting because random splitting is unsafe for financial time series.
+- Selected simple Scikit-learn models for reproducibility and interpretability.
+- Used the same feature set and test period for all models to ensure a fair comparison.
+- Loaded trained models once during FastAPI startup for efficient inference.
+- Used a router-based API structure to keep application setup separate from endpoint logic.
+- Reported both classification metrics and trading-oriented evaluation.
+- Kept model limitations visible instead of overstating predictive performance.
 
-Example response:
-
-```json
-{
-  "status": "healthy",
-  "models_loaded": true
-}
-```
-
-### Model Information
-
-Returns the available trained models, expected input features, and model metadata.
-
-```bash
-curl http://127.0.0.1:8000/model/info
-```
-
-### Compare Model Predictions
-
-This endpoint accepts manually provided feature values and returns predictions from:
-
-* Logistic Regression
-* Random Forest
-* Gradient Boosting
-* Ensemble majority vote
-
-```bash
-curl -X POST "http://127.0.0.1:8000/predict/compare" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "return_1": 0.0012,
-    "ma_gap": -0.0021,
-    "volatility_10": 0.0045,
-    "candle_body_ratio": 0.62,
-    "rsi_14": 54.3
-  }'
-```
-
-Example response:
-
-```json
-{
-  "predictions": {
-    "logistic_regression": {
-      "predicted_class": 1,
-      "direction": "up",
-      "probability_up": 0.53,
-      "probability_down": 0.47,
-      "confidence": 0.53
-    },
-    "random_forest": {
-      "predicted_class": 0,
-      "direction": "down_or_flat",
-      "probability_up": 0.49,
-      "probability_down": 0.51,
-      "confidence": 0.51
-    },
-    "gradient_boosting": {
-      "predicted_class": 1,
-      "direction": "up",
-      "probability_up": 0.55,
-      "probability_down": 0.45,
-      "confidence": 0.55
-    }
-  },
-  "ensemble_prediction": {
-    "predicted_class": 1,
-    "direction": "up",
-    "votes_up": 2,
-    "votes_down_or_flat": 1
-  }
-}
-```
-
-The exact probabilities depend on the supplied feature values and the trained model artifacts.
-
-### Latest Market Prediction
-
-This endpoint downloads the latest available hourly Gold Futures data from Yahoo Finance, generates the required features, and returns predictions from all trained models.
-
-```bash
-curl http://127.0.0.1:8000/predict/latest
-```
-
-Example response:
-
-```json
-{
-  "symbol": "GC=F",
-  "interval": "1h",
-  "latest_candle_timestamp": "2026-07-20T18:00:00Z",
-  "features": {
-    "return_1": 0.0012,
-    "ma_gap": -0.0021,
-    "volatility_10": 0.0045,
-    "candle_body_ratio": 0.62,
-    "rsi_14": 54.3
-  },
-  "predictions": {
-    "logistic_regression": {
-      "predicted_class": 1,
-      "direction": "up",
-      "confidence": 0.53
-    },
-    "random_forest": {
-      "predicted_class": 0,
-      "direction": "down_or_flat",
-      "confidence": 0.51
-    },
-    "gradient_boosting": {
-      "predicted_class": 1,
-      "direction": "up",
-      "confidence": 0.55
-    }
-  },
-  "ensemble_prediction": {
-    "predicted_class": 1,
-    "direction": "up"
-  }
-}
-```
-
-The `/predict/latest` endpoint demonstrates the complete inference workflow:
-
-```text
-Yahoo Finance Data
-        ↓
-Data Validation
-        ↓
-Feature Engineering
-        ↓
-Three Model Predictions
-        ↓
-Ensemble Majority Vote
-        ↓
-JSON Response
-```
-
-
+---
 
 ## Limitations
 
-Financial markets are noisy and difficult to predict.
+- Financial markets are noisy and difficult to predict.
+- The dataset covers a limited historical period.
+- Only five technical features are used.
+- Transaction costs, spread, slippage, and execution delays are excluded.
+- No macroeconomic, sentiment, or news features are included.
+- Yahoo Finance data may differ from institutional XAU/USD feeds.
+- Market behaviour can change over time.
+- The model does not guarantee profitable live trading.
 
-The current model has several limitations:
+---
 
-* A relatively small dataset
-* Only five engineered features
-* A simple linear classifier
-* No transaction costs or slippage
-* No live market-data integration
-* No automatic model retraining
-* No macroeconomic or news features
-* No direct prediction of the future gold price
-* Possible changes in market behaviour over time
+## Future Improvements
 
-A model accuracy slightly above 50% should be interpreted carefully.
+- Use a longer historical dataset
+- Add walk-forward validation
+- Include transaction costs and slippage
+- Add feature-importance analysis
+- Calibrate model probabilities
+- Add scheduled retraining and model monitoring
 
-## Possible Future Improvements
-
-Potential extensions include:
-
-* More historical data
-* Additional technical indicators
-* Walk-forward optimization
-* Transaction-cost modelling
-* Probability calibration
-* Feature-importance analysis
-* Gradient boosting models
-* Live XAU/USD market-data integration
-* Automatic next-hour prediction
-* Model monitoring and scheduled retraining
-* Cloud deployment
-
-## Disclaimer
-
-This project is for educational and technical demonstration purposes only.
-
-It is not financial advice and should not be used as the sole basis for real trading or investment decisions.
+---
 
 ## Technical Documentation
 
-- [Data pipeline](docs/data_pipeline.md)
-- [Feature engineering](docs/feature_engineering.md)
-- [Model training](docs/model_training.md)
-- [Evaluation and backtest](docs/evaluation_and_backtest.md)
-- [FastAPI service](docs/api.md)
 - [Architecture](docs/architecture.md)
+- [Data Pipeline](docs/data_pipeline.md)
+- [Feature Engineering](docs/feature_engineering.md)
+- [Model Training](docs/model_training.md)
+- [Evaluation and Backtest](docs/evaluation_and_backtest.md)
+- [FastAPI Service](docs/api.md)
+
+---
+
+## Release
+
+[Gold Price Direction Predictor v1.0.0](https://github.com/chauhanmuskan291980-wq/gold-price-direction-predictor/releases/tag/v1.0.0)
+
+---
+
+## Disclaimer
+
+This project is intended for educational and technical demonstration purposes only. It is not financial advice and should not be used as the sole basis for trading or investment decisions.
+
+---
 
 ## Author
 
-**Muskan Chauhan**
-
+**Muskan Chauhan**  
 Backend Developer and Applied AI/ML Engineer
 
-* GitHub: https://github.com/chauhanmuskan291980-wq
-* LinkedIn: https://www.linkedin.com/in/muskan-chauhan-0783b4325/
+- [GitHub](https://github.com/chauhanmuskan291980-wq)
+- [LinkedIn](https://www.linkedin.com/in/muskan-chauhan-0783b4325/)
