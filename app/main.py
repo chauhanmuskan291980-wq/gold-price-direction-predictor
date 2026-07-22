@@ -2,28 +2,11 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from datetime import datetime, timezone
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI
 
-from app.schemas import (
-    HealthResponse,
-    LatestPredictionMetadata,
-    LatestPredictionResponse,
-    ModelInfoResponse,
-    PredictionRequest,
-    PredictionResponse,
-)
-from app.services.latest_prediction_service import (
-    GOLD_TICKER,
-    LatestPredictionError,
-    build_latest_feature_row,
-    current_utc_timestamp,
-    serialize_features,
-)
+from app.api.routes import router
 from app.services.model_service import ModelService
-
-model_service = ModelService()
 
 
 @asynccontextmanager
@@ -31,22 +14,26 @@ async def lifespan(
     app: FastAPI,
 ) -> AsyncIterator[None]:
     """
-    Load all trained models once when the API starts.
+    Load all trained models once when the application starts.
 
-    The loaded models are reused for every prediction request.
+    The same model service instance is reused for every request.
     """
+
+    model_service = ModelService()
 
     try:
         model_service.load()
-        app.state.model_service = model_service
 
     except FileNotFoundError:
-        # Allow the API to start even when model artifacts
-        # are unavailable. The health endpoint will report
-        # the degraded state.
-        app.state.model_service = model_service
+        # Allow the API to start in a degraded state.
+        # Endpoints that require models will return HTTP 503.
+        pass
+
+    app.state.model_service = model_service
 
     yield
+
+    # Optional cleanup can be added here later.
 
 
 app = FastAPI(
@@ -60,146 +47,4 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-
-@app.get(
-    "/",
-    tags=["General"],
-)
-def root() -> dict[str, str]:
-    """Return basic API information."""
-
-    return {
-        "message": "Gold Price Direction Predictor API",
-        "version": "2.0.0",
-        "documentation": "/docs",
-    }
-
-
-@app.get(
-    "/health",
-    response_model=HealthResponse,
-    tags=["Health"],
-)
-def health() -> HealthResponse:
-    """Return API and model health information."""
-
-    return HealthResponse(
-        status=(
-            "healthy"
-            if model_service.is_loaded
-            else "degraded"
-        ),
-        model_loaded=model_service.is_loaded,
-        loaded_model_count=model_service.loaded_model_count,
-        timestamp=datetime.now(timezone.utc),
-    )
-
-
-@app.get(
-    "/model/info",
-    response_model=ModelInfoResponse,
-    tags=["Model"],
-)
-def model_info() -> ModelInfoResponse:
-    """Return information about all trained models."""
-
-    if not model_service.is_loaded:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=(
-                "The prediction models are unavailable. "
-                "Train the models before requesting model information."
-            ),
-        )
-
-    return ModelInfoResponse(
-        **model_service.model_info()
-    )
-
-
-@app.post(
-    "/predict/compare",
-    response_model=PredictionResponse,
-    status_code=status.HTTP_200_OK,
-    tags=["Prediction"],
-)
-def compare_predictions(
-    request: PredictionRequest,
-) -> PredictionResponse:
-    """
-    Return predictions from all trained models
-    and calculate the majority-vote result.
-    """
-
-    if not model_service.is_loaded:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=(
-                "The prediction models are unavailable. "
-                "Train the models before starting the API."
-            ),
-        )
-
-    try:
-        result = model_service.predict_all(request)
-
-    except ValueError as error:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=str(error),
-        ) from error
-
-    except RuntimeError as error:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=str(error),
-        ) from error
-
-    return PredictionResponse(**result)
-
-
-@app.get(
-    "/predict/latest",
-    response_model=LatestPredictionResponse,
-    tags=["Predictions"],
-)
-def predict_latest() -> LatestPredictionResponse:
-    try:
-        market_timestamp, feature_row = build_latest_feature_row()
-
-        feature_values = serialize_features(feature_row)
-
-        prediction_request = PredictionRequest(
-            **feature_values
-        )
-
-        predictions = model_service.predict_all(
-            prediction_request
-        )
-
-        return LatestPredictionResponse(
-            metadata=LatestPredictionMetadata(
-                ticker=GOLD_TICKER,
-                market_timestamp=market_timestamp.isoformat(),
-                generated_at=current_utc_timestamp(),
-            ),
-            features=feature_values,
-            predictions=predictions,
-        )
-
-    except LatestPredictionError as exc:
-        raise HTTPException(
-            status_code=503,
-            detail=str(exc),
-        ) from exc
-
-    except Exception as exc:
-        print(
-            "Latest prediction failed: "
-            f"{type(exc).__name__}: {exc}"
-        )
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"{type(exc).__name__}: {exc}",
-        ) from exc
+app.include_router(router)
