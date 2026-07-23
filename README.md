@@ -109,18 +109,54 @@ The API also returns an **ensemble prediction** based on majority voting across 
 
 ## Preventing Look-Ahead Leakage
 
-Financial time-series models must preserve time order.
+Financial time-series models must preserve chronological order because information from the future must never influence training.
 
-This project prevents leakage by using:
+This project prevents look-ahead leakage through:
 
-- Chronological train/test splitting
-- Time-ordered validation
-- Features based only on current and previous candles
-- Removal of future-price columns before training
-- A target derived from the next close only
-- No random shuffling of financial observations
+* Chronological train/test splitting without random shuffling
+* A one-row purged boundary between training and testing
+* Features calculated only from current and historical candles
+* Removal of temporary future-price columns before model training
+* A target derived from the next close but never included as a model feature
+* Scalers fitted only on training data through Scikit-learn pipelines
+* Explicit automated tests that verify chronological ordering and the purged boundary
 
-The training period always occurs before the final test period.
+The split structure is:
+
+```text
+Training period
+      ↓
+One purged observation
+      ↓
+Unseen test period
+```
+
+The test suite includes:
+
+```text
+test_chronological_split_prevents_lookahead
+test_chronological_split_purges_boundary_row
+test_next_close_is_not_in_final_dataset
+```
+
+
+---
+
+### Evaluation Dataset
+
+The committed evaluation artifacts were generated from the committed dataset snapshot.
+
+| Dataset Stage                |  Rows |
+| ---------------------------- | ----: |
+| Raw hourly candles           | 3,356 |
+| Processed observations       | 3,355 |
+| Feature observations         | 3,336 |
+| Training observations        | 2,667 |
+| Purged boundary observations |     1 |
+| Test observations            |   668 |
+| Strategy trades              |   667 |
+
+The test set is chronological and completely unseen during training. One observation is removed between the training and test periods to create an explicit purged boundary and reduce the risk of look-ahead leakage.
 
 ---
 
@@ -128,27 +164,42 @@ The training period always occurs before the final test period.
 
 The three models were evaluated on the same unseen chronological test period.
 
-| Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
-|---|---:|---:|---:|---:|---:|---:|
-| Logistic Regression | **50.45%** | 50.50% | 47.49% | 51.27% | 49.31% | 51.80% |
-| Random Forest | **51.50%** | **51.63%** | **48.56%** | 53.82% | 51.06% | **52.06%** |
-| Gradient Boosting | 49.55% | 50.64% | 47.47% | **68.79%** | **56.18%** | 49.50% |
+| Model               |   Accuracy | Balanced Accuracy |  Precision |     Recall |   F1 Score |    ROC-AUC |
+| ------------------- | ---------: | ----------------: | ---------: | ---------: | ---------: | ---------: |
+| Logistic Regression |     50.45% |            50.50% |     47.49% |     51.27% |     49.31% |     51.80% |
+| Random Forest       | **51.50%** |        **51.63%** | **48.56%** |     53.82% |     51.06% | **52.06%** |
+| Gradient Boosting   |     49.55% |            50.64% |     47.47% | **68.79%** | **56.18%** |     49.50% |
+
+---
 
 ### Interpretation
 
-- Logistic Regression achieved the strongest overall accuracy and ROC-AUC.
-- Gradient Boosting produced the highest recall and F1 score.
-- Random Forest performed similarly but did not outperform the other models.
-- Overall performance remained only slightly above random guessing, which reflects the difficulty of short-term financial-market prediction.
+* Random Forest achieved the highest accuracy, balanced accuracy, precision, and ROC-AUC on the unseen test period.
+* Gradient Boosting achieved the highest recall and F1 score, indicating that it identified more upward candles but also produced more false-positive predictions.
+* Logistic Regression was retained as the official baseline model because it is simpler, more interpretable, and uses standardized preprocessing inside a reproducible Scikit-learn pipeline.
+* Overall performance remained close to random guessing, demonstrating the difficulty of predicting short-term financial-market direction.
+* The weaker results are reported honestly and were reproduced using the committed dataset snapshot.
 
-The project also evaluates:
+---
+### Trading Strategy Results
 
-- Win rate
-- Strategy return
-- Buy-and-hold return
-- Cumulative return curve
-- Trade-level predictions
- 
+The official Logistic Regression baseline was also evaluated as a simple directional trading strategy on the unseen test period.
+
+| Metric                     |   Result |
+| -------------------------- | -------: |
+| Number of trades           |      667 |
+| Winning trades             |      333 |
+| Losing trades              |      334 |
+| Win rate                   |   49.93% |
+| Cumulative strategy return |   -7.36% |
+| Buy-and-hold return        |   -6.46% |
+| Average trade return       | -0.0108% |
+| Best trade return          |    2.18% |
+| Worst trade return         |   -1.76% |
+
+The strategy produced a negative cumulative return. This result is intentionally reported rather than hidden or optimized away. The main goal of the project is to demonstrate a reproducible and leakage-aware machine-learning pipeline, not to claim a profitable trading system.
+
+---
 
 ## Cumulative Return Curve
 
@@ -173,11 +224,19 @@ gold-price-direction-predictor/
 │   └── schemas.py
 ├── src/
 │   ├── data/
+│   │   ├── download.py
+│   │   └── preprocess.py
 │   ├── features/
-│   ├── models/
-│   └── evaluation/
+│   │   └── build_features.py
+│   └── models/
+│       ├── train.py
+│       ├── evaluate.py
+│       ├── validate.py
+│       ├── predict.py
+│       └── model_factory.py
 ├── tests/
 ├── docs/
+├── data/
 ├── artifacts/
 ├── Dockerfile
 ├── pyproject.toml
@@ -223,12 +282,11 @@ pip install -r requirements.txt
 ### 4. Run the project pipeline
 
 ```bash
-python -m src.data.download
 python -m src.data.preprocess
 python -m src.features.build_features
 python -m src.models.train
-python -m src.models.validate
 python -m src.models.evaluate
+pytest
 ```
 
 ### 5. Start the API
@@ -254,55 +312,6 @@ http://127.0.0.1:8000/docs
 | `GET` | `/model/info` | Loaded model metadata |
 | `POST` | `/predict/compare` | Predictions from all models and the ensemble |
 | `GET` | `/predict/latest` | Prediction using the latest available Gold Futures data |
-
-### Example Prediction Request
-
-```http
-POST /predict/compare
-Content-Type: application/json
-```
-
-```json
-{
-  "return_1": 0.0012,
-  "ma_gap": -0.0021,
-  "volatility_10": 0.0045,
-  "candle_body_ratio": 0.62,
-  "rsi_14": 54.3
-}
-```
-
-### Example Response
-
-```json
-{
-  "predictions": {
-    "logistic_regression": {
-      "predicted_class": 1,
-      "direction": "up",
-      "confidence": 0.53
-    },
-    "random_forest": {
-      "predicted_class": 0,
-      "direction": "down_or_flat",
-      "confidence": 0.51
-    },
-    "gradient_boosting": {
-      "predicted_class": 1,
-      "direction": "up",
-      "confidence": 0.55
-    }
-  },
-  "ensemble_prediction": {
-    "predicted_class": 1,
-    "direction": "up",
-    "votes_up": 2,
-    "votes_down_or_flat": 1
-  }
-}
-```
-
-Exact probabilities depend on the input features and trained model artifacts.
 
 ---
 
@@ -400,7 +409,7 @@ The workflow installs dependencies, runs Ruff, Mypy, and Pytest, builds the Dock
 - Yahoo Finance data may differ from institutional XAU/USD feeds.
 - Market behaviour can change over time.
 - The model does not guarantee profitable live trading.
-
+ 
 ---
 
 ## Future Improvements
@@ -413,7 +422,97 @@ The workflow installs dependencies, runs Ruff, Mypy, and Pytest, builds the Dock
 - Add scheduled retraining and model monitoring
 
 ---
+---
+---
+## Quick Start
 
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/chauhanmuskan291980-wq/gold-price-direction-predictor.git
+cd gold-price-direction-predictor
+```
+
+### 2. Create and activate a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Linux or macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Reproduce the committed benchmark
+
+The repository includes a committed raw-data snapshot. Do not run the download command before this workflow.
+
+```bash
+python -m src.data.preprocess
+python -m src.features.build_features
+python -m src.models.train
+python -m src.models.evaluate
+pytest
+```
+
+Expected test result:
+
+```text
+44 passed
+```
+
+The evaluation command regenerates:
+
+```text
+artifacts/evaluation_metrics.json
+artifacts/model_metrics.json
+artifacts/model_comparison.csv
+artifacts/test_period_trades.csv
+artifacts/cumulative_returns.png
+```
+
+### 5. Start the API
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Open the Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Optional: Refresh with current data
+
+> Running this command overwrites the committed raw-data snapshot and changes the resulting metrics.
+
+```bash
+python -m src.data.download; `
+python -m src.data.preprocess; `
+python -m src.features.build_features; `
+python -m src.models.train; `
+python -m src.models.evaluate; `
+pytest
+```
+---
+---
+---
 ## Technical Documentation
 
 - [Architecture](docs/architecture.md)

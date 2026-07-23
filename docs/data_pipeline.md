@@ -374,11 +374,6 @@ The pipeline prevents leakage by following these rules:
 
 ## Running the Data Pipeline
 
-### Download data
-
-```bash
-python -m src.data.download
-```
 
 ### Preprocess data
 

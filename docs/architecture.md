@@ -790,7 +790,6 @@ Because the implementation has changed from one model to three models, tests tha
 ## 29. Recommended Command Sequence
 
 ```bash
-python -m src.data.download
 python -m src.data.preprocess
 python -m src.features.build_features
 python -m src.models.train
