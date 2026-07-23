@@ -44,25 +44,52 @@ def load_training_data(path: str | Path) -> pd.DataFrame:
 def chronological_split(
     data: pd.DataFrame,
     train_ratio: float = 0.80,
+    purge_rows: int = 1,
 ) -> tuple[
     pd.DataFrame,
     pd.DataFrame,
     pd.Series,
     pd.Series,
 ]:
-    split_index = int(len(data) * train_ratio)
+    """
+    Split time-series data chronologically.
 
-    train_data = data.iloc[:split_index]
+    Rows immediately before the test set are excluded from training
+    to reduce the risk of look-ahead leakage at the split boundary.
+    """
+    if not 0 < train_ratio < 1:
+        raise ValueError(
+            "train_ratio must be between 0 and 1."
+        )
+
+    if purge_rows < 0:
+        raise ValueError(
+            "purge_rows must be zero or greater."
+        )
+
+    split_index = int(len(data) * train_ratio)
+    train_end_index = split_index - purge_rows
+
+    if train_end_index <= 0:
+        raise ValueError(
+            "Not enough training rows after applying purge_rows."
+        )
+
+    if split_index >= len(data):
+        raise ValueError(
+            "The testing dataset cannot be empty."
+        )
+
+    train_data = data.iloc[:train_end_index]
     test_data = data.iloc[split_index:]
 
-    X_train = train_data[FEATURE_COLUMNS]
-    y_train = train_data[TARGET_COLUMN]
+    X_train = train_data[FEATURE_COLUMNS].copy()
+    y_train = train_data[TARGET_COLUMN].copy()
 
-    X_test = test_data[FEATURE_COLUMNS]
-    y_test = test_data[TARGET_COLUMN]
+    X_test = test_data[FEATURE_COLUMNS].copy()
+    y_test = test_data[TARGET_COLUMN].copy()
 
     return X_train, X_test, y_train, y_test
-
 
 def train_all_models(
     X_train: pd.DataFrame,
