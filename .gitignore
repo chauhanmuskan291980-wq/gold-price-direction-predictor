@@ -34,14 +34,20 @@ Thumbs.db
 !data/raw/*
 !data/processed/*
 
-# Generated artifacts
+#Generated artifacts
 artifacts/*
 *.joblib
+
+# Commit reproducible project artifacts
 !artifacts/.gitkeep
 !artifacts/gold_direction_pipeline.joblib
 !artifacts/evaluation_metrics.json
+!artifacts/model_metrics.json
+!artifacts/model_comparison.csv
 !artifacts/cumulative_returns.png
 !artifacts/test_period_trades.csv
+!artifacts/time_series_validation.json
+!artifacts/training_metadata.json
 
 # Keep empty directories
 !data/raw/.gitkeep

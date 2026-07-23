@@ -1,4 +1,4 @@
-# `docs/evaluation_and_backtest.md`
+﻿# `docs/evaluation_and_backtest.md`
 
 # Evaluation and Backtesting
 
@@ -14,13 +14,13 @@ Backtesting shows how those predictions would have behaved as trading signals on
 
 ```text
 Trained model
-    ↓
+    â†“
 Predictions on unseen test data
-    ↓
+    â†“
 Classification metrics
-    ↓
+    â†“
 Trading signal simulation
-    ↓
+    â†“
 Cumulative return curve
 ```
 
@@ -66,7 +66,7 @@ accuracy = correct predictions / total predictions
 Current project result:
 
 ```text
-53.10%
+50.15%
 ```
 
 Interpretation:
@@ -82,7 +82,7 @@ Balanced accuracy gives equal importance to both classes.
 Current result:
 
 ```text
-53.48%
+50.20%
 ```
 
 This is useful when upward and downward candles are not perfectly balanced.
@@ -102,7 +102,7 @@ all upward predictions
 Current result:
 
 ```text
-47.06%
+47.20%
 ```
 
 A lower precision means some predicted upward candles actually closed lower.
@@ -122,7 +122,7 @@ all actual upward candles
 Current result:
 
 ```text
-56.57%
+50.96%
 ```
 
 ---
@@ -134,7 +134,7 @@ F1 combines precision and recall into one metric.
 Current result:
 
 ```text
-51.38%
+49.00%
 ```
 
 It is useful when both missed upward candles and false upward predictions matter.
@@ -148,7 +148,7 @@ ROC-AUC evaluates how well prediction probabilities separate upward and downward
 Current result:
 
 ```text
-57.57%
+51.85%
 ```
 
 Interpretation:
@@ -185,8 +185,8 @@ position = prediction.map(
 Meaning:
 
 ```text
-1 prediction → long position
-0 prediction → short position
+1 prediction â†’ long position
+0 prediction â†’ short position
 ```
 
 The next-candle return is:
@@ -201,7 +201,7 @@ The strategy return is:
 strategy_return = position * future_return
 ```
 
-This aligns the current prediction with the following candle’s return.
+This aligns the current prediction with the following candleâ€™s return.
 
 ## Important Alignment Rule
 
@@ -210,13 +210,13 @@ The prediction created from the current candle must be applied to the next candl
 Incorrect:
 
 ```text
-current prediction × current return
+current prediction Ã— current return
 ```
 
 Correct:
 
 ```text
-current prediction × next-candle return
+current prediction Ã— next-candle return
 ```
 
 This prevents look-ahead bias.
@@ -234,7 +234,7 @@ total strategy candles
 Current project result:
 
 ```text
-52.65%
+49.63%
 ```
 
 Win rate alone does not prove profitability because winning and losing moves can have different sizes.
@@ -258,13 +258,13 @@ total_return = cumulative_strategy.iloc[-1] - 1
 Current project strategy return:
 
 ```text
-+1.54%
+-7.74%
 ```
 
 Current buy-and-hold return:
 
 ```text
--4.10%
+-6.46%
 ```
 
 On this test period, the model-based strategy outperformed passive holding.
@@ -344,18 +344,19 @@ The backtest must:
 
 | Metric            | Result |
 | ----------------- | -----: |
-| Accuracy          | 53.10% |
-| Balanced Accuracy | 53.48% |
-| Precision         | 47.06% |
-| Recall            | 56.57% |
-| F1 Score          | 51.38% |
-| ROC-AUC           | 57.57% |
-| Win Rate          | 52.65% |
-| Strategy Return   | +1.54% |
-| Buy and Hold      | -4.10% |
+| Accuracy          | 50.15% |
+| Balanced Accuracy | 50.20% |
+| Precision         | 47.20% |
+| Recall            | 50.96% |
+| F1 Score          | 49.00% |
+| ROC-AUC           | 51.85% |
+| Win Rate          | 49.63% |
+| Strategy Return   | -7.74% |
+| Buy and Hold      | -6.46% |
 
 ## Conclusion
 
 The model showed a small predictive advantage and positive historical strategy return during the selected test period.
 
 The results are encouraging for a baseline engineering assignment, but they are not strong enough to justify live financial use without larger datasets, walk-forward testing, cost modelling, and further validation.
+

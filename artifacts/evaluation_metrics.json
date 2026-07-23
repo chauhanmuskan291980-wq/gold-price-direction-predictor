@@ -1,5 +1,5 @@
 {
-  "model": "LogisticRegression",
+  "model": "logistic_regression",
   "threshold": 0.5,
   "test_size": 0.2,
   "features": [
@@ -11,37 +11,37 @@
   ],
   "target": "target",
   "dataset": {
-    "total_rows": 1129,
-    "training_rows": 902,
-    "testing_rows": 226,
+    "total_rows": 3336,
+    "training_rows": 2668,
+    "testing_rows": 668,
     "purged_boundary_rows": 1,
     "training_period": {
-      "start": "2026-05-07T00:00:00+00:00",
-      "end": "2026-07-05T22:00:00+00:00"
+      "start": "2025-12-16T01:00:00+00:00",
+      "end": "2026-06-08T20:00:00+00:00"
     },
     "testing_period": {
-      "start": "2026-07-06T00:00:00+00:00",
-      "end": "2026-07-17T18:00:00+00:00"
+      "start": "2026-06-08T22:00:00+00:00",
+      "end": "2026-07-21T09:00:00+00:00"
     }
   },
   "classification_metrics": {
-    "accuracy": 0.5309734513274337,
-    "balanced_accuracy": 0.5347967867652907,
-    "precision": 0.47058823529411764,
-    "recall": 0.5656565656565656,
-    "f1_score": 0.5137614678899083,
-    "roc_auc": 0.5756780402449694
+    "accuracy": 0.5014970059880239,
+    "balanced_accuracy": 0.5019522113066321,
+    "precision": 0.471976401179941,
+    "recall": 0.5095541401273885,
+    "f1_score": 0.4900459418070444,
+    "roc_auc": 0.5184605419410558
   },
   "strategy_metrics": {
-    "number_of_trades": 226.0,
-    "winning_trades": 119.0,
-    "losing_trades": 107.0,
-    "win_rate": 0.5265486725663717,
-    "cumulative_strategy_return": 0.015437061460368717,
-    "buy_and_hold_return": -0.04096292377903776,
-    "average_trade_return": 7.178901876202691e-05,
-    "best_trade_return": 0.008036252007494582,
-    "worst_trade_return": -0.0157792718228158
+    "number_of_trades": 667,
+    "winning_trades": 331,
+    "losing_trades": 336,
+    "win_rate": 0.4962518740629685,
+    "cumulative_strategy_return": -0.07736250767759689,
+    "buy_and_hold_return": -0.06464438672366968,
+    "average_trade_return": -0.00011457367760492419,
+    "best_trade_return": 0.0217899843711394,
+    "worst_trade_return": -0.0175558364798413
   },
   "limitations": [
     "The strategy ignores transaction costs, spread, slippage, and execution latency.",
