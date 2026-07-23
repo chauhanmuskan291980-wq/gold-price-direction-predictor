@@ -521,11 +521,10 @@ def calculate_metrics(
 ## Final Model Comparison
 
 | Model | Accuracy | Balanced Accuracy | Precision | Recall | F1 Score | ROC-AUC |
-|:---|---:|---:|---:|---:|---:|---:|
-| **Logistic Regression** | **51.50%** | **51.56%** | **48.22%** | 52.41% | 50.23% | **52.47%** |
-| Random Forest | 50.30% | 50.45% | 47.13% | 52.73% | 49.77% | 52.42% |
-| Gradient Boosting | 50.30% | 51.11% | 47.58% | **63.34%** | **54.34%** | 51.55% |
-
+|---|---:|---:|---:|---:|---:|---:|
+| Logistic Regression | **50.45%** | 50.50% | 47.49% | 51.27% | 49.31% | 51.80% |
+| Random Forest | **51.50%** | **51.63%** | **48.56%** | 53.82% | 51.06% | **52.06%** |
+| Gradient Boosting | 49.55% | 50.64% | 47.47% | **68.79%** | **56.18%** | 49.50% |
 ### Results Interpretation
 
 - **Logistic Regression** achieved the highest accuracy, balanced accuracy, and ROC-AUC.
