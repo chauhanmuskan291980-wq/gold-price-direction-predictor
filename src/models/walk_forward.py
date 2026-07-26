@@ -9,6 +9,9 @@ import yaml
 from src.evaluation.aggregate_metrics import (
     aggregate_walk_forward_results,
 )
+from src.evaluation.walk_forward_plots import (
+    generate_walk_forward_plots,
+)
 from src.evaluation.walk_forward_split import (
     WalkForwardFold,
     generate_walk_forward_folds,
@@ -39,6 +42,10 @@ WALK_FORWARD_REPORT_PATH = Path(
 FOLD_RESULTS_PATH = Path(
     "artifacts/walk_forward/"
     "fold_results.csv"
+)
+
+WALK_FORWARD_ARTIFACT_DIR = Path(
+    "artifacts/walk_forward"
 )
 
 
@@ -127,7 +134,6 @@ def load_walk_forward_config(
         )
 
     return config
-
 
 
 def prepare_fold_data(
@@ -228,58 +234,58 @@ def evaluate_fold(
     ])
 
     strategy_excess_return = (
-    strategy_return
-    - buy_and_hold_return
+        strategy_return
+        - buy_and_hold_return
     )
 
     beats_buy_and_hold = (
-    strategy_return
-    > buy_and_hold_return
+        strategy_return
+        > buy_and_hold_return
     )
 
     return {
-    "fold": fold.fold_number,
-    "training_rows": int(len(X_train)),
-    "testing_rows": int(len(X_test)),
-    "training_period": get_period(
-        data.loc[X_train.index]
-    ),
-    "testing_period": get_period(
-        data.loc[X_test.index]
-    ),
+        "fold": fold.fold_number,
+        "training_rows": int(len(X_train)),
+        "testing_rows": int(len(X_test)),
+        "training_period": get_period(
+            data.loc[X_train.index]
+        ),
+        "testing_period": get_period(
+            data.loc[X_test.index]
+        ),
 
-    # Flat values used by aggregation, CSV, and plots.
-    "accuracy": float(
-        classification_metrics["accuracy"]
-    ),
-    "roc_auc": float(
-        classification_metrics["roc_auc"]
-    ),
-    "balanced_accuracy": float(
-        classification_metrics[
-            "balanced_accuracy"
-        ]
-    ),
-    "win_rate": float(
-        strategy_metrics["win_rate"]
-    ),
-    "strategy_return": strategy_return,
-    "buy_and_hold_return": (
-        buy_and_hold_return
-    ),
-    "strategy_excess_return": (
-        strategy_excess_return
-    ),
-    "beats_buy_and_hold": (
-        beats_buy_and_hold
-    ),
+        # Flat values used by aggregation, CSV, and plots.
+        "accuracy": float(
+            classification_metrics["accuracy"]
+        ),
+        "roc_auc": float(
+            classification_metrics["roc_auc"]
+        ),
+        "balanced_accuracy": float(
+            classification_metrics[
+                "balanced_accuracy"
+            ]
+        ),
+        "win_rate": float(
+            strategy_metrics["win_rate"]
+        ),
+        "strategy_return": strategy_return,
+        "buy_and_hold_return": (
+            buy_and_hold_return
+        ),
+        "strategy_excess_return": (
+            strategy_excess_return
+        ),
+        "beats_buy_and_hold": (
+            beats_buy_and_hold
+        ),
 
-    # Keep the detailed nested metrics.
-    "classification_metrics": (
-        classification_metrics
-    ),
-    "strategy_metrics": strategy_metrics,
-}
+        # Keep the detailed nested metrics.
+        "classification_metrics": (
+            classification_metrics
+        ),
+        "strategy_metrics": strategy_metrics,
+    }
 
 
 def print_fold_result(
@@ -435,7 +441,6 @@ def main() -> None:
             "No walk-forward folds were generated. "
             "Check the YAML configuration values."
         )
-
     aggregate_results = (
         aggregate_walk_forward_results(
             fold_results
@@ -465,6 +470,38 @@ def main() -> None:
         WALK_FORWARD_REPORT_PATH,
     )
 
+    csv_rows = [
+    {
+        key: value
+        for key, value in result.items()
+        if key not in {
+            "classification_metrics",
+            "strategy_metrics",
+        }
+    }
+    for result in fold_results
+]
+
+
+    FOLD_RESULTS_PATH.parent.mkdir(
+    parents=True,
+    exist_ok=True,
+)
+
+    pd.DataFrame(
+    csv_rows
+    ).to_csv(
+    FOLD_RESULTS_PATH,
+    index=False,
+    )
+
+    generate_walk_forward_plots(
+    fold_results=fold_results,
+    output_directory=(
+        WALK_FORWARD_ARTIFACT_DIR
+    ),
+)
+    
     print(
         f"\nCompleted "
         f"{len(fold_results)} "
@@ -475,6 +512,7 @@ def main() -> None:
         "Walk-forward report saved to:",
         WALK_FORWARD_REPORT_PATH,
     )
+
 
 if __name__ == "__main__":
     main()
