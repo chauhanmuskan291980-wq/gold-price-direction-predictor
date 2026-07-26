@@ -22,6 +22,12 @@ ARTIFACT_DIR = Path("artifacts/models")
 
 
 def load_training_data(path: str | Path) -> pd.DataFrame:
+    """
+    Load the processed feature dataset.
+    The dataset must contain all required feature columns
+    and the target column.
+
+    """
     data = pd.read_csv(path)
     required_columns = FEATURE_COLUMNS + [TARGET_COLUMN]
 
@@ -91,10 +97,60 @@ def chronological_split(
 
     return X_train, X_test, y_train, y_test
 
+def create_model(
+        model_name: str,
+) -> Any:
+    """
+    Create a fresh , unfitted model pipeline.
+    A new model instance must be created for every walk-forward
+    fold so information form an earlier fold cannot carry into
+    a later fold.
+    """
+    models = build_models()
+    if model_name not in models:
+        available_models = ",".join(
+            sorted(models)
+        )
+
+        raise ValueError(
+            f"Unknown model '{model_name}'."
+            f"Available models : {available_models}"
+        )
+
+    return models[model_name]
+
+
+def train_model(
+        X_train : pd.DataFrame,
+        y_train:pd.Series,
+        model_name : str,
+) -> Any:
+    """
+    Create and train one fresh model without saving it to disk.
+    This function is intended for walk-forward validation,
+    where every fold must train an independent model.
+    """
+    model = create_model(
+        model_name=model_name
+    )
+
+    model.fit(
+        X_train,
+        y_train
+    )
+
+    return model
+
+    
 def train_all_models(
     X_train: pd.DataFrame,
     y_train: pd.Series,
 ) -> dict[str, Any]:
+    """
+    Train and save all configured models.
+    this remians the offical training workflow for the original 
+    signal-split benchmark.
+    """
     models = build_models()
     trained_models: dict[str, Any] = {}
 
