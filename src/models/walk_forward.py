@@ -244,9 +244,7 @@ def print_fold_result(
 
 def main() -> None:
     """
-    Run the first walk-forward fold end-to-end.
-
-    This is the first implementation milestone.
+    Run all walk-forward folds end-to-end.
     """
     data = load_training_data(
         DATA_PATH
@@ -260,23 +258,36 @@ def main() -> None:
         purge_gap=PURGE_GAP,
     )
 
-    try:
-        first_fold = next(folds)
-    except StopIteration as error:
+    fold_results: list[
+        dict[str, Any]
+    ] = []
+
+    for fold in folds:
+        print(
+            f"\nRunning fold "
+            f"{fold.fold_number}..."
+        )
+
+        result = evaluate_fold(
+            data=data,
+            fold=fold,
+        )
+
+        fold_results.append(result)
+
+        print_fold_result(result)
+
+    if not fold_results:
         raise ValueError(
-            "No walk-forward folds could be generated. "
+            "No walk-forward folds were generated. "
             "Check the configured window sizes."
-        ) from error
+        )
 
-    result = evaluate_fold(
-        data=data,
-        fold=first_fold,
+    print(
+        f"\nCompleted "
+        f"{len(fold_results)} "
+        "walk-forward folds."
     )
-
-    print_fold_result(
-        result
-    )
-
 
 if __name__ == "__main__":
     main()
