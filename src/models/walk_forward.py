@@ -14,6 +14,7 @@ from src.models.evaluate import (
     evaluate_model,
     get_period,
     prepare_test_period_data,
+    save_json,
 )
 from src.models.train import (
     FEATURE_COLUMNS,
@@ -21,10 +22,17 @@ from src.models.train import (
     load_training_data,
     train_model,
 )
-
+from src.evaluation.aggregate_metrics import(
+    aggregate_walk_forward_results
+)
 
 DATA_PATH = Path(
     "data/processed/gold_features.csv"
+)
+
+WALK_FORWARD_REPORT_PATH = Path(
+    "artifacts/walk_forward/"
+    "walk_forward_report.json"
 )
 
 SELECTED_MODEL = "logistic_regression"
@@ -123,37 +131,67 @@ def evaluate_fold(
         )
     )
 
-    strategy_return = strategy_metrics[
+    strategy_return = float(strategy_metrics[
         "cumulative_strategy_return"
-    ]
+    ])
 
-    buy_and_hold_return = strategy_metrics[
+    buy_and_hold_return = float(strategy_metrics[
         "buy_and_hold_return"
-    ]
+    ])
+
+    strategy_excess_return = (
+    strategy_return
+    - buy_and_hold_return
+    )
+
+    beats_buy_and_hold = (
+    strategy_return
+    > buy_and_hold_return
+    )
 
     return {
-        "fold": fold.fold_number,
-        "training_rows": len(X_train),
-        "testing_rows": len(X_test),
-        "training_period": get_period(
-            data.loc[X_train.index]
-        ),
-        "testing_period": get_period(
-            data.loc[X_test.index]
-        ),
-        "classification_metrics": (
-            classification_metrics
-        ),
-        "strategy_metrics": strategy_metrics,
-        "strategy_excess_return": (
-            strategy_return
-            - buy_and_hold_return
-        ),
-        "beats_buy_and_hold": (
-            strategy_return
-            > buy_and_hold_return
-        ),
-    }
+    "fold": fold.fold_number,
+    "training_rows": int(len(X_train)),
+    "testing_rows": int(len(X_test)),
+    "training_period": get_period(
+        data.loc[X_train.index]
+    ),
+    "testing_period": get_period(
+        data.loc[X_test.index]
+    ),
+
+    # Flat values used by aggregation, CSV, and plots.
+    "accuracy": float(
+        classification_metrics["accuracy"]
+    ),
+    "roc_auc": float(
+        classification_metrics["roc_auc"]
+    ),
+    "balanced_accuracy": float(
+        classification_metrics[
+            "balanced_accuracy"
+        ]
+    ),
+    "win_rate": float(
+        strategy_metrics["win_rate"]
+    ),
+    "strategy_return": strategy_return,
+    "buy_and_hold_return": (
+        buy_and_hold_return
+    ),
+    "strategy_excess_return": (
+        strategy_excess_return
+    ),
+    "beats_buy_and_hold": (
+        beats_buy_and_hold
+    ),
+
+    # Keep the detailed nested metrics.
+    "classification_metrics": (
+        classification_metrics
+    ),
+    "strategy_metrics": strategy_metrics,
+}
 
 
 def print_fold_result(
@@ -282,6 +320,34 @@ def main() -> None:
             "No walk-forward folds were generated. "
             "Check the configured window sizes."
         )
+
+    aggregate_results = (
+        aggregate_walk_forward_results(
+            fold_results
+        )
+    )
+
+    report = {
+        "model": SELECTED_MODEL,
+        "configuration": {
+            "train_window": TRAIN_WINDOW,
+            "test_window": TEST_WINDOW,
+            "step_size": STEP_SIZE,
+            "purge_gap": PURGE_GAP,
+        },
+        "dataset": {
+            "path": str(DATA_PATH),
+            "total_rows": len(data),
+            "period": get_period(data),
+        },
+        "folds": fold_results,
+        "aggregate": aggregate_results,
+    }
+
+    save_json(
+        report,
+        WALK_FORWARD_REPORT_PATH,
+    )
 
     print(
         f"\nCompleted "
