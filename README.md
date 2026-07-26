@@ -521,6 +521,7 @@ pytest
 - [Model Training](docs/model_training.md)
 - [Evaluation and Backtest](docs/evaluation_and_backtest.md)
 - [FastAPI Service](docs/api.md)
+- [Walk-Forward Validation Analysis](docs/walk_forward_analysis.md)
 
 ---
 
