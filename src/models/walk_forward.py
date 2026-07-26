@@ -4,7 +4,11 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import yaml
 
+from src.evaluation.aggregate_metrics import (
+    aggregate_walk_forward_results,
+)
 from src.evaluation.walk_forward_split import (
     WalkForwardFold,
     generate_walk_forward_folds,
@@ -22,12 +26,9 @@ from src.models.train import (
     load_training_data,
     train_model,
 )
-from src.evaluation.aggregate_metrics import(
-    aggregate_walk_forward_results
-)
 
-DATA_PATH = Path(
-    "data/processed/gold_features.csv"
+CONFIG_PATH = Path(
+    "config/walk_forward.yaml"
 )
 
 WALK_FORWARD_REPORT_PATH = Path(
@@ -35,12 +36,98 @@ WALK_FORWARD_REPORT_PATH = Path(
     "walk_forward_report.json"
 )
 
-SELECTED_MODEL = "logistic_regression"
+FOLD_RESULTS_PATH = Path(
+    "artifacts/walk_forward/"
+    "fold_results.csv"
+)
 
-TRAIN_WINDOW = 1500
-TEST_WINDOW = 250
-STEP_SIZE = 250
-PURGE_GAP = 1
+
+def load_walk_forward_config(
+    path: Path = CONFIG_PATH,
+) -> dict[str, Any]:
+    """
+    Load and validate walk-forward settings from YAML.
+    """
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Walk-forward configuration file "
+            f"was not found: {path}"
+        )
+
+    with path.open(
+        "r",
+        encoding="utf-8",
+    ) as file:
+        config = yaml.safe_load(file)
+
+    if not isinstance(config, dict):
+        raise ValueError(
+            "Walk-forward configuration must "
+            "contain a YAML mapping."
+        )
+
+    required_keys = {
+        "model",
+        "data_path",
+        "train_window",
+        "test_window",
+        "step_size",
+        "purge_gap",
+    }
+
+    missing_keys = (
+        required_keys - config.keys()
+    )
+
+    if missing_keys:
+        raise ValueError(
+            "Missing walk-forward configuration "
+            f"values: {sorted(missing_keys)}"
+        )
+
+    positive_integer_keys = [
+        "train_window",
+        "test_window",
+        "step_size",
+    ]
+
+    for key in positive_integer_keys:
+        value = config[key]
+
+        if not isinstance(value, int):
+            raise TypeError(
+                f"'{key}' must be an integer."
+            )
+
+        if value <= 0:
+            raise ValueError(
+                f"'{key}' must be greater than zero."
+            )
+
+    purge_gap = config["purge_gap"]
+
+    if not isinstance(purge_gap, int):
+        raise TypeError(
+            "'purge_gap' must be an integer."
+        )
+
+    if purge_gap < 0:
+        raise ValueError(
+            "'purge_gap' cannot be negative."
+        )
+
+    if not isinstance(config["model"], str):
+        raise TypeError(
+            "'model' must be a string."
+        )
+
+    if not isinstance(config["data_path"], str):
+        raise TypeError(
+            "'data_path' must be a string."
+        )
+
+    return config
+
 
 
 def prepare_fold_data(
@@ -90,6 +177,7 @@ def prepare_fold_data(
 def evaluate_fold(
     data: pd.DataFrame,
     fold: WalkForwardFold,
+    model_name: str,
 ) -> dict[str, Any]:
     """
     Train and evaluate a fresh model on one walk-forward fold.
@@ -108,7 +196,7 @@ def evaluate_fold(
     model = train_model(
         X_train=X_train,
         y_train=y_train,
-        model_name=SELECTED_MODEL,
+        model_name=model_name,
     )
 
     classification_metrics = evaluate_model(
@@ -282,18 +370,44 @@ def print_fold_result(
 
 def main() -> None:
     """
-    Run all walk-forward folds end-to-end.
+    Run the complete walk-forward evaluation pipeline.
     """
+    config = load_walk_forward_config()
+
+    model_name = str(
+        config["model"]
+    )
+
+    data_path = Path(
+        config["data_path"]
+    )
+
+    train_window = int(
+        config["train_window"]
+    )
+
+    test_window = int(
+        config["test_window"]
+    )
+
+    step_size = int(
+        config["step_size"]
+    )
+
+    purge_gap = int(
+        config["purge_gap"]
+    )
+
     data = load_training_data(
-        DATA_PATH
+        data_path
     )
 
     folds = generate_walk_forward_folds(
         total_rows=len(data),
-        train_window=TRAIN_WINDOW,
-        test_window=TEST_WINDOW,
-        step_size=STEP_SIZE,
-        purge_gap=PURGE_GAP,
+        train_window=train_window,
+        test_window=test_window,
+        step_size=step_size,
+        purge_gap=purge_gap,
     )
 
     fold_results: list[
@@ -309,6 +423,7 @@ def main() -> None:
         result = evaluate_fold(
             data=data,
             fold=fold,
+            model_name=model_name,
         )
 
         fold_results.append(result)
@@ -318,7 +433,7 @@ def main() -> None:
     if not fold_results:
         raise ValueError(
             "No walk-forward folds were generated. "
-            "Check the configured window sizes."
+            "Check the YAML configuration values."
         )
 
     aggregate_results = (
@@ -328,16 +443,17 @@ def main() -> None:
     )
 
     report = {
-        "model": SELECTED_MODEL,
+        "model": model_name,
         "configuration": {
-            "train_window": TRAIN_WINDOW,
-            "test_window": TEST_WINDOW,
-            "step_size": STEP_SIZE,
-            "purge_gap": PURGE_GAP,
+            "config_path": str(CONFIG_PATH),
+            "train_window": train_window,
+            "test_window": test_window,
+            "step_size": step_size,
+            "purge_gap": purge_gap,
         },
         "dataset": {
-            "path": str(DATA_PATH),
-            "total_rows": len(data),
+            "path": str(data_path),
+            "total_rows": int(len(data)),
             "period": get_period(data),
         },
         "folds": fold_results,
@@ -353,6 +469,11 @@ def main() -> None:
         f"\nCompleted "
         f"{len(fold_results)} "
         "walk-forward folds."
+    )
+
+    print(
+        "Walk-forward report saved to:",
+        WALK_FORWARD_REPORT_PATH,
     )
 
 if __name__ == "__main__":

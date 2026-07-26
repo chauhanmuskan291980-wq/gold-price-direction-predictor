@@ -1,6 +1,7 @@
 {
   "model": "logistic_regression",
   "configuration": {
+    "config_path": "config\\walk_forward.yaml",
     "train_window": 1500,
     "test_window": 250,
     "step_size": 250,

@@ -1,13 +1,7 @@
-walk_forward:
-  train_window: 1000
-  test_window: 168
-  step_size: 168
-  purge_rows: 1
+model: logistic_regression
+data_path: data/processed/gold_features.csv
 
-model:
-  name: logistic_regression
-
-outputs:
-  report_path: artifacts/walk_forward_report.json
-  folds_path: artifacts/walk_forward_folds.csv
-  plot_path: artifacts/walk_forward_metrics.png
+train_window: 1500
+test_window: 250
+step_size: 250
+purge_gap: 1
