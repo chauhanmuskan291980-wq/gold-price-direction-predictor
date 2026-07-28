@@ -1,14 +1,14 @@
 {
   "model": "logistic_regression",
   "configuration": {
-    "config_path": "config\\walk_forward.yaml",
+    "config_path": "config/walk_forward.yaml",
     "train_window": 1500,
     "test_window": 250,
     "step_size": 250,
     "purge_gap": 1
   },
   "dataset": {
-    "path": "data\\processed\\gold_features.csv",
+    "path": "data/processed/gold_features.csv",
     "total_rows": 3336,
     "period": {
       "start": "2025-12-16T01:00:00+00:00",

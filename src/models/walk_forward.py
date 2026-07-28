@@ -450,14 +450,14 @@ def main() -> None:
     report = {
         "model": model_name,
         "configuration": {
-            "config_path": str(CONFIG_PATH),
+            "config_path": CONFIG_PATH.as_posix(),
             "train_window": train_window,
             "test_window": test_window,
             "step_size": step_size,
             "purge_gap": purge_gap,
         },
         "dataset": {
-            "path": str(data_path),
+            "path": data_path.as_posix(),
             "total_rows": int(len(data)),
             "period": get_period(data),
         },
