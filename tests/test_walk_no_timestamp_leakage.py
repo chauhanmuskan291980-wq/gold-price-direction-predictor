@@ -5,7 +5,6 @@ import pandas as pd
 from src.evaluation.walk_forward_split import generate_walk_forward_folds
 from src.models.walk_forward import prepare_fold_data
 
-
 DATA_PATH = Path("data/processed/gold_features.csv")
 
 
