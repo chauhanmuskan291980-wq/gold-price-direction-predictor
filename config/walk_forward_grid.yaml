@@ -1,0 +1,29 @@
+data_path: data/processed/gold_features.csv
+
+models:
+  - logistic_regression
+  - random_forest
+  - gradient_boosting
+
+windows:
+  - name: short_train
+    train_window: 1000
+    test_window: 250
+    step_size: 250
+    purge_gap: 1
+
+  - name: baseline
+    train_window: 1500
+    test_window: 250
+    step_size: 250
+    purge_gap: 1
+
+  - name: long_train
+    train_window: 2000
+    test_window: 250
+    step_size: 250
+    purge_gap: 1
+
+permutation:
+  repetitions: 200
+  seed: 42
