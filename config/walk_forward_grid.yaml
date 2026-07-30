@@ -25,5 +25,5 @@ windows:
     purge_gap: 1
 
 permutation:
-  repetitions: 200
+  repetitions: 500
   seed: 42

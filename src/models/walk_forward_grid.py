@@ -144,6 +144,7 @@ def run_grid_cell(
     data: pd.DataFrame,
     model_name: str,
     window: dict[str, Any],
+    verbose: bool = True,
 ) -> dict[str, Any]:
     """Run one model and window combination."""
 
@@ -159,18 +160,38 @@ def run_grid_cell(
 
     if not folds:
         raise ValueError(
-            f"No folds were generated for cell: {create_cell_id(model_name, window)}"
+            "No folds were generated for cell: "
+            f"{create_cell_id(model_name, window)}"
         )
+
+    # Store the exact train/test indexes used by every fold.
+    fold_boundaries = [
+        {
+            "fold": fold.fold_number,
+            "train_start": fold.train_start,
+            "train_end": fold.train_end,
+            "test_start": fold.test_start,
+            "test_end": fold.test_end,
+        }
+        for fold in folds
+    ]
 
     fold_results: list[dict[str, Any]] = []
 
-    print(
-        "\nRunning grid cell:",
-        create_cell_id(model_name, window),
-    )
+    if verbose:
+        print(
+            "\nRunning grid cell:",
+            create_cell_id(
+                model_name,
+                window,
+            ),
+        )
 
     for fold in folds:
-        print(f"  Running fold {fold.fold_number}...")
+        if verbose:
+            print(
+                f"  Running fold {fold.fold_number}..."
+            )
 
         result = evaluate_fold(
             data=data,
@@ -180,7 +201,9 @@ def run_grid_cell(
 
         fold_results.append(result)
 
-    aggregate = aggregate_walk_forward_results(fold_results)
+    aggregate = aggregate_walk_forward_results(
+        fold_results
+    )
 
     return {
         "cell_id": create_cell_id(
@@ -190,20 +213,32 @@ def run_grid_cell(
         "model": model_name,
         "window": {
             "name": str(window["name"]),
-            "train_window": int(window["train_window"]),
-            "test_window": int(window["test_window"]),
-            "step_size": int(window["step_size"]),
-            "purge_gap": int(window["purge_gap"]),
+            "train_window": int(
+                window["train_window"]
+            ),
+            "test_window": int(
+                window["test_window"]
+            ),
+            "step_size": int(
+                window["step_size"]
+            ),
+            "purge_gap": int(
+                window["purge_gap"]
+            ),
         },
         "fold_count": len(fold_results),
+
+        # Used to compare real and permuted grid folds.
+        "fold_boundaries": fold_boundaries,
+
         "folds": fold_results,
         "aggregate": aggregate,
     }
 
-
 def run_grid(
     data: pd.DataFrame,
     config: dict[str, Any],
+    verbose : bool = True,
 ) -> list[dict[str, Any]]:
     """Run all model and windows combinations."""
 
@@ -218,6 +253,7 @@ def run_grid(
                 data=data,
                 model_name=str(model_name),
                 window=window,
+                verbose=verbose
             )
 
             grid_results.append(cell_result)
@@ -337,6 +373,7 @@ def main() -> None:
     grid_results = run_grid(
         data=data,
         config=config,
+        verbose=True,
     )
 
     summary = rank_summary(grid_results)
