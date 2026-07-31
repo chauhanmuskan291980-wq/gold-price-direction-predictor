@@ -23,6 +23,10 @@ from src.models.walk_forward import (
     evaluate_fold,
 )
 
+from src.evaluation.grid_heatmap import (
+    create_median_strategy_return_heatmap,
+)
+
 
 CONFIG_PATH = Path("config/walk_forward_grid.yaml")
 
@@ -32,6 +36,10 @@ GRID_REPORT_PATH = GRID_ARTIFACT_DIR / "grid_report.json"
 
 GRID_SUMMARY_PATH = GRID_ARTIFACT_DIR / "grid_summary.csv"
 
+HEATMAP_PATH = (
+    GRID_ARTIFACT_DIR
+    / "median_strategy_return_heatmap.png"
+)
 
 def load_grid_config(
     path: Path = CONFIG_PATH,
@@ -377,6 +385,10 @@ def main() -> None:
     )
 
     summary = rank_summary(grid_results)
+    create_median_strategy_return_heatmap(
+    grid_summary=summary,
+    output_path=HEATMAP_PATH,
+)
 
     GRID_ARTIFACT_DIR.mkdir(
         parents=True,
@@ -433,6 +445,9 @@ def main() -> None:
         "Grid summary:",
         GRID_SUMMARY_PATH,
     )
+    print(
+    f"Grid heatmap: {HEATMAP_PATH}"
+)
 
 
 if __name__ == "__main__":
