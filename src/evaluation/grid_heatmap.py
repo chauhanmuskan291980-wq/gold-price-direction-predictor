@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-
 MODEL_ORDER = [
     "logistic_regression",
     "random_forest",
@@ -96,8 +95,12 @@ def create_median_strategy_return_heatmap(
     )
 
     axis.set_xticklabels(
-        TRAIN_WINDOW_ORDER
-    )
+    [
+        str(train_window)
+        for train_window
+        in TRAIN_WINDOW_ORDER
+    ]
+)
 
     axis.set_yticks(
         range(

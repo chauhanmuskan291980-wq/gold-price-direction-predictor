@@ -9,6 +9,9 @@ import yaml
 from src.evaluation.aggregate_metrics import (
     aggregate_walk_forward_results,
 )
+from src.evaluation.grid_heatmap import (
+    create_median_strategy_return_heatmap,
+)
 from src.evaluation.walk_forward_split import (
     generate_walk_forward_folds,
 )
@@ -22,11 +25,6 @@ from src.models.train import (
 from src.models.walk_forward import (
     evaluate_fold,
 )
-
-from src.evaluation.grid_heatmap import (
-    create_median_strategy_return_heatmap,
-)
-
 
 CONFIG_PATH = Path("config/walk_forward_grid.yaml")
 

@@ -9,6 +9,9 @@ from src.evaluation.permutation_null import (
     permute_target,
     summarize_permutation_null,
 )
+from src.evaluation.walk_forward_split import (
+    generate_walk_forward_folds,
+)
 from src.models.train import (
     TARGET_COLUMN,
     load_training_data,
@@ -16,15 +19,8 @@ from src.models.train import (
 from src.models.walk_forward_grid import (
     CONFIG_PATH,
     load_grid_config,
-    run_grid,
-)
-from src.models.walk_forward_permutation import (
-    assert_same_fold_boundaries,
 )
 
-from src.evaluation.walk_forward_split import (
-    generate_walk_forward_folds,
-)
 
 @pytest.fixture(scope="session")
 def training_data() -> pd.DataFrame:

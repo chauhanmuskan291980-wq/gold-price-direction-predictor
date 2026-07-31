@@ -24,7 +24,6 @@ from src.models.walk_forward_grid import (
     run_grid,
 )
 
-
 ARTIFACT_DIRECTORY = Path(
     "artifacts/grid_search"
 )

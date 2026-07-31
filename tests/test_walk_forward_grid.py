@@ -1,16 +1,9 @@
 from pathlib import Path
 
-import pandas as pd
-
-from src.models.train import (
-    load_training_data,
-)
 from src.models.walk_forward_grid import (
     create_cell_id,
     load_grid_config,
-    run_grid_cell,
 )
-
 
 DATA_PATH = Path(
     "data/processed/gold_features.csv"
