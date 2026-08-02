@@ -1,0 +1,10 @@
+rank,cell_id,model,window_name,train_window,test_window,step_size,purge_gap,fold_count,median_accuracy,median_roc_auc,median_win_rate,median_strategy_return,worst_fold,worst_strategy_return,folds_beating_buy_and_hold,beat_buy_hold_percentage
+1,gradient_boosting__short_train__train1000_test250_step250,gradient_boosting,short_train,1000,250,250,1,9,0.5,0.5110105290190037,0.5,0.003586896599615308,9,-0.09615909855926341,6,66.66666666666666
+2,gradient_boosting__baseline__train1500_test250_step250,gradient_boosting,baseline,1500,250,250,1,7,0.492,0.5077200205867217,0.492,0.002794485737333652,5,-0.11765351495807108,4,57.14285714285714
+3,random_forest__short_train__train1000_test250_step250,random_forest,short_train,1000,250,250,1,9,0.488,0.49561600000000006,0.488,-0.007851730564482406,2,-0.13255043613306094,4,44.44444444444444
+4,gradient_boosting__long_train__train2000_test250_step250,gradient_boosting,long_train,2000,250,250,1,5,0.472,0.5199024139702105,0.472,-0.023829021562063346,3,-0.10347256279466699,2,40.0
+5,random_forest__baseline__train1500_test250_step250,random_forest,baseline,1500,250,250,1,7,0.48,0.5070621468926554,0.48,-0.031100642729661065,5,-0.1014522523419783,2,28.57142857142857
+6,random_forest__long_train__train2000_test250_step250,random_forest,long_train,2000,250,250,1,5,0.492,0.5200077200205868,0.484,-0.03171092158615607,1,-0.0706171851722105,4,80.0
+7,logistic_regression__long_train__train2000_test250_step250,logistic_regression,long_train,2000,250,250,1,5,0.488,0.493130457113508,0.48,-0.03683882613600176,3,-0.05878147112580334,3,60.0
+8,logistic_regression__baseline__train1500_test250_step250,logistic_regression,baseline,1500,250,250,1,7,0.492,0.49619199999999997,0.484,-0.04195066891406207,3,-0.06543201356624595,4,57.14285714285714
+9,logistic_regression__short_train__train1000_test250_step250,logistic_regression,short_train,1000,250,250,1,9,0.484,0.48338774726329936,0.484,-0.05229107638253572,2,-0.12924892912192143,4,44.44444444444444

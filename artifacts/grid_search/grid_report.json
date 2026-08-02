@@ -1,0 +1,4348 @@
+{
+  "configuration": {
+    "config_path": "config/walk_forward_grid.yaml",
+    "models": [
+      "logistic_regression",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "windows": [
+      {
+        "name": "short_train",
+        "train_window": 1000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      {
+        "name": "baseline",
+        "train_window": 1500,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      {
+        "name": "long_train",
+        "train_window": 2000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      }
+    ]
+  },
+  "dataset": {
+    "path": "data/processed/gold_features.csv",
+    "total_rows": 3336,
+    "period": {
+      "start": "2025-12-16T01:00:00+00:00",
+      "end": "2026-07-21T09:00:00+00:00"
+    }
+  },
+  "cell_count": 9,
+  "ranking_metric": "median_strategy_return",
+  "best_cell_id": "gradient_boosting__short_train__train1000_test250_step250",
+  "cells": [
+    {
+      "cell_id": "logistic_regression__short_train__train1000_test250_step250",
+      "model": "logistic_regression",
+      "window": {
+        "name": "short_train",
+        "train_window": 1000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 9,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 1000,
+          "test_start": 1001,
+          "test_end": 1251
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 1250,
+          "test_start": 1251,
+          "test_end": 1501
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 1500,
+          "test_start": 1501,
+          "test_end": 1751
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 1750,
+          "test_start": 1751,
+          "test_end": 2001
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 6,
+          "train_start": 1250,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 7,
+          "train_start": 1500,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 8,
+          "train_start": 1750,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 9,
+          "train_start": 2000,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-02-23T20:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-02-23T23:00:00+00:00",
+            "end": "2026-03-10T17:00:00+00:00"
+          },
+          "accuracy": 0.496,
+          "roc_auc": 0.48338774726329936,
+          "balanced_accuracy": 0.4971512707253057,
+          "win_rate": 0.496,
+          "strategy_return": -0.00322903018297116,
+          "buy_and_hold_return": -0.010372062042052765,
+          "strategy_excess_return": 0.0071430318590816055,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.496,
+            "balanced_accuracy": 0.4971512707253057,
+            "precision": 0.5046728971962616,
+            "recall": 0.4251968503937008,
+            "f1": 0.46153846153846156,
+            "roc_auc": 0.48338774726329936
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 124,
+            "losing_trades": 126,
+            "win_rate": 0.496,
+            "cumulative_strategy_return": -0.00322903018297116,
+            "buy_and_hold_return": -0.010372062042052765,
+            "average_trade_return": -2.8489478509999695e-06,
+            "best_trade_return": 0.0290592432854697,
+            "worst_trade_return": -0.0229362237491531
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-03-10T16:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-10T18:00:00+00:00",
+            "end": "2026-03-25T14:00:00+00:00"
+          },
+          "accuracy": 0.496,
+          "roc_auc": 0.48519230769230776,
+          "balanced_accuracy": 0.5006410256410256,
+          "win_rate": 0.496,
+          "strategy_return": -0.12924892912192143,
+          "buy_and_hold_return": -0.12357694185696544,
+          "strategy_excess_return": -0.005671987264955991,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.496,
+            "balanced_accuracy": 0.5006410256410256,
+            "precision": 0.4805194805194805,
+            "recall": 0.6166666666666667,
+            "f1": 0.5401459854014599,
+            "roc_auc": 0.48519230769230776
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 124,
+            "losing_trades": 126,
+            "win_rate": 0.496,
+            "cumulative_strategy_return": -0.12924892912192143,
+            "buy_and_hold_return": -0.12357694185696544,
+            "average_trade_return": -0.0005372786014116588,
+            "best_trade_return": 0.0255738162324354,
+            "worst_trade_return": -0.0245191344173507
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-03-25T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-25T15:00:00+00:00",
+            "end": "2026-04-10T11:00:00+00:00"
+          },
+          "accuracy": 0.484,
+          "roc_auc": 0.468352,
+          "balanced_accuracy": 0.484,
+          "win_rate": 0.484,
+          "strategy_return": -0.09515385933106157,
+          "buy_and_hold_return": 0.05224472347353992,
+          "strategy_excess_return": -0.1473985828046015,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.484,
+            "balanced_accuracy": 0.484,
+            "precision": 0.4830508474576271,
+            "recall": 0.456,
+            "f1": 0.4691358024691358,
+            "roc_auc": 0.468352
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 121,
+            "losing_trades": 129,
+            "win_rate": 0.484,
+            "cumulative_strategy_return": -0.09515385933106157,
+            "buy_and_hold_return": 0.05224472347353992,
+            "average_trade_return": -0.000389120773273655,
+            "best_trade_return": 0.010983354829161,
+            "worst_trade_return": -0.0236199475169587
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-04-10T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-10T12:00:00+00:00",
+            "end": "2026-04-27T14:00:00+00:00"
+          },
+          "accuracy": 0.564,
+          "roc_auc": 0.6127375449409349,
+          "balanced_accuracy": 0.5659989727786338,
+          "win_rate": 0.556,
+          "strategy_return": 0.08143406950554533,
+          "buy_and_hold_return": -0.023084182110826412,
+          "strategy_excess_return": 0.10451825161637174,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.564,
+            "balanced_accuracy": 0.5659989727786338,
+            "precision": 0.5338345864661654,
+            "recall": 0.6016949152542372,
+            "f1": 0.5657370517928287,
+            "roc_auc": 0.6127375449409349
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 139,
+            "losing_trades": 111,
+            "win_rate": 0.556,
+            "cumulative_strategy_return": 0.08143406950554533,
+            "buy_and_hold_return": -0.023084182110826412,
+            "average_trade_return": 0.0003176837683634789,
+            "best_trade_return": 0.0189477892147872,
+            "worst_trade_return": -0.0097469929489837
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.468,
+          "roc_auc": 0.45189168427117343,
+          "balanced_accuracy": 0.46869598617246017,
+          "win_rate": 0.468,
+          "strategy_return": -0.04347354921861224,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.04966378171713037,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.468,
+            "balanced_accuracy": 0.46869598617246017,
+            "precision": 0.47368421052631576,
+            "recall": 0.4251968503937008,
+            "f1": 0.44813278008298757,
+            "roc_auc": 0.45189168427117343
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 117,
+            "losing_trades": 133,
+            "win_rate": 0.468,
+            "cumulative_strategy_return": -0.04347354921861224,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -0.00017404711929775197,
+            "best_trade_return": 0.0083238196214747,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 6,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-10T17:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.528,
+          "roc_auc": 0.5636258363355636,
+          "balanced_accuracy": 0.5226453937210499,
+          "win_rate": 0.528,
+          "strategy_return": 0.025362403310495107,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.06806676349297502,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.528,
+            "balanced_accuracy": 0.5226453937210499,
+            "precision": 0.49056603773584906,
+            "recall": 0.4482758620689655,
+            "f1": 0.46846846846846846,
+            "roc_auc": 0.5636258363355636
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 132,
+            "losing_trades": 118,
+            "win_rate": 0.528,
+            "cumulative_strategy_return": 0.025362403310495107,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": 0.000104326099022338,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 7,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-25T14:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.48057128152341744,
+          "balanced_accuracy": 0.47793360782295413,
+          "win_rate": 0.472,
+          "strategy_return": -0.07127888510792713,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": -0.0047525260359081445,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.47793360782295413,
+            "precision": 0.4452054794520548,
+            "recall": 0.5603448275862069,
+            "f1": 0.4961832061068702,
+            "roc_auc": 0.48057128152341744
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 118,
+            "losing_trades": 132,
+            "win_rate": 0.472,
+            "cumulative_strategy_return": -0.07127888510792713,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.0002897171817275273,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0144318217353235
+          }
+        },
+        {
+          "fold": 8,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-04-10T11:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.468,
+          "roc_auc": 0.4939650744735491,
+          "balanced_accuracy": 0.47194401643554185,
+          "win_rate": 0.46,
+          "strategy_return": -0.053290598266759526,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.000955245204559918,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.468,
+            "balanced_accuracy": 0.47194401643554185,
+            "precision": 0.44755244755244755,
+            "recall": 0.5423728813559322,
+            "f1": 0.4904214559386973,
+            "roc_auc": 0.4939650744735491
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 115,
+            "losing_trades": 135,
+            "win_rate": 0.46,
+            "cumulative_strategy_return": -0.053290598266759526,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": -0.00021227963902179992,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 9,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-04-27T14:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.47903882178153867,
+          "balanced_accuracy": 0.48104127640333316,
+          "win_rate": 0.464,
+          "strategy_return": -0.05229107638253572,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.07360236241677032,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.48104127640333316,
+            "precision": 0.436241610738255,
+            "recall": 0.5752212389380531,
+            "f1": 0.4961832061068702,
+            "roc_auc": 0.47903882178153867
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 116,
+            "losing_trades": 134,
+            "win_rate": 0.464,
+            "cumulative_strategy_return": -0.05229107638253572,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -0.0002096567935722577,
+            "best_trade_return": 0.0166964292680142,
+            "worst_trade_return": -0.0157792718228158
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 9,
+        "folds_beating_buy_and_hold": 4,
+        "percentage_beating_buy_and_hold": 44.44444444444444,
+        "metrics": {
+          "accuracy": {
+            "count": 9,
+            "mean": 0.4942222222222223,
+            "median": 0.484,
+            "q1": 0.472,
+            "q3": 0.496,
+            "iqr": 0.02400000000000002,
+            "minimum": 0.468,
+            "maximum": 0.564,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.468
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.564
+            }
+          },
+          "roc_auc": {
+            "count": 9,
+            "mean": 0.5020846998090872,
+            "median": 0.48338774726329936,
+            "q1": 0.47903882178153867,
+            "q3": 0.4939650744735491,
+            "iqr": 0.014926252692010422,
+            "minimum": 0.45189168427117343,
+            "maximum": 0.6127375449409349,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.45189168427117343
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.6127375449409349
+            }
+          },
+          "balanced_accuracy": {
+            "count": 9,
+            "mean": 0.49667239441114497,
+            "median": 0.484,
+            "q1": 0.47793360782295413,
+            "q3": 0.5006410256410256,
+            "iqr": 0.022707417818071507,
+            "minimum": 0.46869598617246017,
+            "maximum": 0.5659989727786338,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.46869598617246017
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.5659989727786338
+            }
+          },
+          "win_rate": {
+            "count": 9,
+            "mean": 0.4915555555555556,
+            "median": 0.484,
+            "q1": 0.468,
+            "q3": 0.496,
+            "iqr": 0.02799999999999997,
+            "minimum": 0.46,
+            "maximum": 0.556,
+            "worst_fold": {
+              "fold": 8,
+              "value": 0.46
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.556
+            }
+          },
+          "strategy_return": {
+            "count": 9,
+            "mean": -0.037907717199527596,
+            "median": -0.05229107638253572,
+            "q1": -0.07127888510792713,
+            "q3": -0.00322903018297116,
+            "iqr": 0.06804985492495597,
+            "minimum": -0.12924892912192143,
+            "maximum": 0.08143406950554533,
+            "worst_fold": {
+              "fold": 2,
+              "value": -0.12924892912192143
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.08143406950554533
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 9,
+            "mean": -0.02675150074770781,
+            "median": -0.023084182110826412,
+            "q1": -0.054245843471319444,
+            "q3": 0.006190232498518133,
+            "iqr": 0.06043607596983758,
+            "minimum": -0.12357694185696544,
+            "maximum": 0.05224472347353992,
+            "worst_fold": {
+              "fold": 2,
+              "value": -0.12357694185696544
+            },
+            "best_fold": {
+              "fold": 3,
+              "value": 0.05224472347353992
+            }
+          },
+          "strategy_excess_return": {
+            "count": 9,
+            "mean": -0.011156216451819781,
+            "median": -0.0047525260359081445,
+            "q1": -0.04966378171713037,
+            "q3": 0.0071430318590816055,
+            "iqr": 0.05680681357621198,
+            "minimum": -0.1473985828046015,
+            "maximum": 0.10451825161637174,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.1473985828046015
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.10451825161637174
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "logistic_regression__baseline__train1500_test250_step250",
+      "model": "logistic_regression",
+      "window": {
+        "name": "baseline",
+        "train_window": 1500,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 7,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 1500,
+          "test_start": 1501,
+          "test_end": 1751
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 1750,
+          "test_start": 1751,
+          "test_end": 2001
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 6,
+          "train_start": 1250,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 7,
+          "train_start": 1500,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-03-25T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-25T15:00:00+00:00",
+            "end": "2026-04-10T11:00:00+00:00"
+          },
+          "accuracy": 0.484,
+          "roc_auc": 0.49619199999999997,
+          "balanced_accuracy": 0.484,
+          "win_rate": 0.484,
+          "strategy_return": -0.04704109871769002,
+          "buy_and_hold_return": 0.05224472347353992,
+          "strategy_excess_return": -0.09928582219122994,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.484,
+            "balanced_accuracy": 0.484,
+            "precision": 0.48360655737704916,
+            "recall": 0.472,
+            "f1": 0.4777327935222672,
+            "roc_auc": 0.49619199999999997
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 121,
+            "losing_trades": 129,
+            "win_rate": 0.484,
+            "cumulative_strategy_return": -0.04704109871769002,
+            "buy_and_hold_return": 0.05224472347353992,
+            "average_trade_return": -0.00018192314596061253,
+            "best_trade_return": 0.018131883396675,
+            "worst_trade_return": -0.0236199475169587
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-04-10T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-10T12:00:00+00:00",
+            "end": "2026-04-27T14:00:00+00:00"
+          },
+          "accuracy": 0.564,
+          "roc_auc": 0.58082948125321,
+          "balanced_accuracy": 0.554763739085773,
+          "win_rate": 0.556,
+          "strategy_return": 0.05649251000967692,
+          "buy_and_hold_return": -0.023084182110826412,
+          "strategy_excess_return": 0.07957669212050333,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.564,
+            "balanced_accuracy": 0.554763739085773,
+            "precision": 0.5542168674698795,
+            "recall": 0.3898305084745763,
+            "f1": 0.4577114427860697,
+            "roc_auc": 0.58082948125321
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 139,
+            "losing_trades": 111,
+            "win_rate": 0.556,
+            "cumulative_strategy_return": 0.05649251000967692,
+            "buy_and_hold_return": -0.023084182110826412,
+            "average_trade_return": 0.00022436668149049998,
+            "best_trade_return": 0.0164358131214525,
+            "worst_trade_return": -0.0189477892147872
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.448,
+          "roc_auc": 0.44632225849817553,
+          "balanced_accuracy": 0.4486268484732091,
+          "win_rate": 0.448,
+          "strategy_return": -0.06543201356624595,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.07162224606476408,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.448,
+            "balanced_accuracy": 0.4486268484732091,
+            "precision": 0.45217391304347826,
+            "recall": 0.4094488188976378,
+            "f1": 0.4297520661157025,
+            "roc_auc": 0.44632225849817553
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 112,
+            "losing_trades": 138,
+            "win_rate": 0.448,
+            "cumulative_strategy_return": -0.06543201356624595,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -0.0002669417977418976,
+            "best_trade_return": 0.0076921191613754,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.556,
+          "roc_auc": 0.5844055584148224,
+          "balanced_accuracy": 0.5580288214101904,
+          "win_rate": 0.556,
+          "strategy_return": 0.03087540961157198,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.0735797697940519,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.556,
+            "balanced_accuracy": 0.5580288214101904,
+            "precision": 0.5190839694656488,
+            "recall": 0.5862068965517241,
+            "f1": 0.5506072874493927,
+            "roc_auc": 0.5844055584148224
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 139,
+            "losing_trades": 111,
+            "win_rate": 0.556,
+            "cumulative_strategy_return": 0.03087540961157198,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": 0.00012577522939416364,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.46,
+          "roc_auc": 0.4651955738548636,
+          "balanced_accuracy": 0.46210756562017496,
+          "win_rate": 0.46,
+          "strategy_return": -0.06449241716045007,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": 0.002033941911568915,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.46,
+            "balanced_accuracy": 0.46210756562017496,
+            "precision": 0.42857142857142855,
+            "recall": 0.49137931034482757,
+            "f1": 0.4578313253012048,
+            "roc_auc": 0.4651955738548636
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 115,
+            "losing_trades": 135,
+            "win_rate": 0.46,
+            "cumulative_strategy_return": -0.06449241716045007,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.0002605956718383856,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0144318217353235
+          }
+        },
+        {
+          "fold": 6,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-10T17:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.492,
+          "roc_auc": 0.48382126348228044,
+          "balanced_accuracy": 0.49287365177195686,
+          "win_rate": 0.48,
+          "strategy_return": -0.0332452387974953,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.02100060467382414,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.492,
+            "balanced_accuracy": 0.49287365177195686,
+            "precision": 0.46511627906976744,
+            "recall": 0.5084745762711864,
+            "f1": 0.48582995951417,
+            "roc_auc": 0.48382126348228044
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 120,
+            "losing_trades": 130,
+            "win_rate": 0.48,
+            "cumulative_strategy_return": -0.0332452387974953,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": -0.00012846838019434193,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 7,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-25T14:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.528,
+          "roc_auc": 0.5583618629287513,
+          "balanced_accuracy": 0.5329113106388477,
+          "win_rate": 0.52,
+          "strategy_return": -0.04195066891406207,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.06326195494829667,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.528,
+            "balanced_accuracy": 0.5329113106388477,
+            "precision": 0.48175182481751827,
+            "recall": 0.584070796460177,
+            "f1": 0.528,
+            "roc_auc": 0.5583618629287513
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 130,
+            "losing_trades": 120,
+            "win_rate": 0.52,
+            "cumulative_strategy_return": -0.04195066891406207,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -0.000166236616947969,
+            "best_trade_return": 0.013129187708051,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 7,
+        "folds_beating_buy_and_hold": 4,
+        "percentage_beating_buy_and_hold": 57.142857142857146,
+        "metrics": {
+          "accuracy": {
+            "count": 7,
+            "mean": 0.5045714285714286,
+            "median": 0.492,
+            "q1": 0.472,
+            "q3": 0.542,
+            "iqr": 0.07000000000000006,
+            "minimum": 0.448,
+            "maximum": 0.564,
+            "worst_fold": {
+              "fold": 3,
+              "value": 0.448
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.564
+            }
+          },
+          "roc_auc": {
+            "count": 7,
+            "mean": 0.5164468569188719,
+            "median": 0.49619199999999997,
+            "q1": 0.474508418668572,
+            "q3": 0.5695956720909807,
+            "iqr": 0.0950872534224087,
+            "minimum": 0.44632225849817553,
+            "maximum": 0.5844055584148224,
+            "worst_fold": {
+              "fold": 3,
+              "value": 0.44632225849817553
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.5844055584148224
+            }
+          },
+          "balanced_accuracy": {
+            "count": 7,
+            "mean": 0.5047588481428787,
+            "median": 0.49287365177195686,
+            "q1": 0.4730537828100875,
+            "q3": 0.5438375248623104,
+            "iqr": 0.07078374205222293,
+            "minimum": 0.4486268484732091,
+            "maximum": 0.5580288214101904,
+            "worst_fold": {
+              "fold": 3,
+              "value": 0.4486268484732091
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.5580288214101904
+            }
+          },
+          "win_rate": {
+            "count": 7,
+            "mean": 0.5005714285714286,
+            "median": 0.484,
+            "q1": 0.47,
+            "q3": 0.538,
+            "iqr": 0.06800000000000006,
+            "minimum": 0.448,
+            "maximum": 0.556,
+            "worst_fold": {
+              "fold": 3,
+              "value": 0.448
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.556
+            }
+          },
+          "strategy_return": {
+            "count": 7,
+            "mean": -0.02354193107638493,
+            "median": -0.04195066891406207,
+            "q1": -0.055766757939070044,
+            "q3": -0.0011849145929616611,
+            "iqr": 0.05458184334610838,
+            "minimum": -0.06543201356624595,
+            "maximum": 0.05649251000967692,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.06543201356624595
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.05649251000967692
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 7,
+            "mean": -0.0152592146900503,
+            "median": -0.023084182110826412,
+            "q1": -0.04847510182689968,
+            "q3": 0.013750759266376367,
+            "iqr": 0.06222586109327605,
+            "minimum": -0.06652635907201898,
+            "maximum": 0.05224472347353992,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.06652635907201898
+            },
+            "best_fold": {
+              "fold": 1,
+              "value": 0.05224472347353992
+            }
+          },
+          "strategy_excess_return": {
+            "count": 7,
+            "mean": -0.00828271638633463,
+            "median": 0.002033941911568915,
+            "q1": -0.06744210050653038,
+            "q3": 0.04729018723393802,
+            "iqr": 0.1147322877404684,
+            "minimum": -0.09928582219122994,
+            "maximum": 0.07957669212050333,
+            "worst_fold": {
+              "fold": 1,
+              "value": -0.09928582219122994
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.07957669212050333
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "logistic_regression__long_train__train2000_test250_step250",
+      "model": "logistic_regression",
+      "window": {
+        "name": "long_train",
+        "train_window": 2000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 5,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.468,
+          "roc_auc": 0.44331348825299277,
+          "balanced_accuracy": 0.46843992061967865,
+          "win_rate": 0.468,
+          "strategy_return": -0.02464348560029528,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.030833718098813412,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.468,
+            "balanced_accuracy": 0.46843992061967865,
+            "precision": 0.4745762711864407,
+            "recall": 0.4409448818897638,
+            "f1": 0.45714285714285713,
+            "roc_auc": 0.44331348825299277
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 117,
+            "losing_trades": 133,
+            "win_rate": 0.468,
+            "cumulative_strategy_return": -0.02464348560029528,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -9.606859150114876e-05,
+            "best_trade_return": 0.0076921191613754,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.54,
+          "roc_auc": 0.5875579001544005,
+          "balanced_accuracy": 0.5321024189397838,
+          "win_rate": 0.54,
+          "strategy_return": 0.0265381660352193,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.06924252621769922,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.54,
+            "balanced_accuracy": 0.5321024189397838,
+            "precision": 0.5051546391752577,
+            "recall": 0.4224137931034483,
+            "f1": 0.460093896713615,
+            "roc_auc": 0.5875579001544005
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 135,
+            "losing_trades": 115,
+            "win_rate": 0.54,
+            "cumulative_strategy_return": 0.0265381660352193,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": 0.00010891159134093004,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.48,
+          "roc_auc": 0.46976325270200725,
+          "balanced_accuracy": 0.47844827586206895,
+          "win_rate": 0.48,
+          "strategy_return": -0.05878147112580334,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": 0.0077448879462156395,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.48,
+            "balanced_accuracy": 0.47844827586206895,
+            "precision": 0.44166666666666665,
+            "recall": 0.45689655172413796,
+            "f1": 0.4491525423728814,
+            "roc_auc": 0.46976325270200725
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 120,
+            "losing_trades": 130,
+            "win_rate": 0.48,
+            "cumulative_strategy_return": -0.05878147112580334,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.00023624414791277365,
+            "best_trade_return": 0.0144318217353235,
+            "worst_trade_return": -0.0175558364798413
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.488,
+          "roc_auc": 0.493130457113508,
+          "balanced_accuracy": 0.4913328197226502,
+          "win_rate": 0.476,
+          "strategy_return": -0.03683882613600176,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.017407017335317687,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.488,
+            "balanced_accuracy": 0.4913328197226502,
+            "precision": 0.4642857142857143,
+            "recall": 0.5508474576271186,
+            "f1": 0.5038759689922481,
+            "roc_auc": 0.493130457113508
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 119,
+            "losing_trades": 131,
+            "win_rate": 0.476,
+            "cumulative_strategy_return": -0.03683882613600176,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": -0.00014336576527219078,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.528,
+          "roc_auc": 0.5375621729862411,
+          "balanced_accuracy": 0.5282604482914541,
+          "win_rate": 0.524,
+          "strategy_return": -0.045239815262971494,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.0665511012972061,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.528,
+            "balanced_accuracy": 0.5282604482914541,
+            "precision": 0.48,
+            "recall": 0.5309734513274337,
+            "f1": 0.5042016806722689,
+            "roc_auc": 0.5375621729862411
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 131,
+            "losing_trades": 119,
+            "win_rate": 0.524,
+            "cumulative_strategy_return": -0.045239815262971494,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -0.0001799925292903024,
+            "best_trade_return": 0.013129187708051,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 5,
+        "folds_beating_buy_and_hold": 3,
+        "percentage_beating_buy_and_hold": 60.0,
+        "metrics": {
+          "accuracy": {
+            "count": 5,
+            "mean": 0.5008,
+            "median": 0.488,
+            "q1": 0.48,
+            "q3": 0.528,
+            "iqr": 0.04800000000000004,
+            "minimum": 0.468,
+            "maximum": 0.54,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.468
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.54
+            }
+          },
+          "roc_auc": {
+            "count": 5,
+            "mean": 0.5062654542418299,
+            "median": 0.493130457113508,
+            "q1": 0.46976325270200725,
+            "q3": 0.5375621729862411,
+            "iqr": 0.06779892028423384,
+            "minimum": 0.44331348825299277,
+            "maximum": 0.5875579001544005,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.44331348825299277
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.5875579001544005
+            }
+          },
+          "balanced_accuracy": {
+            "count": 5,
+            "mean": 0.49971677668712716,
+            "median": 0.4913328197226502,
+            "q1": 0.47844827586206895,
+            "q3": 0.5282604482914541,
+            "iqr": 0.04981217242938518,
+            "minimum": 0.46843992061967865,
+            "maximum": 0.5321024189397838,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.46843992061967865
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.5321024189397838
+            }
+          },
+          "win_rate": {
+            "count": 5,
+            "mean": 0.4976,
+            "median": 0.48,
+            "q1": 0.476,
+            "q3": 0.524,
+            "iqr": 0.04800000000000004,
+            "minimum": 0.468,
+            "maximum": 0.54,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.468
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.54
+            }
+          },
+          "strategy_return": {
+            "count": 5,
+            "mean": -0.027793086417970514,
+            "median": -0.03683882613600176,
+            "q1": -0.045239815262971494,
+            "q3": -0.02464348560029528,
+            "iqr": 0.020596329662676216,
+            "minimum": -0.05878147112580334,
+            "maximum": 0.0265381660352193,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.05878147112580334
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.0265381660352193
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 5,
+            "mean": -0.027195008838613123,
+            "median": -0.04270436018247992,
+            "q1": -0.054245843471319444,
+            "q3": 0.006190232498518133,
+            "iqr": 0.06043607596983758,
+            "minimum": -0.06652635907201898,
+            "maximum": 0.0213112860342346,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.06652635907201898
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.0213112860342346
+            }
+          },
+          "strategy_excess_return": {
+            "count": 5,
+            "mean": -0.0005980775793573923,
+            "median": 0.0077448879462156395,
+            "q1": -0.030833718098813412,
+            "q3": 0.017407017335317687,
+            "iqr": 0.0482407354341311,
+            "minimum": -0.0665511012972061,
+            "maximum": 0.06924252621769922,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.0665511012972061
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.06924252621769922
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "random_forest__short_train__train1000_test250_step250",
+      "model": "random_forest",
+      "window": {
+        "name": "short_train",
+        "train_window": 1000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 9,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 1000,
+          "test_start": 1001,
+          "test_end": 1251
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 1250,
+          "test_start": 1251,
+          "test_end": 1501
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 1500,
+          "test_start": 1501,
+          "test_end": 1751
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 1750,
+          "test_start": 1751,
+          "test_end": 2001
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 6,
+          "train_start": 1250,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 7,
+          "train_start": 1500,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 8,
+          "train_start": 1750,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 9,
+          "train_start": 2000,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-02-23T20:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-02-23T23:00:00+00:00",
+            "end": "2026-03-10T17:00:00+00:00"
+          },
+          "accuracy": 0.532,
+          "roc_auc": 0.5338966775494527,
+          "balanced_accuracy": 0.5322002432622751,
+          "win_rate": 0.532,
+          "strategy_return": 0.058351970760535776,
+          "buy_and_hold_return": -0.010372062042052765,
+          "strategy_excess_return": 0.06872403280258854,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.532,
+            "balanced_accuracy": 0.5322002432622751,
+            "precision": 0.5409836065573771,
+            "recall": 0.5196850393700787,
+            "f1": 0.5301204819277109,
+            "roc_auc": 0.5338966775494527
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 133,
+            "losing_trades": 117,
+            "win_rate": 0.532,
+            "cumulative_strategy_return": 0.058351970760535776,
+            "buy_and_hold_return": -0.010372062042052765,
+            "average_trade_return": 0.00023693524600019541,
+            "best_trade_return": 0.0290592432854697,
+            "worst_trade_return": -0.0229362237491531
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-03-10T16:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-10T18:00:00+00:00",
+            "end": "2026-03-25T14:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.498525641025641,
+          "balanced_accuracy": 0.4775641025641026,
+          "win_rate": 0.472,
+          "strategy_return": -0.13255043613306094,
+          "buy_and_hold_return": -0.12357694185696544,
+          "strategy_excess_return": -0.008973494276095506,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.4775641025641026,
+            "precision": 0.4625,
+            "recall": 0.6166666666666667,
+            "f1": 0.5285714285714286,
+            "roc_auc": 0.498525641025641
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 118,
+            "losing_trades": 132,
+            "win_rate": 0.472,
+            "cumulative_strategy_return": -0.13255043613306094,
+            "buy_and_hold_return": -0.12357694185696544,
+            "average_trade_return": -0.0005524933419922493,
+            "best_trade_return": 0.0255738162324354,
+            "worst_trade_return": -0.0245191344173507
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-03-25T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-25T15:00:00+00:00",
+            "end": "2026-04-10T11:00:00+00:00"
+          },
+          "accuracy": 0.532,
+          "roc_auc": 0.49561600000000006,
+          "balanced_accuracy": 0.532,
+          "win_rate": 0.532,
+          "strategy_return": 0.028938582449506756,
+          "buy_and_hold_return": 0.05224472347353992,
+          "strategy_excess_return": -0.023306141024033167,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.532,
+            "balanced_accuracy": 0.532,
+            "precision": 0.5307692307692308,
+            "recall": 0.552,
+            "f1": 0.5411764705882353,
+            "roc_auc": 0.49561600000000006
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 133,
+            "losing_trades": 117,
+            "win_rate": 0.532,
+            "cumulative_strategy_return": 0.028938582449506756,
+            "buy_and_hold_return": 0.05224472347353992,
+            "average_trade_return": 0.00012491677869685782,
+            "best_trade_return": 0.018131883396675,
+            "worst_trade_return": -0.0236199475169587
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-04-10T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-10T12:00:00+00:00",
+            "end": "2026-04-27T14:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.47682331792501287,
+          "balanced_accuracy": 0.47887776065742166,
+          "win_rate": 0.468,
+          "strategy_return": -0.08821489708648678,
+          "buy_and_hold_return": -0.023084182110826412,
+          "strategy_excess_return": -0.06513071497566036,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.47887776065742166,
+            "precision": 0.4551282051282051,
+            "recall": 0.6016949152542372,
+            "f1": 0.5182481751824818,
+            "roc_auc": 0.47682331792501287
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 117,
+            "losing_trades": 133,
+            "win_rate": 0.468,
+            "cumulative_strategy_return": -0.08821489708648678,
+            "buy_and_hold_return": -0.023084182110826412,
+            "average_trade_return": -0.00036484005518336174,
+            "best_trade_return": 0.0087113850826259,
+            "worst_trade_return": -0.0189477892147872
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.488,
+          "roc_auc": 0.4572050444913898,
+          "balanced_accuracy": 0.4860764355675053,
+          "win_rate": 0.488,
+          "strategy_return": -0.008407758095225315,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.014597990593743448,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.488,
+            "balanced_accuracy": 0.4860764355675053,
+            "precision": 0.4967741935483871,
+            "recall": 0.6062992125984252,
+            "f1": 0.5460992907801419,
+            "roc_auc": 0.4572050444913898
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 122,
+            "losing_trades": 128,
+            "win_rate": 0.488,
+            "cumulative_strategy_return": -0.008407758095225315,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -3.0033871007691392e-05,
+            "best_trade_return": 0.0083238196214747,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 6,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-10T17:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.508,
+          "roc_auc": 0.5270200720535254,
+          "balanced_accuracy": 0.5120946989191971,
+          "win_rate": 0.508,
+          "strategy_return": -0.007851730564482406,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.03485262961799751,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.508,
+            "balanced_accuracy": 0.5120946989191971,
+            "precision": 0.4748201438848921,
+            "recall": 0.5689655172413793,
+            "f1": 0.5176470588235295,
+            "roc_auc": 0.5270200720535254
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 127,
+            "losing_trades": 123,
+            "win_rate": 0.508,
+            "cumulative_strategy_return": -0.007851730564482406,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": -2.7386490603558438e-05,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 7,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-25T14:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.464,
+          "roc_auc": 0.44203551209469893,
+          "balanced_accuracy": 0.4698919197117859,
+          "win_rate": 0.464,
+          "strategy_return": -0.0013063523835250557,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": 0.06522000668849393,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.464,
+            "balanced_accuracy": 0.4698919197117859,
+            "precision": 0.4383561643835616,
+            "recall": 0.5517241379310345,
+            "f1": 0.48854961832061067,
+            "roc_auc": 0.44203551209469893
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 116,
+            "losing_trades": 134,
+            "win_rate": 0.464,
+            "cumulative_strategy_return": -0.0013063523835250557,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": 8.27442891378545e-07,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0093860916359377
+          }
+        },
+        {
+          "fold": 8,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-04-10T11:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.56,
+          "roc_auc": 0.5338983050847458,
+          "balanced_accuracy": 0.5604134565998973,
+          "win_rate": 0.552,
+          "strategy_return": 0.020361616022597007,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.07460745949391645,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.56,
+            "balanced_accuracy": 0.5604134565998973,
+            "precision": 0.5317460317460317,
+            "recall": 0.5677966101694916,
+            "f1": 0.5491803278688525,
+            "roc_auc": 0.5338983050847458
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 138,
+            "losing_trades": 112,
+            "win_rate": 0.552,
+            "cumulative_strategy_return": 0.020361616022597007,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": 8.741971022782174e-05,
+            "best_trade_return": 0.0146981230830527,
+            "worst_trade_return": -0.0217899843711394
+          }
+        },
+        {
+          "fold": 9,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-04-27T14:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.48058910923066983,
+          "balanced_accuracy": 0.48336670757702993,
+          "win_rate": 0.464,
+          "strategy_return": -0.08339530780553905,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.10470659383977365,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.48336670757702993,
+            "precision": 0.43870967741935485,
+            "recall": 0.6017699115044248,
+            "f1": 0.5074626865671642,
+            "roc_auc": 0.48058910923066983
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 116,
+            "losing_trades": 134,
+            "win_rate": 0.464,
+            "cumulative_strategy_return": -0.08339530780553905,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -0.0003431285872940035,
+            "best_trade_return": 0.0113419191153985,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 9,
+        "folds_beating_buy_and_hold": 4,
+        "percentage_beating_buy_and_hold": 44.44444444444444,
+        "metrics": {
+          "accuracy": {
+            "count": 9,
+            "mean": 0.5,
+            "median": 0.488,
+            "q1": 0.472,
+            "q3": 0.532,
+            "iqr": 0.06000000000000005,
+            "minimum": 0.464,
+            "maximum": 0.56,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.464
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.56
+            }
+          },
+          "roc_auc": {
+            "count": 9,
+            "mean": 0.49395663105057075,
+            "median": 0.49561600000000006,
+            "q1": 0.47682331792501287,
+            "q3": 0.5270200720535254,
+            "iqr": 0.050196754128512544,
+            "minimum": 0.44203551209469893,
+            "maximum": 0.5338983050847458,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.44203551209469893
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.5338983050847458
+            }
+          },
+          "balanced_accuracy": {
+            "count": 9,
+            "mean": 0.5036094805399127,
+            "median": 0.4860764355675053,
+            "q1": 0.47887776065742166,
+            "q3": 0.532,
+            "iqr": 0.05312223934257837,
+            "minimum": 0.4698919197117859,
+            "maximum": 0.5604134565998973,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.4698919197117859
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.5604134565998973
+            }
+          },
+          "win_rate": {
+            "count": 9,
+            "mean": 0.4977777777777778,
+            "median": 0.488,
+            "q1": 0.468,
+            "q3": 0.532,
+            "iqr": 0.064,
+            "minimum": 0.464,
+            "maximum": 0.552,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.464
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.552
+            }
+          },
+          "strategy_return": {
+            "count": 9,
+            "mean": -0.02378603475952,
+            "median": -0.007851730564482406,
+            "q1": -0.08339530780553905,
+            "q3": 0.020361616022597007,
+            "iqr": 0.10375692382813606,
+            "minimum": -0.13255043613306094,
+            "maximum": 0.058351970760535776,
+            "worst_fold": {
+              "fold": 2,
+              "value": -0.13255043613306094
+            },
+            "best_fold": {
+              "fold": 1,
+              "value": 0.058351970760535776
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 9,
+            "mean": -0.02675150074770781,
+            "median": -0.023084182110826412,
+            "q1": -0.054245843471319444,
+            "q3": 0.006190232498518133,
+            "iqr": 0.06043607596983758,
+            "minimum": -0.12357694185696544,
+            "maximum": 0.05224472347353992,
+            "worst_fold": {
+              "fold": 2,
+              "value": -0.12357694185696544
+            },
+            "best_fold": {
+              "fold": 3,
+              "value": 0.05224472347353992
+            }
+          },
+          "strategy_excess_return": {
+            "count": 9,
+            "mean": 0.00296546598818781,
+            "median": -0.008973494276095506,
+            "q1": -0.023306141024033167,
+            "q3": 0.06522000668849393,
+            "iqr": 0.08852614771252709,
+            "minimum": -0.10470659383977365,
+            "maximum": 0.07460745949391645,
+            "worst_fold": {
+              "fold": 9,
+              "value": -0.10470659383977365
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.07460745949391645
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "random_forest__baseline__train1500_test250_step250",
+      "model": "random_forest",
+      "window": {
+        "name": "baseline",
+        "train_window": 1500,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 7,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 1500,
+          "test_start": 1501,
+          "test_end": 1751
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 1750,
+          "test_start": 1751,
+          "test_end": 2001
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 6,
+          "train_start": 1250,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 7,
+          "train_start": 1500,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-03-25T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-25T15:00:00+00:00",
+            "end": "2026-04-10T11:00:00+00:00"
+          },
+          "accuracy": 0.48,
+          "roc_auc": 0.49529599999999996,
+          "balanced_accuracy": 0.48,
+          "win_rate": 0.48,
+          "strategy_return": 7.323263891745313e-05,
+          "buy_and_hold_return": 0.05224472347353992,
+          "strategy_excess_return": -0.05217149083462247,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.48,
+            "balanced_accuracy": 0.48,
+            "precision": 0.48344370860927155,
+            "recall": 0.584,
+            "f1": 0.5289855072463768,
+            "roc_auc": 0.49529599999999996
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 120,
+            "losing_trades": 130,
+            "win_rate": 0.48,
+            "cumulative_strategy_return": 7.323263891745313e-05,
+            "buy_and_hold_return": 0.05224472347353992,
+            "average_trade_return": 1.1063503991523781e-05,
+            "best_trade_return": 0.0236199475169587,
+            "worst_trade_return": -0.0180026815679203
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-04-10T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-10T12:00:00+00:00",
+            "end": "2026-04-27T14:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.5070621468926554,
+          "balanced_accuracy": 0.47438366718027736,
+          "win_rate": 0.464,
+          "strategy_return": -0.04050323845299353,
+          "buy_and_hold_return": -0.023084182110826412,
+          "strategy_excess_return": -0.017419056342167116,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.47438366718027736,
+            "precision": 0.4485294117647059,
+            "recall": 0.5169491525423728,
+            "f1": 0.48031496062992124,
+            "roc_auc": 0.5070621468926554
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 116,
+            "losing_trades": 134,
+            "win_rate": 0.464,
+            "cumulative_strategy_return": -0.04050323845299353,
+            "buy_and_hold_return": -0.023084182110826412,
+            "average_trade_return": -0.00016083474427900746,
+            "best_trade_return": 0.0164358131214525,
+            "worst_trade_return": -0.0189477892147872
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.476,
+          "roc_auc": 0.4629665194289738,
+          "balanced_accuracy": 0.4746495102746303,
+          "win_rate": 0.472,
+          "strategy_return": -0.045763626985257155,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.05195385948377529,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.476,
+            "balanced_accuracy": 0.4746495102746303,
+            "precision": 0.4863013698630137,
+            "recall": 0.5590551181102362,
+            "f1": 0.5201465201465202,
+            "roc_auc": 0.4629665194289738
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 118,
+            "losing_trades": 132,
+            "win_rate": 0.472,
+            "cumulative_strategy_return": -0.045763626985257155,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -0.00018363541322565855,
+            "best_trade_return": 0.0083238196214747,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.5,
+          "roc_auc": 0.5367344312918167,
+          "balanced_accuracy": 0.5086850231600617,
+          "win_rate": 0.5,
+          "strategy_return": -0.031100642729661065,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.011603717452818851,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.5,
+            "balanced_accuracy": 0.5086850231600617,
+            "precision": 0.47096774193548385,
+            "recall": 0.6293103448275862,
+            "f1": 0.5387453874538746,
+            "roc_auc": 0.5367344312918167
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 125,
+            "losing_trades": 125,
+            "win_rate": 0.5,
+            "cumulative_strategy_return": -0.031100642729661065,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": -0.00012223137458514645,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.444,
+          "roc_auc": 0.4343154915079774,
+          "balanced_accuracy": 0.45123520329387545,
+          "win_rate": 0.444,
+          "strategy_return": -0.1014522523419783,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": -0.03492589326995932,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.444,
+            "balanced_accuracy": 0.45123520329387545,
+            "precision": 0.423841059602649,
+            "recall": 0.5517241379310345,
+            "f1": 0.4794007490636704,
+            "roc_auc": 0.4343154915079774
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 111,
+            "losing_trades": 139,
+            "win_rate": 0.444,
+            "cumulative_strategy_return": -0.1014522523419783,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.0004218344480627575,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0114518760687886
+          }
+        },
+        {
+          "fold": 6,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-10T17:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.532,
+          "roc_auc": 0.5568181818181819,
+          "balanced_accuracy": 0.5374935798664612,
+          "win_rate": 0.524,
+          "strategy_return": 0.06166603029619844,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.11591187376751788,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.532,
+            "balanced_accuracy": 0.5374935798664612,
+            "precision": 0.5033557046979866,
+            "recall": 0.635593220338983,
+            "f1": 0.5617977528089888,
+            "roc_auc": 0.5568181818181819
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 131,
+            "losing_trades": 119,
+            "win_rate": 0.524,
+            "cumulative_strategy_return": 0.06166603029619844,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": 0.00024612534890771314,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 7,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-25T14:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.512,
+          "roc_auc": 0.5409857244364059,
+          "balanced_accuracy": 0.5229636328402558,
+          "win_rate": 0.508,
+          "strategy_return": -0.021833040537714843,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.04314432657194944,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.512,
+            "balanced_accuracy": 0.5229636328402558,
+            "precision": 0.47058823529411764,
+            "recall": 0.6371681415929203,
+            "f1": 0.5413533834586466,
+            "roc_auc": 0.5409857244364059
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 127,
+            "losing_trades": 123,
+            "win_rate": 0.508,
+            "cumulative_strategy_return": -0.021833040537714843,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -8.311547424142271e-05,
+            "best_trade_return": 0.0129981606376456,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 7,
+        "folds_beating_buy_and_hold": 2,
+        "percentage_beating_buy_and_hold": 28.571428571428573,
+        "metrics": {
+          "accuracy": {
+            "count": 7,
+            "mean": 0.488,
+            "median": 0.48,
+            "q1": 0.474,
+            "q3": 0.506,
+            "iqr": 0.03200000000000003,
+            "minimum": 0.444,
+            "maximum": 0.532,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.444
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.532
+            }
+          },
+          "roc_auc": {
+            "count": 7,
+            "mean": 0.504882642196573,
+            "median": 0.5070621468926554,
+            "q1": 0.4791312597144869,
+            "q3": 0.5388600778641113,
+            "iqr": 0.059728818149624385,
+            "minimum": 0.4343154915079774,
+            "maximum": 0.5568181818181819,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.4343154915079774
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.5568181818181819
+            }
+          },
+          "balanced_accuracy": {
+            "count": 7,
+            "mean": 0.4927729452307945,
+            "median": 0.48,
+            "q1": 0.47451658872745384,
+            "q3": 0.5158243280001588,
+            "iqr": 0.041307739272704924,
+            "minimum": 0.45123520329387545,
+            "maximum": 0.5374935798664612,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.45123520329387545
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.5374935798664612
+            }
+          },
+          "win_rate": {
+            "count": 7,
+            "mean": 0.48457142857142854,
+            "median": 0.48,
+            "q1": 0.46799999999999997,
+            "q3": 0.504,
+            "iqr": 0.03600000000000003,
+            "minimum": 0.444,
+            "maximum": 0.524,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.444
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.524
+            }
+          },
+          "strategy_return": {
+            "count": 7,
+            "mean": -0.025559076873212714,
+            "median": -0.031100642729661065,
+            "q1": -0.04313343271912534,
+            "q3": -0.010879903949398695,
+            "iqr": 0.03225352876972665,
+            "minimum": -0.1014522523419783,
+            "maximum": 0.06166603029619844,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.1014522523419783
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.06166603029619844
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 7,
+            "mean": -0.0152592146900503,
+            "median": -0.023084182110826412,
+            "q1": -0.04847510182689968,
+            "q3": 0.013750759266376367,
+            "iqr": 0.06222586109327605,
+            "minimum": -0.06652635907201898,
+            "maximum": 0.05224472347353992,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.06652635907201898
+            },
+            "best_fold": {
+              "fold": 1,
+              "value": 0.05224472347353992
+            }
+          },
+          "strategy_excess_return": {
+            "count": 7,
+            "mean": -0.010299862183162414,
+            "median": -0.03492589326995932,
+            "q1": -0.047549093027862366,
+            "q3": -0.0029076694446741325,
+            "iqr": 0.04464142358318823,
+            "minimum": -0.05217149083462247,
+            "maximum": 0.11591187376751788,
+            "worst_fold": {
+              "fold": 1,
+              "value": -0.05217149083462247
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.11591187376751788
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "random_forest__long_train__train2000_test250_step250",
+      "model": "random_forest",
+      "window": {
+        "name": "long_train",
+        "train_window": 2000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 5,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.464,
+          "roc_auc": 0.44593816016900323,
+          "balanced_accuracy": 0.4632225849817553,
+          "win_rate": 0.464,
+          "strategy_return": -0.0706171851722105,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.07680741767072863,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.464,
+            "balanced_accuracy": 0.4632225849817553,
+            "precision": 0.4744525547445255,
+            "recall": 0.5118110236220472,
+            "f1": 0.49242424242424243,
+            "roc_auc": 0.44593816016900323
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 116,
+            "losing_trades": 134,
+            "win_rate": 0.464,
+            "cumulative_strategy_return": -0.0706171851722105,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -0.0002891965678728934,
+            "best_trade_return": 0.0078577948192228,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.5,
+          "roc_auc": 0.5200077200205868,
+          "balanced_accuracy": 0.5063690169840454,
+          "win_rate": 0.5,
+          "strategy_return": 0.0007993535318511213,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.04350371371433104,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.5,
+            "balanced_accuracy": 0.5063690169840454,
+            "precision": 0.46938775510204084,
+            "recall": 0.5948275862068966,
+            "f1": 0.5247148288973384,
+            "roc_auc": 0.5200077200205868
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 125,
+            "losing_trades": 125,
+            "win_rate": 0.5,
+            "cumulative_strategy_return": 0.0007993535318511213,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": 7.342387277379007e-06,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.464,
+          "roc_auc": 0.4247297992794648,
+          "balanced_accuracy": 0.4681549150797736,
+          "win_rate": 0.464,
+          "strategy_return": -0.041762285476233174,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": 0.024764073595785807,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.464,
+            "balanced_accuracy": 0.4681549150797736,
+            "precision": 0.4357142857142857,
+            "recall": 0.5258620689655172,
+            "f1": 0.4765625,
+            "roc_auc": 0.4247297992794648
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 116,
+            "losing_trades": 134,
+            "win_rate": 0.464,
+            "cumulative_strategy_return": -0.041762285476233174,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.00016457474129465314,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0111878280688815
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.492,
+          "roc_auc": 0.5279275808936826,
+          "balanced_accuracy": 0.49646892655367236,
+          "win_rate": 0.484,
+          "strategy_return": -0.03171092158615607,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.022534921885163373,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.492,
+            "balanced_accuracy": 0.49646892655367236,
+            "precision": 0.4689655172413793,
+            "recall": 0.576271186440678,
+            "f1": 0.5171102661596958,
+            "roc_auc": 0.5279275808936826
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 121,
+            "losing_trades": 129,
+            "win_rate": 0.484,
+            "cumulative_strategy_return": -0.03171092158615607,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": -0.00012212684161556258,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.528,
+          "roc_auc": 0.5464763258187455,
+          "balanced_accuracy": 0.5344615980879788,
+          "win_rate": 0.524,
+          "strategy_return": 0.035999021870051884,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": 0.014687735835817284,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.528,
+            "balanced_accuracy": 0.5344615980879788,
+            "precision": 0.48226950354609927,
+            "recall": 0.6017699115044248,
+            "f1": 0.5354330708661418,
+            "roc_auc": 0.5464763258187455
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 131,
+            "losing_trades": 119,
+            "win_rate": 0.524,
+            "cumulative_strategy_return": 0.035999021870051884,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": 0.00014663220747941811,
+            "best_trade_return": 0.0166964292680142,
+            "worst_trade_return": -0.0157792718228158
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 5,
+        "folds_beating_buy_and_hold": 4,
+        "percentage_beating_buy_and_hold": 80.0,
+        "metrics": {
+          "accuracy": {
+            "count": 5,
+            "mean": 0.4896,
+            "median": 0.492,
+            "q1": 0.464,
+            "q3": 0.5,
+            "iqr": 0.035999999999999976,
+            "minimum": 0.464,
+            "maximum": 0.528,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.464
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.528
+            }
+          },
+          "roc_auc": {
+            "count": 5,
+            "mean": 0.4930159172362966,
+            "median": 0.5200077200205868,
+            "q1": 0.44593816016900323,
+            "q3": 0.5279275808936826,
+            "iqr": 0.08198942072467941,
+            "minimum": 0.4247297992794648,
+            "maximum": 0.5464763258187455,
+            "worst_fold": {
+              "fold": 3,
+              "value": 0.4247297992794648
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.5464763258187455
+            }
+          },
+          "balanced_accuracy": {
+            "count": 5,
+            "mean": 0.49373540833744506,
+            "median": 0.49646892655367236,
+            "q1": 0.4681549150797736,
+            "q3": 0.5063690169840454,
+            "iqr": 0.03821410190427177,
+            "minimum": 0.4632225849817553,
+            "maximum": 0.5344615980879788,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.4632225849817553
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.5344615980879788
+            }
+          },
+          "win_rate": {
+            "count": 5,
+            "mean": 0.48719999999999997,
+            "median": 0.484,
+            "q1": 0.464,
+            "q3": 0.5,
+            "iqr": 0.035999999999999976,
+            "minimum": 0.464,
+            "maximum": 0.524,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.464
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.524
+            }
+          },
+          "strategy_return": {
+            "count": 5,
+            "mean": -0.02145840336653935,
+            "median": -0.03171092158615607,
+            "q1": -0.041762285476233174,
+            "q3": 0.0007993535318511213,
+            "iqr": 0.042561639008084295,
+            "minimum": -0.0706171851722105,
+            "maximum": 0.035999021870051884,
+            "worst_fold": {
+              "fold": 1,
+              "value": -0.0706171851722105
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.035999021870051884
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 5,
+            "mean": -0.027195008838613123,
+            "median": -0.04270436018247992,
+            "q1": -0.054245843471319444,
+            "q3": 0.006190232498518133,
+            "iqr": 0.06043607596983758,
+            "minimum": -0.06652635907201898,
+            "maximum": 0.0213112860342346,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.06652635907201898
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.0213112860342346
+            }
+          },
+          "strategy_excess_return": {
+            "count": 5,
+            "mean": 0.005736605472073775,
+            "median": 0.022534921885163373,
+            "q1": 0.014687735835817284,
+            "q3": 0.024764073595785807,
+            "iqr": 0.010076337759968523,
+            "minimum": -0.07680741767072863,
+            "maximum": 0.04350371371433104,
+            "worst_fold": {
+              "fold": 1,
+              "value": -0.07680741767072863
+            },
+            "best_fold": {
+              "fold": 2,
+              "value": 0.04350371371433104
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "gradient_boosting__short_train__train1000_test250_step250",
+      "model": "gradient_boosting",
+      "window": {
+        "name": "short_train",
+        "train_window": 1000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 9,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 1000,
+          "test_start": 1001,
+          "test_end": 1251
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 1250,
+          "test_start": 1251,
+          "test_end": 1501
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 1500,
+          "test_start": 1501,
+          "test_end": 1751
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 1750,
+          "test_start": 1751,
+          "test_end": 2001
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 6,
+          "train_start": 1250,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 7,
+          "train_start": 1500,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 8,
+          "train_start": 1750,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 9,
+          "train_start": 2000,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-02-23T20:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-02-23T23:00:00+00:00",
+            "end": "2026-03-10T17:00:00+00:00"
+          },
+          "accuracy": 0.512,
+          "roc_auc": 0.5157800396901607,
+          "balanced_accuracy": 0.5057294667434863,
+          "win_rate": 0.512,
+          "strategy_return": 0.003586896599615308,
+          "buy_and_hold_return": -0.010372062042052765,
+          "strategy_excess_return": 0.013958958641668073,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.512,
+            "balanced_accuracy": 0.5057294667434863,
+            "precision": 0.5112107623318386,
+            "recall": 0.8976377952755905,
+            "f1": 0.6514285714285715,
+            "roc_auc": 0.5157800396901607
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 128,
+            "losing_trades": 122,
+            "win_rate": 0.512,
+            "cumulative_strategy_return": 0.003586896599615308,
+            "buy_and_hold_return": -0.010372062042052765,
+            "average_trade_return": 2.441498306388104e-05,
+            "best_trade_return": 0.0290592432854697,
+            "worst_trade_return": -0.0229362237491531
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-03-10T16:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-10T18:00:00+00:00",
+            "end": "2026-03-25T14:00:00+00:00"
+          },
+          "accuracy": 0.5,
+          "roc_auc": 0.5276602564102564,
+          "balanced_accuracy": 0.5144230769230769,
+          "win_rate": 0.5,
+          "strategy_return": -0.07242702006950397,
+          "buy_and_hold_return": -0.12357694185696544,
+          "strategy_excess_return": 0.05114992178746147,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.5,
+            "balanced_accuracy": 0.5144230769230769,
+            "precision": 0.4883720930232558,
+            "recall": 0.875,
+            "f1": 0.6268656716417911,
+            "roc_auc": 0.5276602564102564
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 125,
+            "losing_trades": 125,
+            "win_rate": 0.5,
+            "cumulative_strategy_return": -0.07242702006950397,
+            "buy_and_hold_return": -0.12357694185696544,
+            "average_trade_return": -0.00028445523440964987,
+            "best_trade_return": 0.0255738162324354,
+            "worst_trade_return": -0.0245191344173507
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-03-25T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-25T15:00:00+00:00",
+            "end": "2026-04-10T11:00:00+00:00"
+          },
+          "accuracy": 0.48,
+          "roc_auc": 0.456832,
+          "balanced_accuracy": 0.48,
+          "win_rate": 0.48,
+          "strategy_return": -0.019186533300340813,
+          "buy_and_hold_return": 0.05224472347353992,
+          "strategy_excess_return": -0.07143125677388074,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.48,
+            "balanced_accuracy": 0.48,
+            "precision": 0.48663101604278075,
+            "recall": 0.728,
+            "f1": 0.5833333333333334,
+            "roc_auc": 0.456832
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 120,
+            "losing_trades": 130,
+            "win_rate": 0.48,
+            "cumulative_strategy_return": -0.019186533300340813,
+            "buy_and_hold_return": 0.05224472347353992,
+            "average_trade_return": -6.670765055636096e-05,
+            "best_trade_return": 0.0236199475169587,
+            "worst_trade_return": -0.018131883396675
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-04-10T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-10T12:00:00+00:00",
+            "end": "2026-04-27T14:00:00+00:00"
+          },
+          "accuracy": 0.516,
+          "roc_auc": 0.5110105290190037,
+          "balanced_accuracy": 0.5259373394966615,
+          "win_rate": 0.508,
+          "strategy_return": 0.016969991311072796,
+          "buy_and_hold_return": -0.023084182110826412,
+          "strategy_excess_return": 0.04005417342189921,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.516,
+            "balanced_accuracy": 0.5259373394966615,
+            "precision": 0.4911242603550296,
+            "recall": 0.7033898305084746,
+            "f1": 0.578397212543554,
+            "roc_auc": 0.5110105290190037
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 127,
+            "losing_trades": 123,
+            "win_rate": 0.508,
+            "cumulative_strategy_return": 0.016969991311072796,
+            "buy_and_hold_return": -0.023084182110826412,
+            "average_trade_return": 7.185237956583459e-05,
+            "best_trade_return": 0.0189477892147872,
+            "worst_trade_return": -0.0164358131214525
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.496,
+          "roc_auc": 0.471384674476666,
+          "balanced_accuracy": 0.49484668075027205,
+          "win_rate": 0.496,
+          "strategy_return": 0.014864539307770208,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": 0.008674306809252075,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.496,
+            "balanced_accuracy": 0.49484668075027205,
+            "precision": 0.5034965034965035,
+            "recall": 0.5669291338582677,
+            "f1": 0.5333333333333333,
+            "roc_auc": 0.471384674476666
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 124,
+            "losing_trades": 126,
+            "win_rate": 0.496,
+            "cumulative_strategy_return": 0.014864539307770208,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": 6.275937401533337e-05,
+            "best_trade_return": 0.0083238196214747,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 6,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-10T17:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.5,
+          "roc_auc": 0.5208762223365929,
+          "balanced_accuracy": 0.49942099845599586,
+          "win_rate": 0.5,
+          "strategy_return": 0.010142828039571672,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.05284718822205159,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.5,
+            "balanced_accuracy": 0.49942099845599586,
+            "precision": 0.4634146341463415,
+            "recall": 0.49137931034482757,
+            "f1": 0.4769874476987448,
+            "roc_auc": 0.5208762223365929
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 125,
+            "losing_trades": 125,
+            "win_rate": 0.5,
+            "cumulative_strategy_return": 0.010142828039571672,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": 4.450846530782504e-05,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 7,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-25T14:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.444,
+          "roc_auc": 0.4223816263510036,
+          "balanced_accuracy": 0.44370818322182193,
+          "win_rate": 0.444,
+          "strategy_return": -0.08198056039010226,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": -0.015454201318083283,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.444,
+            "balanced_accuracy": 0.44370818322182193,
+            "precision": 0.408,
+            "recall": 0.4396551724137931,
+            "f1": 0.42323651452282157,
+            "roc_auc": 0.4223816263510036
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 111,
+            "losing_trades": 139,
+            "win_rate": 0.444,
+            "cumulative_strategy_return": -0.08198056039010226,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.00033608201756812537,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0114518760687886
+          }
+        },
+        {
+          "fold": 8,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-04-10T11:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.56,
+          "roc_auc": 0.5484078068823831,
+          "balanced_accuracy": 0.5496276322547509,
+          "win_rate": 0.548,
+          "strategy_return": 0.08250837771896347,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.1367542211902829,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.56,
+            "balanced_accuracy": 0.5496276322547509,
+            "precision": 0.5512820512820513,
+            "recall": 0.3644067796610169,
+            "f1": 0.4387755102040816,
+            "roc_auc": 0.5484078068823831
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 137,
+            "losing_trades": 113,
+            "win_rate": 0.548,
+            "cumulative_strategy_return": 0.08250837771896347,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": 0.00032388760813691363,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 9,
+          "training_rows": 1000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-04-27T14:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.464,
+          "roc_auc": 0.44167043472643885,
+          "balanced_accuracy": 0.45048769459337257,
+          "win_rate": 0.456,
+          "strategy_return": -0.09615909855926341,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.11747038459349801,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.464,
+            "balanced_accuracy": 0.45048769459337257,
+            "precision": 0.38461538461538464,
+            "recall": 0.30973451327433627,
+            "f1": 0.3431372549019608,
+            "roc_auc": 0.44167043472643885
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 114,
+            "losing_trades": 136,
+            "win_rate": 0.456,
+            "cumulative_strategy_return": -0.09615909855926341,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -0.00039921854099437534,
+            "best_trade_return": 0.0113419191153985,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 9,
+        "folds_beating_buy_and_hold": 6,
+        "percentage_beating_buy_and_hold": 66.66666666666667,
+        "metrics": {
+          "accuracy": {
+            "count": 9,
+            "mean": 0.49688888888888894,
+            "median": 0.5,
+            "q1": 0.48,
+            "q3": 0.512,
+            "iqr": 0.03200000000000003,
+            "minimum": 0.444,
+            "maximum": 0.56,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.444
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.56
+            }
+          },
+          "roc_auc": {
+            "count": 9,
+            "mean": 0.4906670655436117,
+            "median": 0.5110105290190037,
+            "q1": 0.456832,
+            "q3": 0.5208762223365929,
+            "iqr": 0.0640442223365929,
+            "minimum": 0.4223816263510036,
+            "maximum": 0.5484078068823831,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.4223816263510036
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.5484078068823831
+            }
+          },
+          "balanced_accuracy": {
+            "count": 9,
+            "mean": 0.4960201191599376,
+            "median": 0.49942099845599586,
+            "q1": 0.48,
+            "q3": 0.5144230769230769,
+            "iqr": 0.03442307692307689,
+            "minimum": 0.44370818322182193,
+            "maximum": 0.5496276322547509,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.44370818322182193
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.5496276322547509
+            }
+          },
+          "win_rate": {
+            "count": 9,
+            "mean": 0.49377777777777776,
+            "median": 0.5,
+            "q1": 0.48,
+            "q3": 0.508,
+            "iqr": 0.028000000000000025,
+            "minimum": 0.444,
+            "maximum": 0.548,
+            "worst_fold": {
+              "fold": 7,
+              "value": 0.444
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.548
+            }
+          },
+          "strategy_return": {
+            "count": 9,
+            "mean": -0.015742286593579666,
+            "median": 0.003586896599615308,
+            "q1": -0.07242702006950397,
+            "q3": 0.014864539307770208,
+            "iqr": 0.08729155937727417,
+            "minimum": -0.09615909855926341,
+            "maximum": 0.08250837771896347,
+            "worst_fold": {
+              "fold": 9,
+              "value": -0.09615909855926341
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.08250837771896347
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 9,
+            "mean": -0.02675150074770781,
+            "median": -0.023084182110826412,
+            "q1": -0.054245843471319444,
+            "q3": 0.006190232498518133,
+            "iqr": 0.06043607596983758,
+            "minimum": -0.12357694185696544,
+            "maximum": 0.05224472347353992,
+            "worst_fold": {
+              "fold": 2,
+              "value": -0.12357694185696544
+            },
+            "best_fold": {
+              "fold": 3,
+              "value": 0.05224472347353992
+            }
+          },
+          "strategy_excess_return": {
+            "count": 9,
+            "mean": 0.011009214154128144,
+            "median": 0.013958958641668073,
+            "q1": -0.015454201318083283,
+            "q3": 0.05114992178746147,
+            "iqr": 0.06660412310554475,
+            "minimum": -0.11747038459349801,
+            "maximum": 0.1367542211902829,
+            "worst_fold": {
+              "fold": 9,
+              "value": -0.11747038459349801
+            },
+            "best_fold": {
+              "fold": 8,
+              "value": 0.1367542211902829
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "gradient_boosting__baseline__train1500_test250_step250",
+      "model": "gradient_boosting",
+      "window": {
+        "name": "baseline",
+        "train_window": 1500,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 7,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 1500,
+          "test_start": 1501,
+          "test_end": 1751
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 1750,
+          "test_start": 1751,
+          "test_end": 2001
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 6,
+          "train_start": 1250,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 7,
+          "train_start": 1500,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-03-25T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-03-25T15:00:00+00:00",
+            "end": "2026-04-10T11:00:00+00:00"
+          },
+          "accuracy": 0.492,
+          "roc_auc": 0.485824,
+          "balanced_accuracy": 0.492,
+          "win_rate": 0.492,
+          "strategy_return": 0.06880196302001895,
+          "buy_and_hold_return": 0.05224472347353992,
+          "strategy_excess_return": 0.01655723954647903,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.492,
+            "balanced_accuracy": 0.492,
+            "precision": 0.49514563106796117,
+            "recall": 0.816,
+            "f1": 0.6163141993957704,
+            "roc_auc": 0.485824
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 123,
+            "losing_trades": 127,
+            "win_rate": 0.492,
+            "cumulative_strategy_return": 0.06880196302001895,
+            "buy_and_hold_return": 0.05224472347353992,
+            "average_trade_return": 0.0002769178032396253,
+            "best_trade_return": 0.0236199475169587,
+            "worst_trade_return": -0.018131883396675
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-04-10T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-10T12:00:00+00:00",
+            "end": "2026-04-27T14:00:00+00:00"
+          },
+          "accuracy": 0.528,
+          "roc_auc": 0.54590395480226,
+          "balanced_accuracy": 0.5440421160760144,
+          "win_rate": 0.528,
+          "strategy_return": 0.002794485737333652,
+          "buy_and_hold_return": -0.023084182110826412,
+          "strategy_excess_return": 0.025878667848160064,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.528,
+            "balanced_accuracy": 0.5440421160760144,
+            "precision": 0.5,
+            "recall": 0.8305084745762712,
+            "f1": 0.6242038216560509,
+            "roc_auc": 0.54590395480226
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 132,
+            "losing_trades": 118,
+            "win_rate": 0.528,
+            "cumulative_strategy_return": 0.002794485737333652,
+            "buy_and_hold_return": -0.023084182110826412,
+            "average_trade_return": 1.57214803108843e-05,
+            "best_trade_return": 0.0097469929489837,
+            "worst_trade_return": -0.0189477892147872
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.4330708661417323,
+          "balanced_accuracy": 0.468920043531144,
+          "win_rate": 0.472,
+          "strategy_return": -0.012871166150189461,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.019061398648707595,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.468920043531144,
+            "precision": 0.48554913294797686,
+            "recall": 0.6614173228346457,
+            "f1": 0.56,
+            "roc_auc": 0.4330708661417323
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 118,
+            "losing_trades": 132,
+            "win_rate": 0.472,
+            "cumulative_strategy_return": -0.012871166150189461,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -4.8080932143882576e-05,
+            "best_trade_return": 0.0083238196214747,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.48,
+          "roc_auc": 0.5077200205867217,
+          "balanced_accuracy": 0.49118630983015954,
+          "win_rate": 0.48,
+          "strategy_return": 0.007096374461886823,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.04980073464436674,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.48,
+            "balanced_accuracy": 0.49118630983015954,
+            "precision": 0.4573170731707317,
+            "recall": 0.646551724137931,
+            "f1": 0.5357142857142857,
+            "roc_auc": 0.5077200205867217
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 120,
+            "losing_trades": 130,
+            "win_rate": 0.48,
+            "cumulative_strategy_return": 0.007096374461886823,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": 3.2428501116645584e-05,
+            "best_trade_return": 0.0105179147618682,
+            "worst_trade_return": -0.0108566566892145
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.412,
+          "roc_auc": 0.3824626865671642,
+          "balanced_accuracy": 0.4115414307771487,
+          "win_rate": 0.412,
+          "strategy_return": -0.11765351495807108,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": -0.0511271558860521,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.412,
+            "balanced_accuracy": 0.4115414307771487,
+            "precision": 0.376,
+            "recall": 0.4051724137931034,
+            "f1": 0.3900414937759336,
+            "roc_auc": 0.3824626865671642
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 103,
+            "losing_trades": 147,
+            "win_rate": 0.412,
+            "cumulative_strategy_return": -0.11765351495807108,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.0004946176105761203,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0111878280688815
+          }
+        },
+        {
+          "fold": 6,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-10T17:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.556,
+          "roc_auc": 0.5503017462763226,
+          "balanced_accuracy": 0.5453903441191577,
+          "win_rate": 0.548,
+          "strategy_return": 0.03654976311061908,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.09079560658193853,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.556,
+            "balanced_accuracy": 0.5453903441191577,
+            "precision": 0.5454545454545454,
+            "recall": 0.3559322033898305,
+            "f1": 0.4307692307692308,
+            "roc_auc": 0.5503017462763226
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 137,
+            "losing_trades": 113,
+            "win_rate": 0.548,
+            "cumulative_strategy_return": 0.03654976311061908,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": 0.00015036423750883652,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 7,
+          "training_rows": 1500,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-03-25T14:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.564,
+          "roc_auc": 0.5227375492539241,
+          "balanced_accuracy": 0.5525805826496997,
+          "win_rate": 0.556,
+          "strategy_return": -0.02766035125717725,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.04897163729141185,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.564,
+            "balanced_accuracy": 0.5525805826496997,
+            "precision": 0.5212765957446809,
+            "recall": 0.4336283185840708,
+            "f1": 0.47342995169082125,
+            "roc_auc": 0.5227375492539241
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 139,
+            "losing_trades": 111,
+            "win_rate": 0.556,
+            "cumulative_strategy_return": -0.02766035125717725,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -0.00010700906364120086,
+            "best_trade_return": 0.0073687109537101,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 7,
+        "folds_beating_buy_and_hold": 4,
+        "percentage_beating_buy_and_hold": 57.142857142857146,
+        "metrics": {
+          "accuracy": {
+            "count": 7,
+            "mean": 0.5005714285714286,
+            "median": 0.492,
+            "q1": 0.476,
+            "q3": 0.542,
+            "iqr": 0.06600000000000006,
+            "minimum": 0.412,
+            "maximum": 0.564,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.412
+            },
+            "best_fold": {
+              "fold": 7,
+              "value": 0.564
+            }
+          },
+          "roc_auc": {
+            "count": 7,
+            "mean": 0.48971726051830355,
+            "median": 0.5077200205867217,
+            "q1": 0.4594474330708661,
+            "q3": 0.534320752028092,
+            "iqr": 0.07487331895722593,
+            "minimum": 0.3824626865671642,
+            "maximum": 0.5503017462763226,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.3824626865671642
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.5503017462763226
+            }
+          },
+          "balanced_accuracy": {
+            "count": 7,
+            "mean": 0.5008086895690463,
+            "median": 0.492,
+            "q1": 0.4800531766806518,
+            "q3": 0.5447162300975861,
+            "iqr": 0.06466305341693429,
+            "minimum": 0.4115414307771487,
+            "maximum": 0.5525805826496997,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.4115414307771487
+            },
+            "best_fold": {
+              "fold": 7,
+              "value": 0.5525805826496997
+            }
+          },
+          "win_rate": {
+            "count": 7,
+            "mean": 0.4982857142857143,
+            "median": 0.492,
+            "q1": 0.476,
+            "q3": 0.538,
+            "iqr": 0.062000000000000055,
+            "minimum": 0.412,
+            "maximum": 0.556,
+            "worst_fold": {
+              "fold": 5,
+              "value": 0.412
+            },
+            "best_fold": {
+              "fold": 7,
+              "value": 0.556
+            }
+          },
+          "strategy_return": {
+            "count": 7,
+            "mean": -0.006134635147939898,
+            "median": 0.002794485737333652,
+            "q1": -0.020265758703683356,
+            "q3": 0.021823068786252953,
+            "iqr": 0.04208882748993631,
+            "minimum": -0.11765351495807108,
+            "maximum": 0.06880196302001895,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.11765351495807108
+            },
+            "best_fold": {
+              "fold": 1,
+              "value": 0.06880196302001895
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 7,
+            "mean": -0.0152592146900503,
+            "median": -0.023084182110826412,
+            "q1": -0.04847510182689968,
+            "q3": 0.013750759266376367,
+            "iqr": 0.06222586109327605,
+            "minimum": -0.06652635907201898,
+            "maximum": 0.05224472347353992,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.06652635907201898
+            },
+            "best_fold": {
+              "fold": 1,
+              "value": 0.05224472347353992
+            }
+          },
+          "strategy_excess_return": {
+            "count": 7,
+            "mean": 0.009124579542110402,
+            "median": 0.01655723954647903,
+            "q1": -0.03401651797005972,
+            "q3": 0.0378397012462634,
+            "iqr": 0.07185621921632313,
+            "minimum": -0.0511271558860521,
+            "maximum": 0.09079560658193853,
+            "worst_fold": {
+              "fold": 5,
+              "value": -0.0511271558860521
+            },
+            "best_fold": {
+              "fold": 6,
+              "value": 0.09079560658193853
+            }
+          }
+        }
+      }
+    },
+    {
+      "cell_id": "gradient_boosting__long_train__train2000_test250_step250",
+      "model": "gradient_boosting",
+      "window": {
+        "name": "long_train",
+        "train_window": 2000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      "fold_count": 5,
+      "fold_boundaries": [
+        {
+          "fold": 1,
+          "train_start": 0,
+          "train_end": 2000,
+          "test_start": 2001,
+          "test_end": 2251
+        },
+        {
+          "fold": 2,
+          "train_start": 250,
+          "train_end": 2250,
+          "test_start": 2251,
+          "test_end": 2501
+        },
+        {
+          "fold": 3,
+          "train_start": 500,
+          "train_end": 2500,
+          "test_start": 2501,
+          "test_end": 2751
+        },
+        {
+          "fold": 4,
+          "train_start": 750,
+          "train_end": 2750,
+          "test_start": 2751,
+          "test_end": 3001
+        },
+        {
+          "fold": 5,
+          "train_start": 1000,
+          "train_end": 3000,
+          "test_start": 3001,
+          "test_end": 3251
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2025-12-16T01:00:00+00:00",
+            "end": "2026-04-27T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-04-27T15:00:00+00:00",
+            "end": "2026-05-12T11:00:00+00:00"
+          },
+          "accuracy": 0.38,
+          "roc_auc": 0.3537865693617566,
+          "balanced_accuracy": 0.3755521413481851,
+          "win_rate": 0.38,
+          "strategy_return": -0.100893055499228,
+          "buy_and_hold_return": 0.006190232498518133,
+          "strategy_excess_return": -0.10708328799774613,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.38,
+            "balanced_accuracy": 0.3755521413481851,
+            "precision": 0.42783505154639173,
+            "recall": 0.6535433070866141,
+            "f1": 0.5171339563862928,
+            "roc_auc": 0.3537865693617566
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 95,
+            "losing_trades": 155,
+            "win_rate": 0.38,
+            "cumulative_strategy_return": -0.100893055499228,
+            "buy_and_hold_return": 0.006190232498518133,
+            "average_trade_return": -0.00042167283656566055,
+            "best_trade_return": 0.0083238196214747,
+            "worst_trade_return": -0.0089891043915167
+          }
+        },
+        {
+          "fold": 2,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-05T00:00:00+00:00",
+            "end": "2026-05-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-12T12:00:00+00:00",
+            "end": "2026-05-28T14:00:00+00:00"
+          },
+          "accuracy": 0.472,
+          "roc_auc": 0.5386644364384972,
+          "balanced_accuracy": 0.4900926402470407,
+          "win_rate": 0.472,
+          "strategy_return": -0.023692304141032294,
+          "buy_and_hold_return": -0.04270436018247992,
+          "strategy_excess_return": 0.019012056041447623,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.472,
+            "balanced_accuracy": 0.4900926402470407,
+            "precision": 0.4574468085106383,
+            "recall": 0.7413793103448276,
+            "f1": 0.5657894736842105,
+            "roc_auc": 0.5386644364384972
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 118,
+            "losing_trades": 132,
+            "win_rate": 0.472,
+            "cumulative_strategy_return": -0.023692304141032294,
+            "buy_and_hold_return": -0.04270436018247992,
+            "average_trade_return": -9.176754910274251e-05,
+            "best_trade_return": 0.0108566566892145,
+            "worst_trade_return": -0.0102169409232646
+          }
+        },
+        {
+          "fold": 3,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-01-21T02:00:00+00:00",
+            "end": "2026-05-28T13:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-05-28T15:00:00+00:00",
+            "end": "2026-06-12T11:00:00+00:00"
+          },
+          "accuracy": 0.416,
+          "roc_auc": 0.38976453937210503,
+          "balanced_accuracy": 0.4233787956767885,
+          "win_rate": 0.416,
+          "strategy_return": -0.10347256279466699,
+          "buy_and_hold_return": -0.06652635907201898,
+          "strategy_excess_return": -0.03694620372264801,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.416,
+            "balanced_accuracy": 0.4233787956767885,
+            "precision": 0.40131578947368424,
+            "recall": 0.5258620689655172,
+            "f1": 0.4552238805970149,
+            "roc_auc": 0.38976453937210503
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 104,
+            "losing_trades": 146,
+            "win_rate": 0.416,
+            "cumulative_strategy_return": -0.10347256279466699,
+            "buy_and_hold_return": -0.06652635907201898,
+            "average_trade_return": -0.00043083315963038436,
+            "best_trade_return": 0.0175558364798413,
+            "worst_trade_return": -0.0133000005576373
+          }
+        },
+        {
+          "fold": 4,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-06T01:00:00+00:00",
+            "end": "2026-06-12T10:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-12T12:00:00+00:00",
+            "end": "2026-06-30T02:00:00+00:00"
+          },
+          "accuracy": 0.508,
+          "roc_auc": 0.5199024139702105,
+          "balanced_accuracy": 0.5075757575757576,
+          "win_rate": 0.5,
+          "strategy_return": -0.015431018476861458,
+          "buy_and_hold_return": -0.054245843471319444,
+          "strategy_excess_return": 0.038814824994457986,
+          "beats_buy_and_hold": true,
+          "classification_metrics": {
+            "accuracy": 0.508,
+            "balanced_accuracy": 0.5075757575757576,
+            "precision": 0.4796747967479675,
+            "recall": 0.5,
+            "f1": 0.4896265560165975,
+            "roc_auc": 0.5199024139702105
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 125,
+            "losing_trades": 125,
+            "win_rate": 0.5,
+            "cumulative_strategy_return": -0.015431018476861458,
+            "buy_and_hold_return": -0.054245843471319444,
+            "average_trade_return": -5.5433894981741836e-05,
+            "best_trade_return": 0.0217899843711394,
+            "worst_trade_return": -0.0158063610189629
+          }
+        },
+        {
+          "fold": 5,
+          "training_rows": 2000,
+          "testing_rows": 250,
+          "training_period": {
+            "start": "2026-02-23T21:00:00+00:00",
+            "end": "2026-06-30T01:00:00+00:00"
+          },
+          "testing_period": {
+            "start": "2026-06-30T03:00:00+00:00",
+            "end": "2026-07-15T16:00:00+00:00"
+          },
+          "accuracy": 0.544,
+          "roc_auc": 0.5517731412699438,
+          "balanced_accuracy": 0.5265809702215619,
+          "win_rate": 0.54,
+          "strategy_return": -0.023829021562063346,
+          "buy_and_hold_return": 0.0213112860342346,
+          "strategy_excess_return": -0.045140307596297946,
+          "beats_buy_and_hold": false,
+          "classification_metrics": {
+            "accuracy": 0.544,
+            "balanced_accuracy": 0.5265809702215619,
+            "precision": 0.4936708860759494,
+            "recall": 0.34513274336283184,
+            "f1": 0.40625,
+            "roc_auc": 0.5517731412699438
+          },
+          "strategy_metrics": {
+            "number_of_trades": 250,
+            "winning_trades": 135,
+            "losing_trades": 115,
+            "win_rate": 0.54,
+            "cumulative_strategy_return": -0.023829021562063346,
+            "buy_and_hold_return": 0.0213112860342346,
+            "average_trade_return": -9.127958115804082e-05,
+            "best_trade_return": 0.007442229609655,
+            "worst_trade_return": -0.0166964292680142
+          }
+        }
+      ],
+      "aggregate": {
+        "total_folds": 5,
+        "folds_beating_buy_and_hold": 2,
+        "percentage_beating_buy_and_hold": 40.0,
+        "metrics": {
+          "accuracy": {
+            "count": 5,
+            "mean": 0.4640000000000001,
+            "median": 0.472,
+            "q1": 0.416,
+            "q3": 0.508,
+            "iqr": 0.09200000000000003,
+            "minimum": 0.38,
+            "maximum": 0.544,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.38
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.544
+            }
+          },
+          "roc_auc": {
+            "count": 5,
+            "mean": 0.4707782200825026,
+            "median": 0.5199024139702105,
+            "q1": 0.38976453937210503,
+            "q3": 0.5386644364384972,
+            "iqr": 0.14889989706639212,
+            "minimum": 0.3537865693617566,
+            "maximum": 0.5517731412699438,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.3537865693617566
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.5517731412699438
+            }
+          },
+          "balanced_accuracy": {
+            "count": 5,
+            "mean": 0.46463606101386673,
+            "median": 0.4900926402470407,
+            "q1": 0.4233787956767885,
+            "q3": 0.5075757575757576,
+            "iqr": 0.08419696189896908,
+            "minimum": 0.3755521413481851,
+            "maximum": 0.5265809702215619,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.3755521413481851
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.5265809702215619
+            }
+          },
+          "win_rate": {
+            "count": 5,
+            "mean": 0.46159999999999995,
+            "median": 0.472,
+            "q1": 0.416,
+            "q3": 0.5,
+            "iqr": 0.08400000000000002,
+            "minimum": 0.38,
+            "maximum": 0.54,
+            "worst_fold": {
+              "fold": 1,
+              "value": 0.38
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.54
+            }
+          },
+          "strategy_return": {
+            "count": 5,
+            "mean": -0.053463592494770416,
+            "median": -0.023829021562063346,
+            "q1": -0.100893055499228,
+            "q3": -0.023692304141032294,
+            "iqr": 0.07720075135819571,
+            "minimum": -0.10347256279466699,
+            "maximum": -0.015431018476861458,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.10347256279466699
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": -0.015431018476861458
+            }
+          },
+          "buy_and_hold_return": {
+            "count": 5,
+            "mean": -0.027195008838613123,
+            "median": -0.04270436018247992,
+            "q1": -0.054245843471319444,
+            "q3": 0.006190232498518133,
+            "iqr": 0.06043607596983758,
+            "minimum": -0.06652635907201898,
+            "maximum": 0.0213112860342346,
+            "worst_fold": {
+              "fold": 3,
+              "value": -0.06652635907201898
+            },
+            "best_fold": {
+              "fold": 5,
+              "value": 0.0213112860342346
+            }
+          },
+          "strategy_excess_return": {
+            "count": 5,
+            "mean": -0.026268583656157297,
+            "median": -0.03694620372264801,
+            "q1": -0.045140307596297946,
+            "q3": 0.019012056041447623,
+            "iqr": 0.06415236363774557,
+            "minimum": -0.10708328799774613,
+            "maximum": 0.038814824994457986,
+            "worst_fold": {
+              "fold": 1,
+              "value": -0.10708328799774613
+            },
+            "best_fold": {
+              "fold": 4,
+              "value": 0.038814824994457986
+            }
+          }
+        }
+      }
+    }
+  ]
+}

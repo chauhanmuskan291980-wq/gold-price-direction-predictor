@@ -48,9 +48,13 @@ artifacts/*
 !artifacts/test_period_trades.csv
 !artifacts/time_series_validation.json
 
-# Commit walk-forward evaluation artifacts
+# Commit Brief 01 walk-forward evaluation artifacts
 !artifacts/walk_forward/
 !artifacts/walk_forward/walk_forward_report.json
+
+# Commit Brief 02 configuration-sweep artifacts
+!artifacts/grid_search/
+!artifacts/grid_search/**
 
 # Keep empty directories
 !data/raw/.gitkeep

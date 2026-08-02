@@ -38,7 +38,42 @@ Dataset details:
 The committed data snapshot was used for both the real grid and every permutation run.
 
 ---
+## Version-Specific Reproducibility
 
+The committed Brief 02 artifacts were generated using the following reference
+environment:
+
+- Python: 3.10.5
+- scikit-learn: 1.7.2
+- pandas: 2.3.3
+- NumPy: 2.2.6
+- Random seed: 42
+- Permutation repetitions: 500
+
+Logistic Regression reproduced identically when independently tested on a newer
+numerical-library stack. However, Random Forest results and one Gradient
+Boosting result changed across scikit-learn versions.
+
+A fixed `random_state` makes stochastic estimators deterministic within a fixed
+library implementation. It does not guarantee byte-identical bootstrap
+sampling, tree construction, or fitted results across different scikit-learn
+versions.
+
+Therefore:
+
+- The exact committed per-cell values should be reproduced using the reference
+  environment listed above.
+- Random Forest and Gradient Boosting per-cell results may differ across
+  scikit-learn versions.
+- The identity of the highest-ranked real configuration may change across
+  versions.
+- The principal scientific conclusion remains robust: the best real
+  configuration does not clear the selection-adjusted permutation noise floor.
+
+The robust result of this experiment is the no-edge conclusion under the null,
+not the exact identity or return of the top-ranked tree-model configuration
+across different library versions.
+---
 ## 3. Approved Configuration Grid
 
 The configuration sweep was driven by:

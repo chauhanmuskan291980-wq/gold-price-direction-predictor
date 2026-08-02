@@ -314,7 +314,19 @@ http://127.0.0.1:8000/docs
 | `GET` | `/predict/latest` | Prediction using the latest available Gold Futures data |
 
 ---
+## Known Fresh-Clone Test Limitation
 
+On a fresh clone, `tests/test_api.py::test_prediction_endpoint` may return
+HTTP 503 because the trained per-model `.joblib` prediction artifacts are not
+committed to the repository.
+
+This limitation predates Brief 02 and does not affect the walk-forward grid,
+the selection-adjusted permutation null, or the Brief 02 scientific conclusion.
+
+The required prediction artifacts must be generated before using the live
+prediction endpoint.
+
+---
 ## Run with Docker
 
 ### Build locally

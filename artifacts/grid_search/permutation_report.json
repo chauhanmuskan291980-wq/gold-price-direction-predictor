@@ -1,0 +1,66 @@
+{
+  "configuration": {
+    "config_path": "config/walk_forward_grid.yaml",
+    "models": [
+      "logistic_regression",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "windows": [
+      {
+        "name": "short_train",
+        "train_window": 1000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      {
+        "name": "baseline",
+        "train_window": 1500,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      },
+      {
+        "name": "long_train",
+        "train_window": 2000,
+        "test_window": 250,
+        "step_size": 250,
+        "purge_gap": 1
+      }
+    ],
+    "permutation": {
+      "repetitions": 500,
+      "seed": 42
+    }
+  },
+  "dataset": {
+    "path": "data/processed/gold_features.csv",
+    "total_rows": 3336,
+    "period": {
+      "start": "2025-12-16T01:00:00+00:00",
+      "end": "2026-07-21T09:00:00+00:00"
+    }
+  },
+  "real_grid": {
+    "cell_count": 9,
+    "best_cell_id": "gradient_boosting__short_train__train1000_test250_step250",
+    "best_median_strategy_return": 0.003586896599615308
+  },
+  "permutation_null": {
+    "real_best_median_strategy_return": 0.003586896599615308,
+    "null_median": 0.029898002282233493,
+    "null_q1": 0.018811428618097592,
+    "null_q3": 0.042711150900731354,
+    "null_iqr": 0.023899722282633762,
+    "null_95th_percentile": 0.0619406432640317,
+    "null_maximum": 0.0968436287553982,
+    "exceedance_count": 474,
+    "real_result_percentile": 5.2,
+    "empirical_p_value": 0.9481037924151696,
+    "repetitions": 500,
+    "seed": 42,
+    "method": "maximum median strategy return across the complete nine-cell grid",
+    "verdict": "The real best cell does not clear the selection-adjusted permutation noise floor. Its performance is consistent with configuration snooping rather than a reliable edge."
+  }
+}
