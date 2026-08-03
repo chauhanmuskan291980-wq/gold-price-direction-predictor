@@ -1,0 +1,30 @@
+gate:
+  random_seed: 42
+
+sample:
+  minimum_trades: 100
+
+walk_forward:
+  trade_window_size: 50
+  trade_step_size: 50
+  bar_window_size: 250
+  bar_step_size: 250
+  minimum_windows: 4
+
+permutation:
+  repetitions: 500
+  significance_level: 0.05
+  primary_statistic: median_window_expectancy
+
+bootstrap:
+  repetitions: 2000
+  lower_percentile: 5
+
+concentration:
+  top_winner_fraction: 0.05
+  maximum_allowed_concentration: 0.50
+
+verdict:
+  minimum_positive_window_rate: 0.60
+  minimum_profit_factor_lower_bound: 1.00
+  minimum_expectancy_lower_bound: 0.00
