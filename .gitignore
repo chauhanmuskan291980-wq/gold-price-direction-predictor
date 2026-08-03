@@ -56,6 +56,10 @@ artifacts/*
 !artifacts/grid_search/
 !artifacts/grid_search/**
 
+# Commit Brief 03  feature/single-validation-gate
+!artifacts/gate
+!artifacts/grid_search/**
+
 # Keep empty directories
 !data/raw/.gitkeep
 !data/processed/.gitkeep
