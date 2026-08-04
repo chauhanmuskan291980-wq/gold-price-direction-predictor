@@ -12,7 +12,6 @@ from typing import Any
 
 import yaml
 
-
 DEFAULT_CONFIG_PATH = Path(
     "config/signal_validation_gate.yaml"
 )
