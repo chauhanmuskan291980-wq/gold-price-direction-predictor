@@ -1,32 +1,97 @@
+from __future__ import annotations
+
 from pathlib import Path
 
+import pandas as pd
+
 from gate.input_loader import load_strategy_csv
-from gate.schemas import TemporaryValidationReport, Verdict
+from gate.normalization import normalize_strategy
+from gate.schemas import (
+    TemporaryValidationReport,
+    Verdict,
+    WalkForwardSummary,
+)
+from gate.windows import calculate_walk_forward_summary
+
+DEFAULT_WINDOW_SIZE = 50
+DEFAULT_STEP_SIZE = 50
 
 
 def validate(
     trades_path: str | Path,
+    *,
+    window_size: int = DEFAULT_WINDOW_SIZE,
+    step_size: int = DEFAULT_STEP_SIZE,
 ) -> TemporaryValidationReport:
-    """
-    Load a strategy CSV and produce the gate's temporary report.
-
-    Statistical validation is intentionally not implemented at this stage.
-    This function currently proves that the complete loading and reporting
-    path works before more complex analysis is added.
-    """
+    """Load, normalize, and evaluate a strategy history."""
 
     source_path = Path(trades_path).expanduser()
 
-    dataframe, input_type = load_strategy_csv(source_path)
+    dataframe, input_type = load_strategy_csv(
+        source_path
+    )
+
+    normalized_strategy = normalize_strategy(
+        dataframe,
+        input_type,
+    )
+
+    walk_forward = build_walk_forward_summary(
+        normalized_strategy.trade_returns,
+        window_size=window_size,
+        step_size=step_size,
+    )
+
+    if walk_forward is None:
+        message = (
+            "CSV loaded and normalized successfully, "
+            "but there are not enough completed trades "
+            "for one full chronological evaluation window."
+        )
+    else:
+        message = (
+            "CSV loaded, normalized, and evaluated across "
+            "chronological windows successfully. Bootstrap "
+            "and permutation-null validation are not "
+            "implemented yet."
+        )
 
     return TemporaryValidationReport(
         source_path=source_path,
         input_type=input_type,
         row_count=len(dataframe),
         columns=tuple(dataframe.columns),
+        trade_count=normalized_strategy.trade_count,
+        return_unit=normalized_strategy.return_unit,
+        walk_forward=walk_forward,
         verdict=Verdict.INSUFFICIENT_DATA,
-        message=(
-            "CSV loaded and input format detected successfully. "
-            "Statistical validation is not implemented yet."
-        ),
+        message=message,
+    )
+
+
+def build_walk_forward_summary(
+    trade_returns: pd.Series,
+    *,
+    window_size: int,
+    step_size: int,
+) -> WalkForwardSummary | None:
+    """Build window evidence when enough trades are available."""
+
+    if window_size <= 0:
+        raise ValueError(
+            "window_size must be greater than zero."
+        )
+
+    if step_size <= 0:
+        raise ValueError(
+            "step_size must be greater than zero."
+        )
+
+    if len(trade_returns) < window_size:
+        return None
+
+    return calculate_walk_forward_summary(
+        trade_returns,
+        window_size=window_size,
+        step_size=step_size,
     )

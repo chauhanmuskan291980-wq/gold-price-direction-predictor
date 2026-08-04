@@ -21,8 +21,6 @@ class Verdict(str, Enum):
     INSUFFICIENT_DATA = "INSUFFICIENT DATA"
 
 
-
-
 @dataclass(frozen=True)
 class WalkForwardSummary:
     """Summarize performance across chronological evaluation windows."""
@@ -48,23 +46,26 @@ class WalkForwardSummary:
             "worst_window_expectancy": (
                 self.worst_window_expectancy
             ),
-            "positive_window_rate": self.positive_window_rate,
+            "positive_window_rate": (
+                self.positive_window_rate
+            ),
             "window_expectancies": list(
                 self.window_expectancies
             ),
         }
 
 
-
-
 @dataclass(frozen=True)
 class TemporaryValidationReport:
-    """Represent the first temporary result produced by the gate."""
+    """Represent the current partial result produced by the gate."""
 
     source_path: Path
     input_type: InputType
     row_count: int
     columns: tuple[str, ...]
+    trade_count: int
+    return_unit: str
+    walk_forward: WalkForwardSummary | None
     verdict: Verdict
     message: str
 
@@ -76,6 +77,13 @@ class TemporaryValidationReport:
             "input_type": self.input_type.value,
             "row_count": self.row_count,
             "columns": list(self.columns),
+            "trade_count": self.trade_count,
+            "return_unit": self.return_unit,
+            "walk_forward": (
+                self.walk_forward.to_dict()
+                if self.walk_forward is not None
+                else None
+            ),
             "verdict": self.verdict.value,
             "message": self.message,
         }
