@@ -1,71 +1,45 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Any
-
-import pandas as pd
 
 
 class InputType(str, Enum):
+    """CSV input formats supported by the validation gate."""
+
     CLOSED_TRADES = "closed_trades"
     BAR_SERIES = "bar_series"
 
 
 class Verdict(str, Enum):
+    """Possible final decisions returned by the gate."""
+
     EDGE = "EDGE"
     NO_EDGE = "NO-EDGE"
     INSUFFICIENT_DATA = "INSUFFICIENT DATA"
 
 
 @dataclass(frozen=True)
-class NormalizedStrategy:
+class TemporaryValidationReport:
+    """Represent the first temporary result produced by the gate."""
+
+    source_path: Path
     input_type: InputType
-    strategy_returns: pd.Series
-    trade_returns: pd.Series
-    observation_times: pd.Series
-    trade_count: int
-    return_unit: str
-
-
-@dataclass(frozen=True)
-class WalkForwardSummary:
-    window_count: int
-    median_expectancy: float
-    iqr_expectancy: float
-    worst_window_expectancy: float
-    positive_window_rate: float
-
-
-@dataclass(frozen=True)
-class BootstrapSummary:
-    expectancy_lower_bound: float
-    profit_factor_lower_bound: float
-
-
-@dataclass(frozen=True)
-class NullSummary:
-    real_statistic: float
-    null_median: float
-    null_95th_percentile: float
-    exceedance_count: int
-    p_value: float
-
-
-@dataclass(frozen=True)
-class RiskSummary:
-    maximum_losing_streak: int
-    top_winner_concentration: float
-
-
-@dataclass(frozen=True)
-class ValidationReport:
+    row_count: int
+    columns: tuple[str, ...]
     verdict: Verdict
-    input_type: InputType
-    trade_count: int
-    configs_tried: int
-    walk_forward: WalkForwardSummary | None
-    bootstrap: BootstrapSummary | None
-    permutation: NullSummary | None
-    risk: RiskSummary | None
-    checks: dict[str, bool]
-    failed_checks: list[str]
-    metadata: dict[str, Any]
+    message: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the report into a JSON-compatible dictionary."""
+
+        return {
+            "source_path": str(self.source_path),
+            "input_type": self.input_type.value,
+            "row_count": self.row_count,
+            "columns": list(self.columns),
+            "verdict": self.verdict.value,
+            "message": self.message,
+        }
