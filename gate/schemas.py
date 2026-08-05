@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from gate.bootstrap import BootstrapSummary
     from gate.metrics import TradeMetricsSummary
+    from gate.nulls import NullSummary
 
 from dataclasses import dataclass
 from enum import Enum
@@ -75,6 +76,7 @@ class TemporaryValidationReport:
     message: str
     metrics: TradeMetricsSummary | None = None
     bootstrap: BootstrapSummary | None = None
+    null_test: NullSummary | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert the report into a JSON-compatible dictionary."""
@@ -100,6 +102,11 @@ class TemporaryValidationReport:
                 self.bootstrap.to_dict()
                 if self.bootstrap is not None
                 else None
+            ),
+            "null_test": (
+            self.null_test.to_dict()
+            if self.null_test is not None
+            else None
             ),
             "verdict": self.verdict.value,
             "message": self.message,
