@@ -4,7 +4,14 @@ from pathlib import Path
 
 import pandas as pd
 
+from gate.bootstrap import (
+    DEFAULT_BOOTSTRAP_ITERATIONS,
+    DEFAULT_BOOTSTRAP_SEED,
+    DEFAULT_LOWER_PERCENTILE,
+    run_bootstrap,
+)
 from gate.input_loader import load_strategy_csv
+from gate.metrics import calculate_trade_metrics
 from gate.normalization import normalize_strategy
 from gate.schemas import (
     TemporaryValidationReport,
@@ -22,8 +29,11 @@ def validate(
     *,
     window_size: int = DEFAULT_WINDOW_SIZE,
     step_size: int = DEFAULT_STEP_SIZE,
+    bootstrap_iterations: int = DEFAULT_BOOTSTRAP_ITERATIONS,
+    bootstrap_seed: int = DEFAULT_BOOTSTRAP_SEED,
+    bootstrap_lower_percentile: float = DEFAULT_LOWER_PERCENTILE,
 ) -> TemporaryValidationReport:
-    """Load, normalize, and evaluate a strategy history."""
+    """Load, normalize, and partially validate a strategy history."""
 
     source_path = Path(trades_path).expanduser()
 
@@ -36,6 +46,17 @@ def validate(
         input_type,
     )
 
+    metrics = calculate_trade_metrics(
+        normalized_strategy.trade_returns
+    )
+
+    bootstrap = run_bootstrap(
+        normalized_strategy.trade_returns,
+        iterations=bootstrap_iterations,
+        seed=bootstrap_seed,
+        lower_percentile=bootstrap_lower_percentile,
+    )
+
     walk_forward = build_walk_forward_summary(
         normalized_strategy.trade_returns,
         window_size=window_size,
@@ -44,16 +65,17 @@ def validate(
 
     if walk_forward is None:
         message = (
-            "CSV loaded and normalized successfully, "
-            "but there are not enough completed trades "
-            "for one full chronological evaluation window."
+            "CSV loaded, normalized, and evaluated with "
+            "observed metrics and bootstrap evidence, but "
+            "there are not enough completed trades for one "
+            "full chronological evaluation window."
         )
     else:
         message = (
-            "CSV loaded, normalized, and evaluated across "
-            "chronological windows successfully. Bootstrap "
-            "and permutation-null validation are not "
-            "implemented yet."
+            "CSV loaded, normalized, and evaluated with "
+            "chronological windows, observed metrics, and "
+            "bootstrap evidence. Permutation-null validation "
+            "is not implemented yet."
         )
 
     return TemporaryValidationReport(
@@ -64,6 +86,8 @@ def validate(
         trade_count=normalized_strategy.trade_count,
         return_unit=normalized_strategy.return_unit,
         walk_forward=walk_forward,
+        metrics=metrics,
+        bootstrap=bootstrap,
         verdict=Verdict.INSUFFICIENT_DATA,
         message=message,
     )

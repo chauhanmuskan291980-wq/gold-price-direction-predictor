@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from gate.bootstrap import BootstrapSummary
+    from gate.metrics import TradeMetricsSummary
+
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any
 
 
 class InputType(str, Enum):
@@ -68,6 +73,8 @@ class TemporaryValidationReport:
     walk_forward: WalkForwardSummary | None
     verdict: Verdict
     message: str
+    metrics: TradeMetricsSummary | None = None
+    bootstrap: BootstrapSummary | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert the report into a JSON-compatible dictionary."""
@@ -82,6 +89,16 @@ class TemporaryValidationReport:
             "walk_forward": (
                 self.walk_forward.to_dict()
                 if self.walk_forward is not None
+                else None
+            ),
+            "metrics": (
+                self.metrics.to_dict()
+                if self.metrics is not None
+                else None
+            ),
+            "bootstrap": (
+                self.bootstrap.to_dict()
+                if self.bootstrap is not None
                 else None
             ),
             "verdict": self.verdict.value,
