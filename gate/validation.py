@@ -13,6 +13,12 @@ from gate.bootstrap import (
 from gate.input_loader import load_strategy_csv
 from gate.metrics import calculate_trade_metrics
 from gate.normalization import normalize_strategy
+from gate.nulls import (
+    DEFAULT_NULL_ITERATIONS,
+    DEFAULT_NULL_PERCENTILE,
+    DEFAULT_NULL_SEED,
+    run_selection_adjusted_null,
+)
 from gate.schemas import (
     TemporaryValidationReport,
     Verdict,
@@ -32,6 +38,10 @@ def validate(
     bootstrap_iterations: int = DEFAULT_BOOTSTRAP_ITERATIONS,
     bootstrap_seed: int = DEFAULT_BOOTSTRAP_SEED,
     bootstrap_lower_percentile: float = DEFAULT_LOWER_PERCENTILE,
+    configs_tried: int | None = None,
+    null_iterations: int = DEFAULT_NULL_ITERATIONS,
+    null_seed: int = DEFAULT_NULL_SEED,
+    null_percentile_level: float = DEFAULT_NULL_PERCENTILE,
 ) -> TemporaryValidationReport:
     """Load, normalize, and partially validate a strategy history."""
 
@@ -63,19 +73,49 @@ def validate(
         step_size=step_size,
     )
 
-    if walk_forward is None:
+    null_test = None
+
+    if configs_tried is not None:
+        null_test = run_selection_adjusted_null(
+            normalized_strategy.trade_returns,
+            configs_tried=configs_tried,
+            iterations=null_iterations,
+            seed=null_seed,
+            percentile_level=null_percentile_level,
+        )
+
+    if walk_forward is None and null_test is None:
         message = (
             "CSV loaded, normalized, and evaluated with "
-            "observed metrics and bootstrap evidence, but "
-            "there are not enough completed trades for one "
-            "full chronological evaluation window."
+            "observed metrics and bootstrap evidence. There "
+            "are not enough completed trades for one full "
+            "chronological window, and the permutation-null "
+            "test was not run because configs_tried was not "
+            "provided."
+        )
+    elif walk_forward is None:
+        message = (
+            "CSV loaded, normalized, and evaluated with "
+            "observed metrics, bootstrap evidence, and a "
+            "selection-adjusted permutation null. There are "
+            "not enough completed trades for one full "
+            "chronological evaluation window."
+        )
+    elif null_test is None:
+        message = (
+            "CSV loaded, normalized, and evaluated with "
+            "chronological windows, observed metrics, and "
+            "bootstrap evidence. The permutation-null test "
+            "was not run because configs_tried was not "
+            "provided."
         )
     else:
         message = (
             "CSV loaded, normalized, and evaluated with "
-            "chronological windows, observed metrics, and "
-            "bootstrap evidence. Permutation-null validation "
-            "is not implemented yet."
+            "chronological windows, observed metrics, "
+            "bootstrap evidence, and a selection-adjusted "
+            "permutation null. The final verdict policy is "
+            "not implemented yet."
         )
 
     return TemporaryValidationReport(
@@ -88,6 +128,7 @@ def validate(
         walk_forward=walk_forward,
         metrics=metrics,
         bootstrap=bootstrap,
+        null_test=null_test,
         verdict=Verdict.INSUFFICIENT_DATA,
         message=message,
     )
