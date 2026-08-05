@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -29,6 +30,15 @@ def positive_integer(value: str) -> int:
         )
 
     return parsed_value
+
+
+def format_number(value: float) -> str:
+    """Format finite and infinite metric values."""
+
+    if math.isinf(value):
+        return "Infinity" if value > 0 else "-Infinity"
+
+    return f"{value:.6f}"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -132,6 +142,97 @@ def format_temporary_report(
                 (
                     "Positive windows: "
                     f"{walk_forward.positive_window_rate:.2%}"
+                ),
+            ]
+        )
+
+    lines.extend(
+        [
+            "",
+            "OBSERVED TRADE METRICS",
+            "----------------------",
+        ]
+    )
+
+    if report.metrics is None:
+        lines.append("Unavailable.")
+    else:
+        metrics = report.metrics
+
+        lines.extend(
+            [
+                f"Trades: {metrics.trade_count}",
+                f"Winning trades: {metrics.winning_trade_count}",
+                f"Losing trades: {metrics.losing_trade_count}",
+                (
+                    "Breakeven trades: "
+                    f"{metrics.breakeven_trade_count}"
+                ),
+                (
+                    "Expectancy: "
+                    f"{format_number(metrics.expectancy)}"
+                ),
+                (
+                    "Gross profit: "
+                    f"{format_number(metrics.gross_profit)}"
+                ),
+                (
+                    "Gross loss: "
+                    f"{format_number(metrics.gross_loss)}"
+                ),
+                (
+                    "Profit factor: "
+                    f"{format_number(metrics.profit_factor)}"
+                ),
+                f"Win rate: {metrics.win_rate:.2%}",
+                (
+                    "Maximum losing streak: "
+                    f"{metrics.max_losing_streak}"
+                ),
+                (
+                    "Top-5% winner concentration: "
+                    f"{metrics.top_five_percent_winner_concentration:.2%}"
+                ),
+            ]
+        )
+
+    lines.extend(
+        [
+            "",
+            "BOOTSTRAP LOWER BOUNDS",
+            "----------------------",
+        ]
+    )
+
+    if report.bootstrap is None:
+        lines.append("Unavailable.")
+    else:
+        bootstrap = report.bootstrap
+
+        lines.extend(
+            [
+                f"Iterations: {bootstrap.iterations}",
+                f"Seed: {bootstrap.seed}",
+                f"Sample size: {bootstrap.sample_size}",
+                (
+                    "Lower percentile: "
+                    f"{bootstrap.lower_percentile:.2f}%"
+                ),
+                (
+                    "Observed expectancy: "
+                    f"{format_number(bootstrap.observed_expectancy)}"
+                ),
+                (
+                    "Observed profit factor: "
+                    f"{format_number(bootstrap.observed_profit_factor)}"
+                ),
+                (
+                    "Expectancy lower bound: "
+                    f"{format_number(bootstrap.expectancy_lower_bound)}"
+                ),
+                (
+                    "Profit-factor lower bound: "
+                    f"{format_number(bootstrap.profit_factor_lower_bound)}"
                 ),
             ]
         )
