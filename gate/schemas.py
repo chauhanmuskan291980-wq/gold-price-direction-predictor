@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from gate.bootstrap import BootstrapSummary
     from gate.metrics import TradeMetricsSummary
     from gate.nulls import NullSummary
+    from gate.verdict import VerdictAssessment
 
 from dataclasses import dataclass
 from enum import Enum
@@ -63,8 +64,6 @@ class WalkForwardSummary:
 
 @dataclass(frozen=True)
 class TemporaryValidationReport:
-    """Represent the current partial result produced by the gate."""
-
     source_path: Path
     input_type: InputType
     row_count: int
@@ -72,11 +71,12 @@ class TemporaryValidationReport:
     trade_count: int
     return_unit: str
     walk_forward: WalkForwardSummary | None
+    metrics: TradeMetricsSummary
+    bootstrap: BootstrapSummary
+    null_test: NullSummary | None
+    verdict_assessment: VerdictAssessment
     verdict: Verdict
     message: str
-    metrics: TradeMetricsSummary | None = None
-    bootstrap: BootstrapSummary | None = None
-    null_test: NullSummary | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert the report into a JSON-compatible dictionary."""
@@ -104,6 +104,11 @@ class TemporaryValidationReport:
                 else None
             ),
             "null_test": (
+            self.null_test.to_dict()
+            if self.null_test is not None
+            else None
+            ),
+            "verdict_assessment":(
             self.null_test.to_dict()
             if self.null_test is not None
             else None

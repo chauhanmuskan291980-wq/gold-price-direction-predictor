@@ -21,13 +21,14 @@ from gate.nulls import (
 )
 from gate.schemas import (
     TemporaryValidationReport,
-    Verdict,
     WalkForwardSummary,
 )
+from gate.verdict import evaluate_verdict
 from gate.windows import calculate_walk_forward_summary
 
 DEFAULT_WINDOW_SIZE = 50
 DEFAULT_STEP_SIZE = 50
+
 
 
 def validate(
@@ -84,54 +85,65 @@ def validate(
             percentile_level=null_percentile_level,
         )
 
+    assessment = evaluate_verdict(
+    trade_count=normalized_strategy.trade_count,
+    walk_forward=walk_forward,
+    metrics=metrics,
+    bootstrap=bootstrap,
+    null_test=null_test,
+)
+
     if walk_forward is None and null_test is None:
         message = (
-            "CSV loaded, normalized, and evaluated with "
-            "observed metrics and bootstrap evidence. There "
-            "are not enough completed trades for one full "
-            "chronological window, and the permutation-null "
-            "test was not run because configs_tried was not "
-            "provided."
-        )
+        "CSV loaded, normalized, and evaluated with "
+        "observed metrics and bootstrap evidence. There "
+        "are not enough completed trades for one full "
+        "chronological window, and the permutation-null "
+        "test was not run because configs_tried was not "
+        "provided."
+    )
+
     elif walk_forward is None:
         message = (
-            "CSV loaded, normalized, and evaluated with "
-            "observed metrics, bootstrap evidence, and a "
-            "selection-adjusted permutation null. There are "
-            "not enough completed trades for one full "
-            "chronological evaluation window."
-        )
+        "CSV loaded, normalized, and evaluated with "
+        "observed metrics, bootstrap evidence, and a "
+        "selection-adjusted permutation null. There are "
+        "not enough completed trades for one full "
+        "chronological evaluation window."
+    )
+
     elif null_test is None:
-        message = (
-            "CSV loaded, normalized, and evaluated with "
-            "chronological windows, observed metrics, and "
-            "bootstrap evidence. The permutation-null test "
-            "was not run because configs_tried was not "
-            "provided."
-        )
+       message = (
+        "CSV loaded, normalized, and evaluated with "
+        "chronological windows, observed metrics, "
+        "bootstrap evidence. The permutation-null test "
+        "was not run because configs_tried was not "
+        "provided. Final verdict evaluated."
+    )
+
     else:
         message = (
-            "CSV loaded, normalized, and evaluated with "
-            "chronological windows, observed metrics, "
-            "bootstrap evidence, and a selection-adjusted "
-            "permutation null. The final verdict policy is "
-            "not implemented yet."
-        )
+        "CSV loaded, normalized, and evaluated with "
+        "chronological windows, observed metrics, "
+        "bootstrap evidence, selection-adjusted "
+        "permutation null, and final verdict policy."
+    )
 
     return TemporaryValidationReport(
-        source_path=source_path,
-        input_type=input_type,
-        row_count=len(dataframe),
-        columns=tuple(dataframe.columns),
-        trade_count=normalized_strategy.trade_count,
-        return_unit=normalized_strategy.return_unit,
-        walk_forward=walk_forward,
-        metrics=metrics,
-        bootstrap=bootstrap,
-        null_test=null_test,
-        verdict=Verdict.INSUFFICIENT_DATA,
-        message=message,
-    )
+    source_path=source_path,
+    input_type=input_type,
+    row_count=len(dataframe),
+    columns=tuple(dataframe.columns),
+    trade_count=normalized_strategy.trade_count,
+    return_unit=normalized_strategy.return_unit,
+    walk_forward=walk_forward,
+    metrics=metrics,
+    bootstrap=bootstrap,
+    null_test=null_test,
+    verdict=assessment.verdict,
+    verdict_assessment=assessment,
+    message=message,
+)
 
 
 def build_walk_forward_summary(
