@@ -830,6 +830,414 @@ to minimize runtime errors.
 
 ---
 
+# 🚀 Getting Started
+
+This guide explains how to set up and run the Signal Validation Gate from scratch.
+
+---
+
+# System Requirements
+
+- Python 3.10+
+- Git
+- pip
+- Virtual Environment (recommended)
+
+---
+
+# 1. Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/gold-price-direction-predictor.git
+
+cd gold-price-direction-predictor
+```
+
+---
+
+# 2. Create a Virtual Environment
+
+Windows
+
+```bash
+python -m venv .venv
+```
+
+Linux / macOS
+
+```bash
+python3 -m venv .venv
+```
+
+---
+
+# 3. Activate the Virtual Environment
+
+### Windows PowerShell
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks activation:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+```
+
+Then activate again.
+
+### Windows CMD
+
+```cmd
+.venv\Scripts\activate.bat
+```
+
+### Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+# 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 5. Verify Installation
+
+```bash
+ruff check gate
+
+mypy gate
+```
+
+Expected output
+
+```text
+All checks passed!
+
+Success: no issues found
+```
+
+---
+
+# Project Structure
+
+```
+gold-price-direction-predictor/
+
+│
+├── gate/
+│   ├── cli.py
+│   ├── validation.py
+│   ├── verdict.py
+│   ├── bootstrap.py
+│   ├── metrics.py
+│   ├── windows.py
+│   ├── nulls.py
+│   ├── normalization.py
+│   ├── input_loader.py
+│   └── schemas.py
+│
+├── tests/
+│   └── fixtures/
+│       └── sample_closed_trades.csv
+│
+└── README.md
+```
+
+---
+
+# Running the Validation Framework
+
+The framework is executed through the CLI.
+
+Example:
+
+```bash
+python -m gate validate \
+    --trades tests/fixtures/sample_closed_trades.csv
+```
+
+---
+
+## Full Validation
+
+```bash
+python -m gate validate \
+    --trades tests/fixtures/sample_closed_trades.csv \
+    --window-size 50 \
+    --step-size 50 \
+    --configs-tried 10 \
+    --null-iterations 5000
+```
+
+The framework automatically performs:
+
+```
+Load CSV
+      ↓
+Normalize Strategy
+      ↓
+Observed Metrics
+      ↓
+Walk-Forward Analysis
+      ↓
+Bootstrap Analysis
+      ↓
+Selection-Adjusted Null Test
+      ↓
+Final Verdict
+```
+
+---
+
+# Input CSV Format
+
+The validator currently accepts closed trade history.
+
+Example:
+
+| open_time | close_time | side | return_R |
+|-----------|------------|------|----------|
+| 2024-01-01 | 2024-01-02 | LONG | 1.25 |
+| 2024-01-02 | 2024-01-03 | SHORT | -0.50 |
+| 2024-01-03 | 2024-01-04 | LONG | 0.80 |
+
+Required columns
+
+```
+open_time
+close_time
+side
+return_R
+```
+
+---
+
+# Using Your Own Strategy
+
+Replace the sample CSV with your own trade history.
+
+Example:
+
+```
+tests/
+    fixtures/
+        my_strategy.csv
+```
+
+Run:
+
+```bash
+python -m gate validate \
+    --trades tests/fixtures/my_strategy.csv
+```
+
+You may also keep your strategy anywhere on disk:
+
+```bash
+python -m gate validate \
+    --trades E:\Strategies\eurusd.csv
+```
+
+---
+
+# Changing Validation Parameters
+
+The framework allows every statistical component to be configured.
+
+Example
+
+```bash
+python -m gate validate \
+    --trades strategy.csv \
+    --window-size 100 \
+    --step-size 25 \
+    --configs-tried 50 \
+    --null-iterations 10000
+```
+
+### Available Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|----------|
+| `--window-size` | Walk-forward window size | 50 |
+| `--step-size` | Sliding window step | 50 |
+| `--configs-tried` | Number of tested strategies | Optional |
+| `--null-iterations` | Permutation iterations | 5000 |
+| `--bootstrap-iterations` | Bootstrap samples | 5000 |
+
+---
+
+# Validation Output
+
+Running the framework produces a complete statistical report.
+
+```
+SIGNAL VALIDATION GATE
+
+Walk Forward Distribution
+
+Observed Trade Metrics
+
+Bootstrap Lower Bounds
+
+Selection Adjusted Null
+
+Verdict
+
+Message
+```
+
+Possible verdicts
+
+```
+EDGE
+
+NO-EDGE
+
+INSUFFICIENT DATA
+```
+
+---
+
+# Code Quality Checks
+
+Run Ruff
+
+```bash
+ruff check gate
+```
+
+Automatically fix formatting
+
+```bash
+ruff check gate --fix
+```
+
+Run static type checking
+
+```bash
+mypy gate
+```
+
+---
+
+# Running Individual Components
+
+Bootstrap
+
+```python
+from gate.bootstrap import run_bootstrap
+```
+
+Walk Forward
+
+```python
+from gate.windows import calculate_walk_forward_summary
+```
+
+Observed Metrics
+
+```python
+from gate.metrics import calculate_trade_metrics
+```
+
+Selection-Adjusted Null
+
+```python
+from gate.nulls import run_selection_adjusted_null
+```
+
+Final Verdict
+
+```python
+from gate.verdict import evaluate_verdict
+```
+
+Validation Pipeline
+
+```python
+from gate import validate
+```
+
+---
+
+# Typical Development Workflow
+
+```text
+Modify CSV
+      ↓
+Run Validation
+      ↓
+Inspect Metrics
+      ↓
+Inspect Bootstrap
+      ↓
+Inspect Null Test
+      ↓
+Review Final Verdict
+      ↓
+Refine Strategy
+      ↓
+Repeat
+```
+
+---
+
+# Troubleshooting
+
+## Virtual environment not activating
+
+Run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+```
+
+---
+
+## Ruff reports import errors
+
+```bash
+ruff check gate --fix
+```
+
+---
+
+## Mypy reports type errors
+
+```bash
+mypy gate
+```
+
+---
+
+## CSV validation fails
+
+Verify that your CSV includes:
+
+- `open_time`
+- `close_time`
+- `side`
+- `return_R`
+
+and contains completed trades.
+
+---
+
+# Next Steps
+
+Once your strategy consistently receives an **EDGE** verdict, it is ready to be used as high-quality training data for machine learning models.
+---
+
 # 16. Future Improvements
 
 Planned enhancements include:
