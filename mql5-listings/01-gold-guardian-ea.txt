@@ -1,0 +1,508 @@
+GOLD GUARDIAN EA MQL5 MARKETPLACE  
+
+Product Type: Expert Advisor Product: Gold Guardian EA Price: USD 45
+Platform: MetaTrader 5 Primary Symbol: XAUUSD / Gold Recommended
+Timeframes: M15 and H1 (M15 optimized)
+
+============================================================ 
+1. HEADLINE
+============================================================
+
+Gold Guardian EA — Automated XAUUSD Trend Trading with Built-In Risk
+Management
+
+============================================================ 
+2. SHORT MARKETPLACE INTRODUCTION
+============================================================
+
+Gold Guardian EA is an automated MetaTrader 5 Expert Advisor designed
+for XAUUSD (Gold) trading using a rule-based trend-following strategy.
+
+The EA combines EMA trend detection, RSI momentum confirmation, ADX
+trend-strength filtering and ATR-based volatility management to identify
+and manage potential trades.
+
+Gold Guardian also includes a dedicated risk-management layer with daily
+loss protection, maximum drawdown monitoring, session controls,
+economic-news filtering, configurable position sizing and position
+limits.
+
+The system is designed for traders who want a structured, automated
+approach to Gold trading without relying on martingale or grid recovery
+techniques.
+
+IMPORTANT: Gold Guardian is not a profit guarantee and does not claim a
+verified live trading record. Historical backtests do not guarantee
+future results. Prop-firm rules vary and must be checked by the trader
+before use.
+
+============================================================ 
+3. WHO IS GOLD GUARDIAN EA FOR?
+============================================================
+
+Gold Guardian EA is designed for traders who:
+
+-   Trade XAUUSD (Gold) on MetaTrader 5.
+-   Prefer automated, rule-based trend-following strategies.
+-   Want multiple confirmation filters before an entry.
+-   Want volatility-aware stop-loss management.
+-   Want automated account-level risk controls.
+-   Trade personal accounts or accounts subject to specific risk limits.
+-   Want the EA to operate on a VPS with limited manual intervention.
+-   Prefer a system that does not use martingale or grid recovery logic.
+
+Gold Guardian may not be suitable for traders who:
+
+-   Are looking for guaranteed returns.
+-   Want a discretionary/manual trading system.
+-   Specifically want a martingale or grid strategy.
+-   Are unwilling to verify their broker or prop-firm trading rules.
+
+============================================================ 
+4. KEY FEATURES 
+============================================================
+
+Trading Strategy
+
+-   XAUUSD-focused trend-following strategy.
+-   EMA(20) and EMA(50) crossover for trend direction.
+-   RSI(14) for momentum confirmation.
+-   ADX(14) > 25 trend-strength filter.
+-   ATR(14)-based dynamic stop-loss.
+-   Configurable 1:2 or 1:3 risk-reward target.
+-   Optional ATR-based trailing stop.
+-   Optional session-end time exit.
+-   Signals are generated from closed bars.
+
+Risk Management
+
+-   Daily equity-loss protection.
+-   Maximum drawdown protection.
+-   Configurable risk-based position sizing.
+-   Session-aware risk controls.
+-   High-impact economic-news filter.
+-   Position limits to reduce excessive exposure.
+-   Automated trading lockout when configured risk thresholds are
+    reached.
+
+Monitoring
+
+-   On-chart trend status.
+-   ADX value.
+-   Daily loss percentage.
+-   Maximum drawdown status.
+-   Current trading session.
+-   Next high-impact news event and countdown.
+-   Open positions with SL/TP information.
+-   Kill-switch status.
+
+Alerts
+
+-   Daily loss early warning.
+-   Kill-switch activation.
+-   Maximum drawdown warning.
+-   Session changes.
+-   High-impact news warning.
+-   Trade entry and exit updates.
+-   Trailing-stop updates.
+-   Push, email and Telegram alerts.
+
+Compatibility
+
+-   MetaTrader 5.
+-   XAUUSD / Gold.
+-   Broker symbol suffixes such as XAUUSDm may be supported depending on
+    broker configuration.
+-   M15 and H1 timeframes.
+-   M15 is the optimized timeframe stated in the current product
+    configuration.
+-   Standard, raw-spread and ECN broker environments.
+-   Personal, challenge and funded accounts, subject to the applicable
+    account rules.
+-   VPS operation.
+
+============================================================ 
+5. HOW THE TRADING STRATEGY WORKS
+============================================================
+
+Gold Guardian does not enter a trade based on a single indicator.
+
+The strategy combines trend direction, momentum and trend strength
+before considering an entry.
+
+5.1 Trend Direction
+
+The EA uses the relationship between EMA(20) and EMA(50) to identify
+potential bullish or bearish trend direction.
+
+5.2 Momentum Confirmation
+
+RSI(14) is used as a momentum filter.
+
+Long setup: RSI(14) > 55
+
+Short setup: RSI(14) < 45
+
+5.3 Trend Strength Confirmation
+
+ADX(14) must be above 25 before an entry is considered.
+
+5.4 Volatility Management
+
+ATR(14) is used to adapt stop-loss distance to current market
+volatility.
+
+============================================================ 
+6. ENTRY CONDITIONS 
+============================================================
+
+Long Entry
+
+-   EMA(20) crosses above EMA(50)
+-   RSI(14) > 55
+-   ADX(14) > 25
+
+Short Entry
+
+-   EMA(20) crosses below EMA(50)
+-   RSI(14) < 45
+-   ADX(14) > 25
+
+Signals are based on closed bars.
+
+============================================================
+ 7. EXIT MANAGEMENT
+============================================================
+
+Stop Loss: ATR(14) x 2, using a volatility-adaptive stop distance.
+
+Take Profit: Configurable 1:2 or 1:3 risk-reward target.
+
+Trailing Stop: Optional ATR-based trailing stop.
+
+Time Exit: Optional closing of positions at the end of a configured
+trading session.
+
+============================================================ 
+8. BUILT-IN RISK MANAGEMENT
+============================================================
+
+Gold Guardian is designed with two distinct layers:
+
+1.  Trading logic
+2.  Risk-management controls
+
+8.1 Daily Loss Protection
+
+The EA monitors account equity against the configured daily-loss
+threshold.
+
+When the configured limit is reached, the risk engine can close
+positions and block new trades.
+
+8.2 Maximum Drawdown Protection
+
+A second protection layer monitors maximum drawdown to help prevent
+continued trading after the configured drawdown limit is reached.
+
+8.3 Configurable Position Sizing
+
+Position size is calculated using the configured risk percentage and
+account equity.
+
+The recommended risk level can be adjusted according to the trader’s
+account and risk requirements.
+
+8.4 Session-Aware Risk Controls
+
+The EA provides session-aware risk management for major market periods,
+including London and New York sessions.
+
+Current configuration: - London Open: 08:00–09:00 UTC - New York Open:
+13:00–14:00 UTC - London/New York overlap: 13:00–16:00 UTC
+
+8.5 Economic News Filter
+
+The EA can pause trading around high-impact economic events using the
+MetaTrader 5 built-in economic calendar.
+
+The current configuration references: - NFP - CPI - FOMC - ECB - BoE
+
+The configured news protection window is 15 minutes before and after
+high-impact events.
+
+8.6 Position Limits
+
+Position limits help prevent excessive simultaneous exposure and reduce
+overtrading.
+
+============================================================ 
+9. ON-CHART DASHBOARD 
+============================================================
+
+The dashboard can display:
+
+-   Current trend: Bullish / Bearish / Neutral
+-   ADX trend-strength value
+-   Daily loss percentage
+-   Daily-loss risk status
+-   Maximum drawdown status
+-   Current session
+-   Next high-impact news event
+-   News countdown
+-   Open positions
+-   Stop-loss and take-profit levels
+-   Kill-switch status
+
+============================================================ 
+10. ALERTS
+============================================================
+
+Gold Guardian can provide alerts for:
+
+-   Daily loss reaching 80% of the configured limit.
+-   Kill-switch activation.
+-   Maximum drawdown reaching 80% of the configured limit.
+-   Session changes.
+-   High-impact news approaching.
+-   Trade entry.
+-   Trade exit.
+-   Trailing-stop updates.
+
+Available channels in the current product description: - Push
+notifications - Email - Telegram
+
+============================================================ 
+11. WHY GOLD GUARDIAN EA?
+============================================================
+
+Gold Guardian combines automated XAUUSD trend trading with account-level
+risk management.
+
+The focus is not only on finding entries. The EA also monitors
+account-level exposure while the strategy is running.
+
+Key differentiators in the current product design:
+
+-   XAUUSD-focused trend-following logic.
+-   Multiple entry filters instead of relying on a single indicator.
+-   ATR-based volatility management.
+-   Daily loss protection.
+-   Maximum drawdown protection.
+-   Economic-news filtering.
+-   Session-aware controls.
+-   Configurable risk-based position sizing.
+-   Position limits.
+-   On-chart monitoring.
+-   Automated alerts.
+-   No martingale.
+-   No grid recovery system.
+
+The objective is to provide a structured automated trading framework
+rather than a system based on increasing exposure after losses.
+
+============================================================ 
+12. QUICK FEATURE COMPARISON
+============================================================
+
+Capability Gold Guardian EA
+
+XAUUSD trend strategy YES EMA trend filter YES RSI momentum filter YES
+ADX trend-strength filter YES ATR-based stop loss YES Configurable
+risk/reward YES ATR trailing stop OPTIONAL Daily loss protection YES
+Maximum drawdown protection YES Economic-news filter YES Session
+controls YES Risk-based position sizing YES Position limits YES On-chart
+dashboard YES Push alerts YES Email alerts YES Telegram alerts YES
+Martingale NO Grid recovery NO
+
+============================================================ 
+13. COMPATIBILITY AND SETUP
+============================================================
+
+Platform: MetaTrader 5 Symbol: XAUUSD / Gold Recommended timeframe: M15
+or H1 Optimized timeframe: M15
+
+The current product description supports broker-specific Gold symbols
+such as XAUUSDm, depending on broker configuration.
+
+Account types: Personal, challenge and funded accounts, subject to
+applicable rules.
+
+Execution: A VPS is recommended for continuous automated operation.
+
+Before running the EA, traders should confirm: - Broker XAUUSD symbol
+name. - Spread and execution conditions. - Trading hours. - Contract
+specifications. - Account daily-loss and drawdown rules. - Any
+applicable prop-firm restrictions.
+
+============================================================ 
+14. RECOMMENDED PROP-FIRM SETTINGS
+============================================================
+
+FTMO: Daily Loss: 5% Maximum Drawdown: 10% DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0 RiskPercent: 1.5
+
+5%ers: Daily Loss: 4% Maximum Drawdown: 10% DailyLossPercent: 4.0
+MaxDrawdownPercent: 10.0 RiskPercent: 1.0
+
+Finotive: Daily Loss: 5% Maximum Drawdown: 8% DailyLossPercent: 5.0
+MaxDrawdownPercent: 8.0 RiskPercent: 1.5
+
+FundedNext: Daily Loss: 5% Maximum Drawdown: 10% DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0 RiskPercent: 1.5
+
+The Funded Trader: Daily Loss: 5% Maximum Drawdown: 10%
+DailyLossPercent: 5.0 MaxDrawdownPercent: 10.0 RiskPercent: 1.5
+
+IMPORTANT: These are configuration examples from the current product
+information, not a guarantee of compliance. Prop-firm rules can change.
+Verify current rules before trading.
+
+============================================================
+15.BACKTEST INFORMATION
+============================================================
+
+The current product information reports the following figures based on
+2023–2024 every-tick backtests using real spreads:
+
+-   Net Profit: Positive across most tested periods.
+-   Profit Factor: 1.5–1.8 typical.
+-   Maximum Drawdown: 6–10% with the risk engine active.
+-   Daily Loss Breaches: 0 with the kill switch active.
+-   Win Rate: 50–55%.
+-   Trades per Year: approximately 200–400 depending on settings.
+
+These figures describe historical simulated performance and are not a
+prediction of future results.
+
+Results may vary according to: - Historical period. - Broker. -
+Spread. - Execution conditions. - Timeframe. - Risk settings. - Market
+volatility.
+
+============================================================ 
+16. WHY BACKTEST RESULTS SHOULD BE READ CAREFULLY
+============================================================
+
+Backtests can help evaluate how a rule-based strategy behaved under
+historical conditions, but they cannot reproduce every aspect of live
+trading.
+
+Gold Guardian has no claimed verified live or forward-test track record
+in the supplied product information.
+
+For this reason, buyers should evaluate the EA using their own broker
+conditions, risk settings and testing environment before committing
+significant capital.
+
+============================================================ 
+17.FREQUENTLY ASKED QUESTIONS
+============================================================
+
+Q1. What does Gold Guardian EA trade?
+
+Gold Guardian EA is designed primarily for XAUUSD (Gold) trading on
+MetaTrader 5.
+
+Q2. What strategy does it use?
+
+The EA uses EMA(20)/EMA(50) trend detection, RSI(14) momentum
+confirmation and ADX(14) trend-strength filtering. ATR(14) is used for
+volatility-aware stop-loss management.
+
+Q3. Does Gold Guardian use martingale or grid trading?
+
+No. The current product description states that Gold Guardian does not
+use martingale or grid strategies.
+
+Q4. Does the EA repaint?
+
+The strategy uses signals from closed bars. The supplied product
+description presents the system as non-repainting because signals are
+based on closed-bar information.
+
+Q5. Can I use it on a funded or prop-firm account?
+
+The EA includes risk controls intended for challenge and funded-account
+environments. However, each provider has its own rules. Verify the
+current rules of the specific provider before trading.
+
+Q6. Does it guarantee profits?
+
+No. No automated trading system can guarantee profits. Historical
+backtest results do not guarantee future performance.
+
+Q7. Which timeframe is recommended?
+
+M15 and H1 are supported, with M15 identified as the optimized timeframe
+in the current configuration.
+
+Q8. Do I need a VPS?
+
+A VPS is recommended for continuous automated operation.
+
+Q9. Does it support broker suffixes?
+
+The current product description states that broker-specific Gold symbols
+such as XAUUSDm are supported, depending on broker configuration.
+
+Q10. Does it have a news filter?
+
+Yes. The EA uses the MetaTrader 5 built-in economic calendar for
+high-impact economic events. The current configuration uses a 15-minute
+protection window before and after high-impact events.
+
+Q11. Can I change the risk settings?
+
+The EA includes configurable risk controls. Risk should be selected
+according to account size, drawdown limits and applicable trading rules.
+
+Q12. What happens when the daily loss limit is reached?
+
+When the configured daily equity-loss limit is reached, the risk engine
+can close positions and block new trades.
+
+============================================================ 
+18. SUPPORT
+============================================================
+
+Post-delivery bug-fix support is included.
+
+Feature requests and customization are available through MQL5 Freelance.
+
+============================================================ 
+19. RELATED PRODUCTS 
+============================================================
+
+Daily Loss Guardian ($35) Standalone risk engine for other EAs.
+
+Global Stop Loss and Target Manager ($30) Bulk position management with
+SL/TP controls.
+
+Session Countdown Panel ($30) Visual session boxes and countdown timers.
+
+Prop Firm Challenge Suite ($79) Bundle of related tools.
+
+These products should be treated as related products, not mandatory
+dependencies, unless confirmed otherwise.
+
+============================================================ 
+20. FINAL MARKETPLACE POSITIONING
+============================================================
+
+Gold Guardian EA is designed for traders who want a structured,
+automated approach to XAUUSD trend trading with integrated risk
+controls.
+
+The system combines:
+
+Trading signals + Momentum and trend-strength confirmation +
+Volatility-aware exits + Account-level risk controls + News and session
+filtering + Monitoring and alerts
+
+The system is based on predefined rules and configurable risk management
+rather than martingale or grid recovery techniques.
+
+Gold Guardian should be evaluated using the trader’s own broker
+conditions, account requirements and risk tolerance. Historical
+backtests represent past simulated behavior and are not a promise of
+future performance.
