@@ -359,25 +359,13 @@ information, not a guarantee of compliance. Prop-firm rules can change.
 Verify current rules before trading.
 
 ============================================================
-15.BACKTEST INFORMATION
+15.Backtest & Performance
 ============================================================
 
-The current product information reports the following figures based on
-2023–2024 every-tick backtests using real spreads:
-
--   Net Profit: Positive across most tested periods.
--   Profit Factor: 1.5–1.8 typical.
--   Maximum Drawdown: 6–10% with the risk engine active.
--   Daily Loss Breaches: 0 with the kill switch active.
--   Win Rate: 50–55%.
--   Trades per Year: approximately 200–400 depending on settings.
-
-These figures describe historical simulated performance and are not a
-prediction of future results.
-
-Results may vary according to: - Historical period. - Broker. -
-Spread. - Execution conditions. - Timeframe. - Risk settings. - Market
-volatility.
+Gold Guardian is designed to combine trend confirmation, volatility-adaptive stops, and explicit account-level risk controls for XAUUSD.
+Actual results depend on broker conditions, spread, execution, market regime, timeframe, and configuration.
+No specific historical performance figures are claimed without a reproducible Strategy Tester report.
+Past performance does not guarantee future results.
 
 ============================================================ 
 16. WHY BACKTEST RESULTS SHOULD BE READ CAREFULLY
