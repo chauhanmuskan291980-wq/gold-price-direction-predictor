@@ -1,0 +1,447 @@
+GLOBAL STOP LOSS AND TARGET MANAGER — MQL5 MARKETPLACE
+
+Product Type: Utility
+Product: Global Stop Loss and Target Manager
+Price: USD 30
+Platform: MetaTrader 5
+Primary Use: Manual / discretionary position management
+Supported Markets: Forex, Gold / XAUUSD, Indices, Crypto
+
+============================================================
+1. HEADLINE
+============================================================
+
+Global Stop Loss and Target Manager — Drag-and-Drop SL/TP Control for MT5
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+============================================================
+
+Global Stop Loss and Target Manager is a MetaTrader 5 utility for
+manual and discretionary traders who want to manage Stop Loss and
+Take Profit levels across multiple positions on the same symbol.
+
+Instead of modifying each position individually, the utility provides
+one global Stop Loss line and one global Take Profit line on the chart.
+
+Drag either line and the corresponding protection level of open
+positions on the current symbol is updated to match it.
+
+New positions opened on the same symbol automatically inherit the
+current Stop Loss and Take Profit levels.
+
+IMPORTANT: This is a position-management utility, not a trading
+strategy. It does not generate trading signals, predict prices, or
+guarantee profits.
+
+============================================================
+3. WHO IS GLOBAL STOP LOSS AND TARGET MANAGER FOR?
+============================================================
+
+The utility is designed for traders who:
+
+- Trade manually or use discretionary trading setups.
+- Manage multiple positions on the same symbol.
+- Want to adjust Stop Loss and Take Profit levels quickly.
+- Trade Gold, XAUUSD, Forex, indices or crypto.
+- Want chart-based drag-and-drop risk management.
+- Want new positions to inherit the current protection levels.
+- Prefer a simple visual alternative to editing each position
+  separately.
+
+It may not be suitable for traders who:
+
+- Want an automated trading strategy.
+- Want the utility to generate entry or exit signals.
+- Want it to open, close or reverse trades.
+- Need portfolio-wide management across different symbols from
+  a single chart.
+
+============================================================
+4. KEY FEATURES
+============================================================
+
+Global Stop Loss Control
+
+- One global Stop Loss line on the chart.
+- Drag the line to change the Stop Loss level.
+- Open positions on the current symbol are updated to the selected
+  Stop Loss level.
+
+Global Take Profit Control
+
+- One global Take Profit line on the chart.
+- Drag the line to change the target level.
+- Open positions on the current symbol are updated to the selected
+  Take Profit level.
+
+Automatic Protection for New Trades
+
+- New positions opened on the current symbol inherit the active
+  global Stop Loss and Take Profit levels.
+
+Visual Management
+
+- Drag-and-drop chart interaction.
+- Compact information panel.
+- Shows the number of positions currently being managed.
+- Displays the active global Stop Loss and Take Profit levels.
+
+Persistence
+
+- Global levels are saved.
+- Levels are restored when the MetaTrader 5 terminal is restarted.
+
+============================================================
+5. HOW IT WORKS
+============================================================
+
+Global Stop Loss and Target Manager uses two horizontal lines on the
+chart:
+
+1. Global Stop Loss line
+2. Global Take Profit line
+
+5.1 Stop Loss
+
+Drag the global Stop Loss line to the desired price.
+
+The utility updates the Stop Loss of positions on the current symbol
+to that level when the requested modification is valid.
+
+5.2 Take Profit
+
+Drag the global Take Profit line to the desired price.
+
+The utility updates the Take Profit of positions on the current symbol
+to that level when the requested modification is valid.
+
+5.3 New Positions
+
+When a new position is opened on the current symbol, the utility
+applies the current global Stop Loss and Take Profit levels.
+
+============================================================
+6. SAFE BY DESIGN
+============================================================
+
+The utility is designed specifically for position protection and
+management.
+
+It:
+
+- Does not open trades.
+- Does not close trades.
+- Does not reverse trades.
+- Does not place pending orders.
+- Only modifies Stop Loss and Take Profit levels.
+- Handles hedging accounts by addressing positions by their
+  individual ticket.
+- Skips invalid stops that are too close to the current price without
+  modifying the other positions.
+
+============================================================
+7. POSITION MANAGEMENT SCOPE
+============================================================
+
+The global levels apply to positions on the current chart symbol.
+
+For example:
+
+If the utility is attached to an XAUUSD chart, the global Stop Loss
+and Take Profit levels manage positions for XAUUSD.
+
+Positions on other symbols are not managed by that chart instance.
+
+============================================================
+8. ON-CHART INTERFACE
+============================================================
+
+The chart can display:
+
+- Global Stop Loss line.
+- Global Take Profit line.
+- Current managed-position count.
+- Current global Stop Loss level.
+- Current global Take Profit level.
+- Information panel.
+
+The lines can be moved directly on the chart to adjust the
+corresponding protection levels.
+
+============================================================
+9. INPUTS AND CONFIGURATION
+============================================================
+
+The utility provides configuration options for:
+
+- Stop Loss line colour.
+- Take Profit line colour.
+- Line width.
+- Initial Stop Loss distance in points.
+- Initial Take Profit distance in points.
+- Information panel visibility.
+- Information panel position.
+- Refresh interval in milliseconds.
+
+The initial Stop Loss and Take Profit distances are used on the
+first run.
+
+============================================================
+10. USE CASES
+============================================================
+
+Manual Multi-Position Management
+
+When several positions are open on the same symbol, the trader can
+move one global line instead of editing each position individually.
+
+Gold Trading
+
+Gold traders can use the chart lines to manage common protection
+levels across multiple XAUUSD positions.
+
+Forex and Indices
+
+The same approach can be used for multiple positions on supported
+Forex and index symbols.
+
+Crypto Trading
+
+The utility can also be used for symbol-level Stop Loss and Take
+Profit management on supported crypto instruments.
+
+Prop-Firm / Funded Accounts
+
+The utility can help traders apply their chosen protection levels
+quickly, but it does not guarantee compliance with any prop-firm's
+rules. Traders remain responsible for verifying the firm's current
+requirements.
+
+============================================================
+11. WHY GLOBAL STOP LOSS AND TARGET MANAGER?
+============================================================
+
+The main advantage is faster, visual position management.
+
+Instead of opening and modifying individual position settings, the
+trader can use two chart lines to manage the protection levels for
+positions on the current symbol.
+
+Key differentiators:
+
+- Drag-and-drop Stop Loss control.
+- Drag-and-drop Take Profit control.
+- Bulk modification of positions on the current symbol.
+- New positions inherit the active protection levels.
+- Levels persist across terminal restarts.
+- Hedging-account position handling by ticket.
+- Invalid stops are skipped rather than affecting valid positions.
+- No trading strategy or signal generation.
+- No external trading decisions are made by the utility.
+
+============================================================
+12. QUICK FEATURE COMPARISON
+============================================================
+
+Capability                              Global Manager
+
+Global Stop Loss line                   YES
+Global Take Profit line                 YES
+Drag-and-drop control                   YES
+Bulk modify current-symbol positions    YES
+New trades inherit levels               YES
+Information panel                       YES
+Managed-position count                  YES
+Level persistence                       YES
+Hedging-account ticket handling         YES
+Invalid-stop protection                 YES
+Opens trades                             NO
+Closes trades                            NO
+Reverses trades                          NO
+Places pending orders                    NO
+Generates trading signals                NO
+
+============================================================
+13. COMPATIBILITY AND SETUP
+============================================================
+
+Platform: MetaTrader 5
+
+Markets stated in the product description:
+
+- Forex
+- Gold / XAUUSD
+- Indices
+- Crypto
+
+The utility is attached to a chart for the symbol whose positions
+you want to manage.
+
+Basic setup:
+
+1. Install the utility in MetaTrader 5.
+2. Attach it to the desired symbol chart.
+3. Configure the initial Stop Loss and Take Profit distances if
+   required.
+4. Confirm the global Stop Loss and Take Profit lines.
+5. Open or manage positions on that symbol.
+6. Drag the lines to adjust the corresponding protection levels.
+
+The trader should verify broker stop-distance requirements and
+instrument specifications before use.
+
+============================================================
+14. FREQUENTLY ASKED QUESTIONS
+============================================================
+
+Q1. Does this utility open trades?
+
+No. It is a position-management utility and does not open trades.
+
+Q2. Does it close trades?
+
+No. It does not close or reverse trades.
+
+Q3. What does the Stop Loss line control?
+
+The global Stop Loss line controls the Stop Loss level applied to
+positions on the current chart symbol.
+
+Q4. What does the Take Profit line control?
+
+The global Take Profit line controls the target level applied to
+positions on the current chart symbol.
+
+Q5. Do I need to modify every position manually?
+
+No. The utility is designed to update positions on the current symbol
+from the global chart levels.
+
+Q6. What happens when I open a new position?
+
+A new position opened on the current symbol can inherit the current
+global Stop Loss and Take Profit levels.
+
+Q7. Does it work with hedging accounts?
+
+The supplied product description states that it is hedging-account
+safe and addresses each position by its individual ticket.
+
+Q8. What happens if a Stop Loss level is invalid?
+
+Invalid stops that are too close to the current price are skipped
+without modifying the other positions.
+
+Q9. Are the levels saved after restarting MT5?
+
+Yes. The product description states that the levels are saved and
+restored when the terminal is restarted.
+
+Q10. Does it generate trading signals?
+
+No. It is not a trading strategy and does not generate trading
+signals.
+
+Q11. Can I use it for XAUUSD?
+
+Yes. The product is described for Gold / XAUUSD as well as Forex,
+indices and crypto.
+
+Q12. Can I use it on a prop-firm account?
+
+It can be used for position management on such accounts, but it does
+not guarantee compliance with any prop-firm rules. Verify the
+applicable rules before trading.
+
+============================================================
+15. FREE EDITION
+============================================================
+
+A free edition with one-click buttons instead of draggable lines is
+also available.
+
+The free edition is an alternative for traders who prefer button-based
+position management rather than drag-and-drop chart controls.
+
+============================================================
+16. WHY BACKTEST OR PERFORMANCE CLAIMS ARE NOT APPLICABLE
+============================================================
+
+Global Stop Loss and Target Manager is a position-management utility,
+not a trading strategy.
+
+It does not claim a trading edge, win rate, profit factor or historical
+trading performance.
+
+Its purpose is to help traders apply and manage their own Stop Loss
+and Take Profit levels efficiently.
+
+Actual trading outcomes depend on the trader's strategy, execution,
+market conditions, broker conditions and risk management.
+
+============================================================
+17. SUPPORT
+============================================================
+
+Post-delivery bug-fix support is included.
+
+Feature requests and customization are available through MQL5
+Freelance.
+
+============================================================
+18. RELATED PRODUCTS
+============================================================
+
+Global Stop Loss and Target Setter — Free edition with one-click
+buttons instead of draggable lines.
+
+Daily Loss Guardian ($35) — Standalone account-level risk management
+utility.
+
+Session Countdown Panel ($30) — Visual session timing and countdown
+tool.
+
+These products are related tools and are not mandatory dependencies
+unless otherwise stated.
+
+============================================================
+19. FINAL MARKETPLACE POSITIONING
+============================================================
+
+Global Stop Loss and Target Manager is designed for MetaTrader 5
+traders who want faster and more visual control over Stop Loss and
+Take Profit levels.
+
+The utility combines:
+
+Drag-and-drop chart control
++ Bulk position modification
++ Automatic protection for new positions
++ Level persistence
++ Hedging-account handling
++ Invalid-stop protection
+
+It does not open, close or reverse trades and does not generate
+trading signals.
+
+The utility gives the trader direct control over the protection levels
+they choose. Traders remain responsible for selecting appropriate
+levels, managing risk and verifying broker or prop-firm requirements.
+
+============================================================
+20. DISCLAIMER
+============================================================
+
+Global Stop Loss and Target Manager is a position-management utility,
+not a trading strategy or financial advice tool.
+
+It does not guarantee profits, prevent all trading losses, or guarantee
+compliance with broker or prop-firm requirements.
+
+Broker execution rules, minimum stop distances, symbol specifications
+and account rules can affect whether a requested modification is
+accepted.
+
+Always verify the applicable trading conditions and risk requirements
+before using the utility.
