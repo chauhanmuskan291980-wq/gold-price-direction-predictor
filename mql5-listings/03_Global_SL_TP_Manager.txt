@@ -1,0 +1,462 @@
+GLOBAL STOP LOSS AND TARGET SETTER
+MQL5 MARKETPLACE LISTING
+
+Product Type: Utility
+Product: Global Stop Loss and Target Setter
+Price: Free
+Platform: MetaTrader 5
+Supported Markets: Forex, Gold/XAUUSD, Indices, Crypto
+
+============================================================
+1. HEADLINE
+============================================================
+
+Global Stop Loss and Target Setter — Free One-Click SL/TP & Break-Even Tool for MT5
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+============================================================
+
+Global Stop Loss and Target Setter is a free MetaTrader 5 utility for
+manual traders who want to apply Stop Loss and Take Profit levels to
+multiple open positions on the same symbol without editing each trade
+individually.
+
+With two on-chart buttons, traders can apply a fixed-distance Stop Loss
+and Take Profit to all open positions on the current symbol, or move
+profitable positions to break-even.
+
+The utility is designed for manual position management. It only modifies
+Stop Loss and Take Profit levels. It does not open, close, reverse or
+place pending orders.
+
+IMPORTANT: This is a position-management utility, not a trading strategy.
+It does not generate trading signals or guarantee profits. Traders remain
+responsible for verifying broker conditions and their account or prop-firm
+rules.
+
+============================================================
+3. WHO IS THIS UTILITY FOR?
+============================================================
+
+Global Stop Loss and Target Setter is designed for traders who:
+
+- Trade manually on MetaTrader 5.
+- Manage several positions on the same symbol.
+- Want to apply protection to multiple positions with one action.
+- Trade Forex, Gold/XAUUSD, indices or crypto.
+- Want a simple way to move profitable positions to break-even.
+- Prefer on-chart controls instead of editing every position manually.
+- Want a free position-management utility.
+
+It may not be suitable for traders who:
+
+- Need an automated trading strategy.
+- Want the utility to open or close trades.
+- Need continuously synchronized SL/TP levels after new trades open.
+- Need an automated daily-loss or news-risk engine.
+
+============================================================
+4. KEY FEATURES
+============================================================
+
+One-Click SL and Take Profit
+
+- Applies a fixed-distance Stop Loss to all open positions on the
+  current symbol.
+- Applies a fixed-distance Take Profit to all open positions on the
+  current symbol.
+- BUY and SELL positions are handled according to their trade direction.
+- Stop Loss and Take Profit can be controlled independently.
+
+Break-Even Management
+
+- Moves the Stop Loss of profitable positions to their entry price.
+- Optional break-even lock can add a configurable number of points
+  beyond entry.
+- Can be configured to affect only positions already in profit.
+- Positions that are not yet profitable are not moved when profit-only
+  break-even mode is enabled.
+
+Safety
+
+- Only modifies Stop Loss and Take Profit on existing positions.
+- Never opens a trade.
+- Never closes a trade.
+- Never reverses a position.
+- Never places pending orders.
+- Addresses positions individually by ticket, supporting hedging accounts.
+- Respects the broker's minimum stop-distance requirements.
+
+On-Chart Controls
+
+- Apply SL and Target button.
+- Break-Even button.
+- Configurable button and panel appearance.
+- Configurable panel position.
+
+============================================================
+5. HOW IT WORKS
+============================================================
+
+5.1 Apply SL and Target
+
+Set the desired Stop Loss and Take Profit distances in points.
+
+When the "Apply SL and Target" button is pressed, the utility applies
+the configured levels to the open positions on the current symbol.
+
+A Stop Loss or Take Profit distance set to zero can be used to leave
+that protection level unchanged.
+
+5.2 Break-Even
+
+Press the "Break-Even" button to move eligible profitable positions'
+Stop Loss to their entry price.
+
+An optional break-even lock can move the Stop Loss beyond entry by the
+configured number of points.
+
+5.3 Current-Symbol Scope
+
+The utility manages positions on the symbol of the chart where it is
+running. It is intended to provide one-click management for the
+positions associated with that symbol.
+
+============================================================
+6. BUTTONS
+============================================================
+
+Button 1 — Apply SL and Target
+
+Applies the configured fixed-distance Stop Loss and Take Profit to
+open positions on the current symbol.
+
+Button 2 — Break-Even
+
+Moves the Stop Loss of eligible positions in profit to break-even,
+including the optional configured lock.
+
+============================================================
+7. INPUTS AND CONFIGURATION
+============================================================
+
+Stop Loss Distance
+
+Sets the Stop Loss distance in points.
+
+Take Profit Distance
+
+Sets the Take Profit distance in points.
+
+Break-Even Lock
+
+Sets the number of points to lock beyond entry.
+
+Break-Even Profit Filter
+
+Controls whether break-even is applied only to positions that are
+already in profit.
+
+Button and Panel Appearance
+
+Allows customization of button/panel colours and position.
+
+============================================================
+8. SAFETY AND ACCOUNT COMPATIBILITY
+============================================================
+
+The utility is designed as a position-management tool rather than an
+automated trading system.
+
+It:
+
+- Does not decide when to enter a trade.
+- Does not decide when to exit a trade.
+- Does not place orders.
+- Does not close positions.
+- Only changes the Stop Loss and Take Profit properties of existing
+  positions.
+
+Hedging accounts are supported by addressing positions individually by
+their ticket.
+
+If a requested protection level violates the broker's minimum stop
+distance, that modification may be skipped rather than changing other
+positions.
+
+============================================================
+9. COMPATIBILITY AND SETUP
+============================================================
+
+Platform: MetaTrader 5
+
+Markets:
+
+- Forex
+- Gold / XAUUSD
+- Indices
+- Crypto
+
+Account Types:
+
+- Standard accounts
+- Raw-spread / ECN environments
+- Prop-firm and funded accounts, subject to their rules
+
+The utility is intended for manual position management and can be
+attached to a chart for the symbol whose positions you want to manage.
+
+Before using the utility, traders should confirm:
+
+- Broker symbol specifications.
+- Minimum stop distance.
+- Contract specifications.
+- Account trading rules.
+- Prop-firm restrictions, if applicable.
+
+============================================================
+10. WHAT YOU GET
+============================================================
+
+- Free MetaTrader 5 utility.
+- Compiled .ex5 version.
+- On-chart SL/TP controls.
+- Break-even management.
+- Configurable inputs.
+- Position-level protection handling.
+- Installation/use guidance.
+
+If source-code availability differs from the current MQL5 product
+package, buyers should rely on the actual files included with the
+published product.
+
+============================================================
+11. WHY GLOBAL STOP LOSS AND TARGET SETTER?
+============================================================
+
+The main benefit is faster manual position protection.
+
+Instead of opening each position and entering SL/TP values individually,
+the trader can use the on-chart controls to apply the same protection
+logic across open positions on the current symbol.
+
+Key differentiators:
+
+- Free to use.
+- One-click bulk SL/TP management.
+- Break-even button for profitable positions.
+- Works with BUY and SELL positions.
+- Hedging-account aware.
+- Respects broker stop-distance requirements.
+- Does not open or close trades.
+- Designed for manual traders.
+- Works across Forex, Gold, indices and crypto.
+
+The utility focuses specifically on position protection rather than
+trying to replace the trader's entry or exit strategy.
+
+============================================================
+12. QUICK FEATURE COMPARISON
+============================================================
+
+Capability                         Global Stop Loss and Target Setter
+
+One-click bulk SL                  YES
+One-click bulk TP                  YES
+Break-even management              YES
+Optional break-even lock           YES
+Current-symbol management          YES
+BUY position handling              YES
+SELL position handling             YES
+Hedging-account support            YES
+Broker minimum-stop awareness      YES
+Opens trades                       NO
+Closes trades                      NO
+Reverses trades                    NO
+Places pending orders              NO
+Trading strategy included          NO
+Automated daily-loss engine        NO
+Automated news filter              NO
+Continuous SL/TP synchronization   NO
+
+============================================================
+13. FREE EDITION VS ALWAYS-ON MANAGER
+============================================================
+
+Global Stop Loss and Target Setter is designed to apply protection when
+the trader presses one of its buttons.
+
+It is therefore different from an always-on position manager.
+
+If you want continuously active global SL/TP lines that remain linked to
+open positions and automatically apply the current protection to new
+positions, use Global Stop Loss and Target Manager.
+
+Global Stop Loss and Target Manager provides:
+
+- Drag-and-drop global Stop Loss line.
+- Drag-and-drop global Take Profit line.
+- Continuous synchronization for positions on the symbol.
+- New positions inherit the configured protection.
+- Always-on position management.
+
+============================================================
+14. FREQUENTLY ASKED QUESTIONS
+============================================================
+
+Q1. Is Global Stop Loss and Target Setter free?
+
+Yes. It is provided as a free MetaTrader 5 utility.
+
+Q2. Does it open trades?
+
+No. It does not open trades or place pending orders.
+
+Q3. Does it close trades?
+
+No. Its purpose is to modify Stop Loss and Take Profit levels on
+existing positions.
+
+Q4. Can it manage several positions at once?
+
+Yes. It can apply the configured SL and/or TP to open positions on the
+current chart symbol.
+
+Q5. Does it work with BUY and SELL positions?
+
+Yes. BUY and SELL positions are handled according to their direction
+when calculating the corresponding protection levels.
+
+Q6. What does the Break-Even button do?
+
+It moves the Stop Loss of eligible profitable positions to their entry
+price, with an optional lock beyond entry.
+
+Q7. Can I leave Stop Loss or Take Profit unchanged?
+
+Yes. A distance of zero can be configured to leave that protection level
+untouched.
+
+Q8. Does it support hedging accounts?
+
+Yes. Positions are addressed individually by ticket.
+
+Q9. What happens if the requested SL/TP is too close to the market?
+
+The broker's minimum stop-distance rules are respected. An invalid
+modification may be skipped rather than affecting the other positions.
+
+Q10. Does it work on Gold?
+
+Yes. It can be used with Gold/XAUUSD, subject to the broker's symbol and
+contract specifications.
+
+Q11. Does it provide trading signals?
+
+No. It is a position-management utility and does not generate trading
+signals.
+
+Q12. Does it automatically protect a new trade after I open it?
+
+No. This free edition applies its settings when you use the controls.
+For continuously active synchronization, use Global Stop Loss and
+Target Manager.
+
+Q13. Is this a prop-firm compliance tool?
+
+It can help with manual position protection, but it does not guarantee
+compliance with any prop-firm rules. Traders must verify and follow
+their provider's current rules.
+
+============================================================
+15. RELATED PRODUCTS AND UPGRADE PATH
+============================================================
+
+Global Stop Loss and Target Manager
+
+Paid always-on version with draggable global SL/TP lines. Open positions
+remain synchronized as the lines move, and new positions can inherit
+the current protection.
+
+Daily Loss Guardian ($35)
+
+Standalone risk-management utility for daily-loss protection, equity
+kill-switch behavior and additional account-level controls.
+
+Session Countdown Panel ($30)
+
+Visual session timing and countdown utility for London, New York and
+other market sessions.
+
+Prop Firm Challenge Suite ($79)
+
+Bundle of related risk-management tools for traders who want a broader
+prop-firm-oriented position-management setup.
+
+Gold Guardian EA ($45)
+
+Automated XAUUSD trend-following EA with integrated risk-management
+controls.
+
+============================================================
+16. MARKET NOTES AND SIGNAL CHANNEL
+============================================================
+
+The developer also publishes short notes on gold and crypto, together
+with updates about this and other tools, through a free Telegram
+channel:
+
+t.me/boltiq_signals
+
+This channel is optional and is not required to use the utility.
+
+============================================================
+17. DISCLAIMER
+============================================================
+
+Global Stop Loss and Target Setter is a position-management utility,
+not a trading strategy.
+
+It does not generate trading signals, predict market direction or
+guarantee profits.
+
+The utility only performs the position modifications described in its
+configuration. Broker execution, symbol specifications, minimum stop
+distances and account rules can affect the result of a modification.
+
+Prop-firm and funded-account rules can change. Traders are responsible
+for verifying the current rules of their provider before trading.
+
+No use of this utility guarantees that an account will pass or remain
+within any prop-firm limits.
+
+============================================================
+18. SUPPORT
+============================================================
+
+Post-delivery bug-fix support is included.
+
+Feature requests and customization are available through MQL5
+Freelance.
+
+============================================================
+19. FINAL MARKETPLACE POSITIONING
+============================================================
+
+Global Stop Loss and Target Setter is a free MetaTrader 5 utility for
+manual traders who want a faster way to protect multiple open positions
+on the same symbol.
+
+Its workflow is intentionally simple:
+
+Set your distances → click Apply SL and Target → manage profitable
+positions with Break-Even.
+
+The utility does not trade for you. It provides focused manual
+position-management controls while leaving trade selection and strategy
+decisions with the trader.
+
+For traders who need continuous global SL/TP synchronization rather than
+one-time button actions, Global Stop Loss and Target Manager provides
+the always-on upgrade path
