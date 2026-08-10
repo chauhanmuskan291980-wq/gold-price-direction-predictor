@@ -1,0 +1,734 @@
+BOLTIQ GOLD EA — MQL5 MARKETPLACE LISTING
+
+Product Type: Expert Advisor
+Product: BoltIQ Gold EA
+Price: USD 59
+Platform: MetaTrader 5
+Primary Symbol: XAUUSD / Gold
+Recommended Timeframes: M15 and H1
+
+============================================================
+1. HEADLINE
+============================================================
+
+BoltIQ Gold EA — Automated XAUUSD Trend Trading with Optional ONNX
+Machine Learning Filter and Built-In Risk Management
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+============================================================
+
+BoltIQ Gold EA is an automated MetaTrader 5 Expert Advisor designed
+primarily for XAUUSD (Gold) trading.
+
+The EA combines a rule-based trend-following strategy with an optional
+ONNX machine-learning filter. The core strategy uses EMA trend
+detection, RSI momentum confirmation, ADX trend-strength filtering and
+ATR-based volatility management.
+
+The ML filter is optional. Traders can run the EA using the rule-based
+strategy alone or enable the supplied ONNX model as an additional
+trade-selection layer.
+
+BoltIQ Gold EA also includes account-level risk controls such as daily
+loss protection, maximum drawdown monitoring, session controls,
+economic-news filtering, configurable risk sizing and position limits.
+
+IMPORTANT: No specific historical performance figures are claimed here
+without a reproducible Strategy Tester report. Past performance does not
+guarantee future results. Prop-firm rules vary and must be checked by
+the trader before use.
+
+============================================================
+3. WHO IS BOLTIQ GOLD EA FOR?
+============================================================
+
+BoltIQ Gold EA is designed for traders who:
+
+- Trade XAUUSD (Gold) on MetaTrader 5.
+- Prefer automated, rule-based trend-following strategies.
+- Want multiple confirmation filters before an entry.
+- Want the option to use an ONNX ML filter for trade selection.
+- Want volatility-aware stop-loss management.
+- Want automated account-level risk controls.
+- Trade personal accounts or accounts subject to specific risk limits.
+- Want the EA to operate on a VPS with limited manual intervention.
+- Prefer a system that does not use martingale or grid recovery logic.
+
+BoltIQ Gold EA may not be suitable for traders who:
+
+- Are looking for guaranteed returns.
+- Want a fully discretionary/manual trading system.
+- Specifically want a martingale or grid recovery strategy.
+- Are unwilling to verify broker, execution or prop-firm conditions.
+- Expect the optional ML filter to guarantee better trading results.
+
+============================================================
+4. KEY FEATURES
+============================================================
+
+Trading Strategy
+
+- XAUUSD-focused trend-following strategy.
+- EMA(20) and EMA(50) crossover for trend direction.
+- RSI(14) for momentum confirmation.
+- ADX(14) > 25 trend-strength filter.
+- ATR(14)-based dynamic stop-loss.
+- Configurable 1:2 or 1:3 risk-reward target.
+- Optional ATR-based trailing stop.
+- Optional session-end time exit.
+- Signals are generated from closed bars.
+
+Optional ONNX Machine-Learning Filter
+
+- Optional ML filtering layer.
+- Loads a supplied ONNX model inside MetaTrader 5.
+- Evaluates trade setups before entry.
+- Can block setups that do not meet the configured ML probability
+  threshold.
+- Can be disabled so the EA operates using the rule-based strategy.
+- Configurable ML probability threshold.
+- Local inference without requiring an external API.
+
+Risk Management
+
+- Daily equity-loss protection.
+- Maximum drawdown protection.
+- Configurable risk-based position sizing.
+- Session-aware risk controls.
+- High-impact economic-news filter.
+- Position limits to reduce excessive exposure.
+- Automated trading lockout when configured risk thresholds are
+  reached.
+
+Monitoring
+
+- Current trend status.
+- EMA alignment status.
+- ADX trend-strength value.
+- ML filter enabled/disabled status.
+- Latest ML probability when available.
+- Daily loss percentage.
+- Maximum drawdown status.
+- Current trading session.
+- Next high-impact news event.
+- Open positions with SL/TP information.
+- Kill-switch status.
+
+Alerts
+
+- ML filter trade decision.
+- Daily loss warning.
+- Kill-switch activation.
+- Maximum drawdown warning.
+- Session changes.
+- High-impact news warning.
+- Trade entry and exit updates.
+- Trailing-stop updates.
+- Push, email and Telegram alerts.
+
+Compatibility
+
+- MetaTrader 5.
+- XAUUSD / Gold.
+- M15 and H1 timeframes.
+- Broker-specific Gold symbols may be supported depending on broker
+  configuration.
+- Standard, raw-spread and ECN broker environments.
+- Personal, challenge and funded accounts, subject to applicable rules.
+- VPS operation.
+- ONNX inference runs locally when the ML filter is enabled.
+
+============================================================
+5. HOW THE TRADING STRATEGY WORKS
+============================================================
+
+BoltIQ Gold EA does not rely on a single indicator for its core entry
+logic.
+
+The rule-based strategy combines trend direction, momentum and trend
+strength before considering an entry.
+
+5.1 Trend Direction
+
+The EA uses EMA(20) and EMA(50) to identify potential bullish or bearish
+trend direction.
+
+5.2 Momentum Confirmation
+
+RSI(14) is used as a momentum filter.
+
+Long setup: RSI(14) > 55
+
+Short setup: RSI(14) < 45
+
+5.3 Trend Strength Confirmation
+
+ADX(14) must be above 25 before an entry is considered.
+
+5.4 Volatility Management
+
+ATR(14) is used to adapt stop-loss distance to current market volatility.
+
+5.5 Closed-Bar Signals
+
+The supplied product description specifies that the strategy operates
+using closed-bar information.
+
+============================================================
+6. ENTRY CONDITIONS
+============================================================
+
+Long Entry
+
+- EMA(20) crosses above EMA(50)
+- RSI(14) > 55
+- ADX(14) > 25
+
+Short Entry
+
+- EMA(20) crosses below EMA(50)
+- RSI(14) < 45
+- ADX(14) > 25
+
+When the optional ML filter is enabled, the ML layer can additionally
+evaluate the setup before the EA allows an entry.
+
+============================================================
+7. EXIT MANAGEMENT
+============================================================
+
+Stop Loss: ATR(14) x 2 using a volatility-adaptive stop distance.
+
+Take Profit: Configurable 1:2 or 1:3 risk-reward target.
+
+Trailing Stop: Optional ATR-based trailing stop.
+
+Time Exit: Optional closing of positions at the end of a configured
+trading session.
+
+============================================================
+8. OPTIONAL ONNX MACHINE-LEARNING FILTER
+============================================================
+
+The ML component is an optional additional filtering layer.
+
+8.1 How It Works
+
+The EA can:
+
+1. Detect a setup using the core rule-based strategy.
+2. Pass the setup features to the supplied ONNX model.
+3. Receive the model's output probability.
+4. Compare the result with the configured ML threshold.
+5. Allow or block the setup according to the configuration.
+
+8.2 Configuration
+
+UseMLFilter = false by default.
+
+MLModelPath = "BoltIQ_Gold_Filter.onnx"
+
+MLThreshold can be configured within the supported range.
+
+The ML filter can therefore be used as an optional trade-selection
+mechanism rather than being required for the core strategy to operate.
+
+8.3 ML Model Information From the Current Product Description
+
+The existing product information states:
+
+- Input features: 12 technical features.
+- Model format: ONNX.
+- Architecture: Feed-forward neural network.
+- Target: Binary classification of trading setups.
+- Training data stated in the existing listing: 2020–2023 XAUUSD M15
+  data.
+- The existing listing also states that the model was walk-forward
+  validated.
+
+These claims should only be retained in a final marketplace listing if
+the underlying model/training and validation evidence can be reproduced.
+
+============================================================
+9. BUILT-IN RISK MANAGEMENT
+============================================================
+
+BoltIQ Gold EA separates trading logic from account-level risk controls.
+
+9.1 Daily Loss Protection
+
+The EA monitors account equity against the configured daily-loss
+threshold.
+
+When the configured limit is reached, the risk engine can close
+positions and block new trades.
+
+9.2 Maximum Drawdown Protection
+
+A second protection layer monitors account drawdown and can stop further
+trading when the configured threshold is reached.
+
+9.3 Configurable Position Sizing
+
+Position size is calculated according to the configured risk percentage
+and account equity.
+
+Risk should be selected according to account size, drawdown limits and
+applicable trading rules.
+
+9.4 Session-Aware Risk Controls
+
+The EA provides session-aware controls for major market periods,
+including London and New York sessions.
+
+9.5 Economic News Filter
+
+The EA can pause trading around high-impact economic events using the
+MetaTrader 5 built-in economic calendar.
+
+The current product description references:
+
+- NFP
+- CPI
+- FOMC
+- ECB
+- BoE
+
+The configured protection window is 15 minutes before and after
+high-impact events.
+
+9.6 Position Limits
+
+Position limits help prevent excessive simultaneous exposure and
+overtrading.
+
+============================================================
+10. ON-CHART DASHBOARD
+============================================================
+
+The dashboard can display:
+
+- Current trend: Bullish / Bearish / Neutral
+- EMA alignment
+- ADX trend-strength value
+- ML filter status
+- Latest ML probability
+- Daily loss percentage
+- Maximum drawdown status
+- Current session
+- Next high-impact news event
+- News countdown
+- Open positions
+- Stop-loss and take-profit levels
+- Kill-switch status
+
+============================================================
+11. ALERTS
+============================================================
+
+BoltIQ Gold EA can provide alerts for:
+
+- ML filter trade decisions.
+- Daily loss reaching the configured warning level.
+- Kill-switch activation.
+- Maximum drawdown warning.
+- Session changes.
+- High-impact news approaching.
+- Trade entry.
+- Trade exit.
+- Trailing-stop updates.
+
+Available channels stated in the current product description:
+
+- Push notifications
+- Email
+- Telegram
+
+============================================================
+12. WHY BOLTIQ GOLD EA?
+============================================================
+
+BoltIQ Gold EA combines a transparent rule-based XAUUSD strategy with an
+optional machine-learning filtering layer.
+
+The core strategy remains understandable:
+
+Trend direction
++
+Momentum confirmation
++
+Trend-strength confirmation
++
+Volatility-aware exits
+
+The optional ML layer adds another decision stage without making ML
+mandatory.
+
+Key differentiators:
+
+- XAUUSD-focused trend-following logic.
+- EMA, RSI and ADX confirmation.
+- ATR-based volatility management.
+- Optional ONNX ML trade filter.
+- ML filter can be disabled.
+- Local ONNX inference inside MT5.
+- Daily loss protection.
+- Maximum drawdown protection.
+- Economic-news filtering.
+- Session-aware controls.
+- Configurable risk-based position sizing.
+- Position limits.
+- On-chart monitoring.
+- Automated alerts.
+- No martingale.
+- No grid recovery system.
+
+Why this vs. a rule-only EA?
+
+BoltIQ provides an optional ML layer while preserving the underlying
+rule-based strategy.
+
+Why this vs. an ML-only system?
+
+The core entry logic remains explicit and indicator-based. Traders can
+disable the ML filter and operate the rule-based strategy independently.
+
+Why this vs. martingale/grid systems?
+
+BoltIQ does not rely on increasing exposure after losses as its recovery
+mechanism.
+
+============================================================
+13. QUICK FEATURE COMPARISON
+============================================================
+
+Capability                         BoltIQ Gold EA
+
+XAUUSD trend strategy              YES
+EMA trend filter                   YES
+RSI momentum filter                YES
+ADX trend-strength filter          YES
+ATR-based stop loss                YES
+Configurable risk/reward           YES
+ATR trailing stop                  OPTIONAL
+Daily loss protection              YES
+Maximum drawdown protection        YES
+Economic-news filter               YES
+Session controls                   YES
+Risk-based position sizing         YES
+Position limits                    YES
+Optional ONNX ML filter            YES
+Configurable ML threshold          YES
+ML filter can be disabled          YES
+On-chart dashboard                 YES
+Push alerts                        YES
+Email alerts                       YES
+Telegram alerts                    YES
+Martingale                         NO
+Grid recovery                      NO
+
+============================================================
+14. COMPATIBILITY AND SETUP
+============================================================
+
+Platform: MetaTrader 5
+
+Symbol: XAUUSD / Gold
+
+Recommended timeframes: M15 or H1
+
+The current product information states that broker-specific Gold symbols
+may be supported depending on broker configuration.
+
+Account types: Personal, challenge and funded accounts, subject to
+applicable rules.
+
+VPS: Recommended for continuous automated operation.
+
+ML setup:
+
+1. Install the EA in MetaTrader 5.
+2. Place the supplied ONNX model in the appropriate MQL5/Files location.
+3. Set UseMLFilter = true when the ML filter is required.
+4. Configure the ML threshold.
+5. If the ML filter is not required, leave UseMLFilter disabled.
+6. Test the configuration under the intended broker conditions before
+   live deployment.
+
+Before running the EA, traders should confirm:
+
+- Broker XAUUSD symbol name.
+- Spread and execution conditions.
+- Trading hours.
+- Contract specifications.
+- Account daily-loss and drawdown rules.
+- Applicable prop-firm restrictions.
+- ONNX model file location and configuration when using the ML filter.
+
+============================================================
+15. RECOMMENDED PROP-FIRM SETTINGS
+============================================================
+
+FTMO:
+Daily Loss: 5%
+Maximum Drawdown: 10%
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0
+RiskPercent: 1.5
+ML Threshold: 0.65
+
+5%ers:
+Daily Loss: 4%
+Maximum Drawdown: 10%
+DailyLossPercent: 4.0
+MaxDrawdownPercent: 10.0
+RiskPercent: 1.0
+ML Threshold: 0.70
+
+Finotive:
+Daily Loss: 5%
+Maximum Drawdown: 8%
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 8.0
+RiskPercent: 1.5
+ML Threshold: 0.65
+
+FundedNext:
+Daily Loss: 5%
+Maximum Drawdown: 10%
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0
+RiskPercent: 1.5
+ML Threshold: 0.65
+
+The Funded Trader:
+Daily Loss: 5%
+Maximum Drawdown: 10%
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0
+RiskPercent: 1.5
+ML Threshold: 0.65
+
+IMPORTANT: These are configuration examples from the current product
+information, not a guarantee of compliance. Prop-firm rules can change.
+Verify the current rules of the specific provider before trading.
+
+============================================================
+16. BACKTEST & PERFORMANCE
+============================================================
+
+No specific historical performance figures are claimed in this revised
+listing without a reproducible Strategy Tester report.
+
+The current product information contains historical comparison figures
+for the rule-based strategy and optional ML filter. Those figures should
+not be presented as verified marketplace performance until the underlying
+MT5 Strategy Tester reports and ML evaluation artifacts have been
+reproduced.
+
+Actual trading results can vary because of:
+
+- Broker conditions.
+- Spread.
+- Slippage.
+- Execution quality.
+- Market regime.
+- Timeframe.
+- Risk settings.
+- ML threshold.
+- Trading account conditions.
+
+Past performance does not guarantee future results.
+
+============================================================
+17. HOW TO INTERPRET ML AND BACKTEST RESULTS
+============================================================
+
+An ML filter can change the number and characteristics of trades. A
+different trade count, win rate or profit factor in one historical test
+does not establish that the ML filter will improve live performance.
+
+The ML model may also behave differently as market conditions change.
+
+For this reason, traders should evaluate:
+
+- The rule-based configuration.
+- The ML-enabled configuration.
+- The broker's actual execution conditions.
+- The selected ML threshold.
+- Out-of-sample or forward-test behavior.
+- Risk and drawdown under the intended account rules.
+
+No verified live or forward-test track record is claimed in the supplied
+product information.
+
+============================================================
+18. FREQUENTLY ASKED QUESTIONS
+============================================================
+
+Q1. What does BoltIQ Gold EA trade?
+
+BoltIQ Gold EA is designed primarily for XAUUSD (Gold) trading on
+MetaTrader 5.
+
+Q2. What strategy does it use?
+
+The core strategy uses EMA(20)/EMA(50) trend detection, RSI(14)
+momentum confirmation and ADX(14) trend-strength filtering. ATR(14) is
+used for volatility-aware stop-loss management.
+
+Q3. What is the ONNX ML filter?
+
+It is an optional machine-learning layer that evaluates a trading setup
+before entry and can allow or block the setup according to the configured
+probability threshold.
+
+Q4. Do I have to use the ML filter?
+
+No. The current configuration allows the ML filter to be disabled. The
+EA can operate using the rule-based strategy.
+
+Q5. Does the EA require an external AI API?
+
+The supplied product description states that ONNX inference runs locally
+inside MetaTrader 5. No external API is required for the stated ML
+workflow.
+
+Q6. Does BoltIQ use martingale or grid trading?
+
+No. The current product description states that the EA does not use
+martingale or grid recovery logic.
+
+Q7. Does the EA repaint?
+
+The supplied product description states that the strategy uses closed
+bars. The implementation should be evaluated under the trader's own
+testing conditions before live deployment.
+
+Q8. Can I use it on a funded or prop-firm account?
+
+The EA includes account-level risk controls intended for challenge and
+funded-account environments. However, every provider has its own rules.
+Verify the current rules before trading.
+
+Q9. Does it guarantee profits?
+
+No. No automated trading system or ML model can guarantee profits.
+Historical results do not guarantee future performance.
+
+Q10. Can I change the ML threshold?
+
+Yes, the current product configuration provides a configurable ML
+probability threshold.
+
+Q11. What happens when the daily loss limit is reached?
+
+When the configured daily equity-loss limit is reached, the risk engine
+can close positions and block new trades.
+
+Q12. Does it have a news filter?
+
+Yes. The EA uses the MetaTrader 5 built-in economic calendar for
+high-impact events. The current configuration uses a 15-minute
+protection window before and after high-impact events.
+
+Q13. Do I need a VPS?
+
+A VPS is recommended for continuous automated operation.
+
+Q14. What happens if the ONNX model is not used?
+
+The ML filter can be disabled and the EA can operate using the
+rule-based strategy, subject to the product's actual implementation.
+
+============================================================
+19. WHAT YOU RECEIVE
+============================================================
+
+The current product description states that the package includes:
+
+- .mq5 source code and compiled .ex5
+- Pre-trained BoltIQ Gold Filter ONNX model
+- Parameter documentation
+- ML filter setup guide
+- Recommended prop-firm settings
+- Installation guide
+- Lifetime updates
+
+Only deliverables actually included with the purchased product should
+be advertised on the final marketplace listing.
+
+============================================================
+20. RELATED PRODUCTS
+============================================================
+
+Daily Loss Guardian ($35)
+
+Standalone risk-management tool for other EAs.
+
+Global Stop Loss and Target Manager ($30)
+
+Bulk position management with SL/TP controls.
+
+Session Countdown Panel ($30)
+
+Visual trading-session boxes and countdown timers.
+
+BoltIQ Gold EA Premium ($199)
+
+The current product information describes this as a higher-tier
+multi-strategy and advanced-ML product.
+
+Prop Firm Challenge Suite ($79)
+
+Bundle of related risk-management tools.
+
+These products should be treated as related products, not mandatory
+dependencies, unless confirmed otherwise.
+
+============================================================
+21. SUPPORT
+============================================================
+
+Post-delivery bug-fix support is included according to the current
+product information.
+
+ML model retraining and customization are available through MQL5
+Freelance.
+
+============================================================
+22. FINAL MARKETPLACE POSITIONING
+============================================================
+
+BoltIQ Gold EA is designed for traders who want automated XAUUSD trend
+trading with the option to add an ONNX machine-learning filter to the
+trade-selection process.
+
+The core system combines:
+
+Trend detection
++
+Momentum confirmation
++
+Trend-strength filtering
++
+Volatility-aware exits
++
+Account-level risk controls
++
+Optional ML trade filtering
++
+News and session controls
++
+Monitoring and alerts
+
+The ML component is optional, allowing traders to compare or operate
+the rule-based strategy without the ML layer.
+
+BoltIQ Gold EA should be evaluated using the trader's own broker
+conditions, account requirements, risk tolerance and testing environment.
+
+No specific performance outcome is promised. Historical backtests, when
+available and independently reproducible, represent simulated past
+behavior and are not a guarantee of future results.
