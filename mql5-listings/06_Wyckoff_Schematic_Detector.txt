@@ -1,0 +1,810 @@
+WYCKOFF SCHEMATIC DETECTOR — MQL5 MARKETPLACE
+
+Product Type: Indicator
+Product: Wyckoff Schematic Detector
+Platform: MetaTrader 5
+Primary Purpose: Algorithmic Wyckoff phase, event and trading-range detection
+Supported Markets: Forex, Gold, Indices, Crypto, Stocks, Futures
+Supported Timeframes: M1 to MN
+Recommended Timeframes: M15, H1 and H4
+
+============================================================
+
+1. HEADLINE
+   ============================================================
+
+Wyckoff Schematic Detector — Automated Phase, Spring & Upthrust Detection for MT5
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+=================================
+
+Wyckoff Schematic Detector is a MetaTrader 5 indicator designed to
+algorithmically identify selected Wyckoff-style market structures using
+price range, volume and market-structure information.
+
+The indicator analyzes trading ranges and attempts to identify four
+broad market phases:
+
+* Accumulation
+* Markup
+* Distribution
+* Markdown
+
+It can also identify configured Wyckoff-style events such as Springs,
+Upthrusts, Last Point of Support (LPS), Back-Up (BU), Sign of Strength
+(SOS) and Sign of Weakness (SOW).
+
+The indicator combines price structure with volume analysis rather than
+relying only on visual candlestick or price-pattern recognition.
+
+IMPORTANT: Wyckoff Schematic Detector provides algorithmic analysis and
+visualization. It does not guarantee profitable trades and does not
+replace discretionary market analysis, risk management or trader
+judgment.
+
+Detection results can depend on symbol, timeframe, available volume
+data, market conditions and indicator settings.
+
+============================================================
+3. WHO IS WYCKOFF SCHEMATIC DETECTOR FOR?
+=========================================
+
+Wyckoff Schematic Detector is designed for traders who:
+
+* Use Wyckoff-style market analysis.
+* Want automated assistance identifying potential market phases.
+* Analyze accumulation and distribution structures.
+* Monitor trading ranges and support/resistance areas.
+* Use volume together with price structure.
+* Want potential Spring and Upthrust events highlighted automatically.
+* Want LPS and BU events displayed on the chart.
+* Trade Forex, Gold, indices, crypto, stocks or futures.
+* Want configurable detection parameters.
+* Prefer objective rule-based visualization over manually drawing every
+  structure.
+
+Wyckoff Schematic Detector may not be suitable for traders who:
+
+* Expect guaranteed buy or sell signals.
+* Want a fully automated trading strategy.
+* Expect every detected Wyckoff event to result in a profitable trade.
+* Do not want to interpret market context.
+* Expect identical results across every symbol and timeframe.
+* Want an indicator based only on traditional discretionary Wyckoff
+  chart interpretation.
+
+============================================================
+4. KEY FEATURES
+===============
+
+Wyckoff Phase Detection
+
+The indicator can identify four broad market phases:
+
+* Accumulation.
+* Markup.
+* Distribution.
+* Markdown.
+
+Phase detection uses combinations of price structure, trading-range
+behavior and volume information.
+
+Wyckoff Event Detection
+
+The current product description includes detection for:
+
+* Spring.
+* Upthrust.
+* Last Point of Support (LPS).
+* Back-Up (BU).
+* Sign of Strength (SOS).
+* Sign of Weakness (SOW).
+
+Trading Range Detection
+
+* Automatic trading-range identification.
+* Support and resistance boundaries.
+* Range visualization.
+* Configurable minimum range length.
+* Range extension and counting-guide visualization.
+
+Volume Analysis
+
+* Up-volume versus down-volume analysis.
+* Volume comparison around market swings.
+* Volume-based absorption conditions.
+* Tick-volume support for markets where real volume is unavailable.
+* Real-volume support where the broker/data source provides it.
+* Volume-weighted range analysis.
+
+On-Chart Visualization
+
+* Phase labels.
+* Trading-range boxes.
+* Support and resistance levels.
+* Spring markers.
+* Upthrust markers.
+* LPS markers.
+* BU markers.
+* SOS markers.
+* SOW markers.
+* Volume histogram.
+* Cause-and-effect count guide.
+* Current-phase information.
+
+Alerts
+
+* Phase transition alerts.
+* Spring detection alerts.
+* Upthrust detection alerts.
+* LPS detection alerts.
+* BU detection alerts.
+* Range breakout alerts with configured volume confirmation.
+
+============================================================
+5. HOW THE WYCKOFF DETECTOR WORKS
+=================================
+
+The indicator uses a rule-based analysis process.
+
+Basic workflow:
+
+Read historical price and volume data
+
+↓
+
+Analyze price ranges and market structure
+
+↓
+
+Identify potential trading ranges
+
+↓
+
+Analyze volume behavior
+
+↓
+
+Classify potential market phase
+
+↓
+
+Check configured event conditions
+
+↓
+
+Display detected phase/events on chart
+
+↓
+
+Trigger configured alerts
+
+The indicator is intended to assist with Wyckoff analysis rather than
+replace the trader's interpretation of the broader market context.
+
+============================================================
+6. WYCKOFF PHASE DETECTION
+==========================
+
+6.1 ACCUMULATION
+
+The current detection logic describes accumulation using combinations
+of:
+
+* Contracting price range.
+* Relative volume behavior during downward moves.
+* Spring detection.
+
+The indicator displays the detected accumulation phase on the chart.
+
+6.2 MARKUP
+
+Markup detection uses combinations of:
+
+* Higher-high / higher-low structure.
+* Expanding volume during advances.
+* Sign of Strength confirmation.
+
+The indicator displays the detected markup phase and associated trend
+information.
+
+6.3 DISTRIBUTION
+
+Distribution detection uses combinations of:
+
+* Contracting price range.
+* Relative volume behavior during upward moves.
+* Upthrust detection.
+
+The indicator displays the detected distribution phase.
+
+6.4 MARKDOWN
+
+Markdown detection uses combinations of:
+
+* Lower-high / lower-low structure.
+* Expanding volume during declines.
+* Sign of Weakness confirmation.
+
+The indicator displays the detected markdown phase.
+
+IMPORTANT: These classifications are algorithmic interpretations based
+on the configured rules. They should not be treated as definitive
+statements about market intent.
+
+============================================================
+7. KEY WYCKOFF EVENTS
+=====================
+
+SPRING
+
+A potential Spring is identified when configured conditions indicate:
+
+* Price moves below a detected range-support boundary.
+* Volume behavior meets the configured condition.
+* Price returns inside the trading range.
+* The closing price confirms the return within the configured window.
+
+A Spring marker is then displayed when the configured conditions are
+satisfied.
+
+UPTHRUST
+
+A potential Upthrust is identified using the corresponding resistance
+breakout and return-to-range conditions.
+
+Typical configured conditions include:
+
+* Price moves above range resistance.
+* Volume meets the configured condition.
+* Price returns inside the range.
+* The close confirms the return within the configured window.
+
+LPS — LAST POINT OF SUPPORT
+
+The indicator can identify configured low-volume pullback conditions
+associated with a potential Last Point of Support during markup.
+
+BU — BACK-UP
+
+The indicator can identify configured low-volume rally conditions
+associated with a potential Back-Up during markdown.
+
+SOS — SIGN OF STRENGTH
+
+The indicator can identify configured volume-supported moves through
+resistance associated with a potential Sign of Strength.
+
+SOW — SIGN OF WEAKNESS
+
+The indicator can identify configured volume-supported moves through
+support associated with a potential Sign of Weakness.
+
+IMPORTANT: These event labels represent algorithmic detection based on
+configured criteria. They are not guaranteed trading signals.
+
+============================================================
+8. SPRING AND UPTHRUST DETECTION
+================================
+
+The current product description uses the following general criteria:
+
+1. Price pierces a detected range boundary.
+2. Volume meets the configured absorption condition.
+3. Price returns toward or inside the trading range.
+4. The closing price confirms the configured event condition.
+
+The relevant event is then displayed on the chart.
+
+The exact detection behavior can depend on:
+
+* Lookback period.
+* Volume threshold.
+* Minimum range size.
+* Symbol.
+* Timeframe.
+* Available volume data.
+
+============================================================
+9. TRADING RANGE ANALYSIS
+=========================
+
+The indicator can identify and display potential trading ranges.
+
+Range-related features include:
+
+* Automatic range identification.
+* Support boundary.
+* Resistance boundary.
+* Range rectangle.
+* Range extension.
+* Cause-and-effect counting guide.
+* Horizontal count to vertical projection visualization.
+
+The counting guide is intended as an analytical reference and should
+not be interpreted as a guaranteed price target.
+
+============================================================
+10. VOLUME ANALYSIS
+===================
+
+Volume is an important component of the detector's analysis.
+
+The current product description supports:
+
+* Comparison of up-volume and down-volume.
+* Volume analysis around market swings.
+* Volume-based absorption conditions.
+* Tick volume for markets such as Forex.
+* Real volume where supported by the broker/data source.
+
+The type and quality of available volume data can vary between brokers
+and asset classes.
+
+For this reason, traders should understand what volume data their broker
+provides before interpreting volume-based detections.
+
+============================================================
+11. INPUT PARAMETERS
+====================
+
+The current product configuration includes parameters such as:
+
+LookbackBars:
+
+500
+
+Controls the amount of historical data considered for range detection.
+
+VolumeThreshold:
+
+1.5
+
+Controls the configured volume threshold used by the detection logic.
+
+MinRangeBars:
+
+20
+
+Defines the minimum number of bars required for a valid trading range.
+
+ShowPhases:
+
+true
+
+Controls whether phase labels are displayed.
+
+ShowEvents:
+
+true
+
+Controls whether detected Wyckoff events are displayed.
+
+ShowRangeBox:
+
+true
+
+Controls whether the detected trading range is displayed.
+
+ShowCountGuide:
+
+true
+
+Controls whether the cause-and-effect counting guide is displayed.
+
+Visual settings are also available for phase and event visualization.
+
+============================================================
+12. ON-CHART DISPLAY
+====================
+
+The indicator can display:
+
+* Current or detected Wyckoff phase.
+* Phase transition labels.
+* Trading-range rectangle.
+* Support level.
+* Resistance level.
+* Spring markers.
+* Upthrust markers.
+* LPS markers.
+* BU markers.
+* SOS markers.
+* SOW markers.
+* Volume histogram.
+* Up/down volume information.
+* Cause-and-effect count guide.
+* Current range status.
+* Relevant detected levels.
+
+The exact information displayed depends on the enabled settings.
+
+============================================================
+13. ALERTS
+==========
+
+Wyckoff Schematic Detector can provide alerts for:
+
+* Phase transitions.
+* Spring detection.
+* Upthrust detection.
+* LPS detection.
+* BU detection.
+* Range breakout with configured volume confirmation.
+
+Available notification channels in the current product description:
+
+* Push notifications.
+* Email.
+* Telegram.
+
+Alerts are intended to notify traders that a configured algorithmic
+condition has been detected.
+
+============================================================
+14. WHY WYCKOFF SCHEMATIC DETECTOR?
+===================================
+
+Traditional Wyckoff analysis can require manually studying price,
+volume and trading-range behavior.
+
+Wyckoff Schematic Detector provides an automated visualization layer
+that applies predefined rules to these inputs.
+
+Key differentiators:
+
+* Volume + range + price analysis.
+* Automated phase classification.
+* Automated Spring detection.
+* Automated Upthrust detection.
+* LPS and BU event detection.
+* SOS and SOW detection.
+* Trading-range visualization.
+* Support/resistance visualization.
+* Cause-and-effect count guide.
+* Configurable detection parameters.
+* Closed-bar based analysis.
+* Multiple asset-class compatibility.
+* Push, email and Telegram alerts.
+
+The goal is to make selected Wyckoff-style structures easier to monitor
+and analyze without requiring every range and event to be identified
+manually.
+
+============================================================
+15. WYCKOFF DETECTOR VS SIMPLE PATTERN INDICATORS
+=================================================
+
+Capability                         Pattern Indicators
+Wyckoff Schematic Detector
+
+Primary input                       Price pattern
+Price + range + volume
+
+Phase analysis                      Usually unavailable
+Included
+
+Trading-range analysis              Limited
+Included
+
+Spring detection                    Usually manual
+Algorithmic detection
+
+Upthrust detection                  Usually manual
+Algorithmic detection
+
+LPS detection                       Usually unavailable
+Included
+
+BU detection                        Usually unavailable
+Included
+
+SOS/SOW analysis                    Usually unavailable
+Included
+
+Volume analysis                     Limited or absent
+Included
+
+Range visualization                 Limited
+Included
+
+Cause/effect count guide            Usually unavailable
+Included
+
+Configurable detection              Depends on indicator
+Included
+
+IMPORTANT: This comparison describes the intended feature differences
+based on the current product information. Actual behavior depends on the
+indicator configuration and market data.
+
+============================================================
+16. COMPATIBILITY AND SETUP
+===========================
+
+Platform:
+
+MetaTrader 5
+
+Supported Markets:
+
+* Forex.
+* Gold.
+* Indices.
+* Crypto.
+* Stocks.
+* Futures.
+
+Supported Timeframes:
+
+M1 through MN.
+
+Recommended Timeframes:
+
+M15, H1 and H4 for the primary use cases described by the product.
+
+Broker:
+
+The indicator is designed to work with MT5 brokers that provide the
+required market and volume data.
+
+Volume behavior may differ depending on whether the market provides
+tick volume or real volume.
+
+VPS:
+
+The indicator can operate on a VPS and can generate configured alerts
+without requiring continuous manual chart interaction.
+
+Before using the indicator, traders should verify:
+
+* Symbol data availability.
+* Volume-data type.
+* Broker trading hours.
+* Timeframe.
+* Lookback settings.
+* Volume threshold.
+* Minimum range length.
+
+============================================================
+17. WHAT YOU GET
+================
+
+The current product description states that the package includes:
+
+* Commented MQ5 source code.
+* Compiled EX5 indicator.
+* Parameter documentation.
+* Wyckoff schematic quick-reference guide.
+* Installation guide.
+* Product updates.
+
+Exact package contents should be confirmed against the current MQL5
+Market delivery.
+
+============================================================
+18. PERFORMANCE & VALIDATION
+============================
+
+Wyckoff Schematic Detector is an analytical indicator rather than a
+standalone automated trading strategy.
+
+No specific profitability, win-rate, profit-factor or return figures are
+claimed in this listing without a reproducible testing report.
+
+The indicator should therefore be evaluated based on:
+
+* Detection behavior.
+* False-positive frequency.
+* Symbol.
+* Timeframe.
+* Volume-data quality.
+* Parameter configuration.
+* Market regime.
+* Trader interpretation.
+
+A detected Spring, Upthrust, LPS, BU, SOS or SOW should not be treated
+as a guaranteed profitable setup.
+
+============================================================
+19. WHY WYCKOFF DETECTIONS SHOULD BE READ CAREFULLY
+===================================================
+
+Wyckoff analysis is highly dependent on context.
+
+The same price and volume behavior can produce different interpretations
+depending on:
+
+* Market regime.
+* Timeframe.
+* Trading-range boundaries.
+* Volume quality.
+* Liquidity.
+* News events.
+* Broker data.
+* Parameter configuration.
+
+The indicator therefore provides algorithmic assistance rather than a
+complete discretionary Wyckoff analysis.
+
+Traders should confirm detected structures using their own analysis and
+risk-management process.
+
+============================================================
+20. FREQUENTLY ASKED QUESTIONS
+==============================
+
+Q1. What does Wyckoff Schematic Detector do?
+
+It analyzes price, range and volume information to identify selected
+Wyckoff-style phases, trading ranges and market events.
+
+Q2. Which Wyckoff phases does it detect?
+
+The current product description includes Accumulation, Markup,
+Distribution and Markdown.
+
+Q3. Can it detect Springs?
+
+Yes. The indicator includes algorithmic Spring detection based on its
+configured range, price and volume conditions.
+
+Q4. Can it detect Upthrusts?
+
+Yes. Upthrust detection is included.
+
+Q5. Does it detect LPS and BU?
+
+Yes. The current product description includes Last Point of Support
+(LPS) and Back-Up (BU) detection.
+
+Q6. Does it detect SOS and SOW?
+
+Yes. Sign of Strength (SOS) and Sign of Weakness (SOW) are included in
+the described detection logic.
+
+Q7. Does it generate buy and sell signals?
+
+The indicator can identify events that may be interpreted as potential
+long or short setups, such as Springs and Upthrusts. However, it should
+not be treated as a guaranteed buy/sell signal generator.
+
+Q8. Does it repaint?
+
+The current product description states that detection is based on
+closed-bar information. Traders should still evaluate the behavior of
+the specific version and configuration they are using.
+
+Q9. What volume data does it use?
+
+It can use tick volume for markets such as Forex and real volume where
+the broker/data source provides it.
+
+Q10. Does it work on Gold?
+
+Yes. XAUUSD/Gold is among the supported markets.
+
+Q11. Does it work on Forex?
+
+Yes. The indicator is designed to support Forex markets.
+
+Q12. Which timeframe should I use?
+
+The indicator supports M1 through MN. The current product description
+identifies M15, H1 and H4 as useful timeframes for the primary use cases.
+
+Q13. Can I change the lookback period?
+
+Yes. The current configuration includes a LookbackBars parameter.
+
+Q14. Can I change the volume threshold?
+
+Yes. The VolumeThreshold parameter can be configured.
+
+Q15. Does the indicator guarantee profitable trades?
+
+No. Algorithmic Wyckoff detection does not guarantee profitability.
+Market context, execution, volume quality and risk management remain
+important.
+
+Q16. Can I use it with an Expert Advisor?
+
+Yes. It can be used alongside other trading systems as an analytical
+tool. It should not be treated as a mandatory dependency unless
+explicitly stated.
+
+Q17. Does it automatically place trades?
+
+No. It is an indicator and does not automatically execute trades.
+
+Q18. Does the count guide guarantee a price target?
+
+No. The count guide is an analytical projection tool. It should not be
+treated as a guaranteed price target.
+
+============================================================
+21. SUPPORT
+===========
+
+Post-delivery bug-fix support is included.
+
+Feature requests and customization are available through MQL5
+Freelance.
+
+============================================================
+22. RELATED PRODUCTS
+====================
+
+Session Countdown Panel ($30)
+
+Visual session timing, countdowns and configurable kill-zone alerts.
+
+Global Stop Loss and Target Manager ($30)
+
+Position-management utility for managing stop-loss and take-profit
+levels.
+
+BoltIQ Gold EA ($59)
+
+Automated XAUUSD trend-following Expert Advisor with an optional ML
+filter and integrated risk controls.
+
+These products are related tools and should not be treated as mandatory
+dependencies unless specifically confirmed otherwise.
+
+============================================================
+23. FINAL MARKETPLACE POSITIONING
+=================================
+
+Wyckoff Schematic Detector is designed for traders who want automated
+assistance when analyzing Wyckoff-style market structures on MetaTrader
+5.
+
+The indicator combines:
+
+Price Structure
+
+*
+
+Trading-Range Analysis
+
+*
+
+Volume Analysis
+
+*
+
+Phase Detection
+
+*
+
+Spring / Upthrust Detection
+
+*
+
+LPS / BU Detection
+
+*
+
+SOS / SOW Detection
+
+*
+
+Visual Range and Level Mapping
+
+*
+
+Alerts
+
+The indicator's purpose is to make selected Wyckoff structures easier to
+identify and monitor on the chart.
+
+It does not replace discretionary market analysis, does not execute
+trades and does not guarantee profitable results.
+
+Traders should evaluate detected structures using their own market
+context, broker data, timeframe and risk-management rules.
+
+Wyckoff Schematic Detector should therefore be treated as an analytical
+and visualization tool rather than a standalone trading strategy.
