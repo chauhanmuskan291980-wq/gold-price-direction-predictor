@@ -1,0 +1,766 @@
+EMA MULTI-TIMEFRAME TREND EA — MQL5 MARKETPLACE
+
+Product Type: Expert Advisor
+Product: EMA Multi Timeframe Trend EA
+Price: USD 39
+Platform: MetaTrader 5
+Primary Symbols: XAUUSD / Gold and selected major/trending markets
+Recommended Timeframes: H1 / M15 / M5
+Primary Configuration: H1 trend → M15 confirmation → M5 entry timing
+
+============================================================
+
+1. HEADLINE
+   ============================================================
+
+EMA Multi-Timeframe Trend EA — Automated H1/M15/M5 Trend Alignment with Built-In Risk Management
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+=================================
+
+EMA Multi-Timeframe Trend EA is an automated MetaTrader 5 Expert Advisor designed to identify and trade aligned trends across three timeframes.
+
+The system uses H1 to define the broader market direction, M15 to confirm the developing trend, and M5 to identify a more precise entry opportunity.
+
+The strategy combines EMA alignment, pullback-based entry logic and ATR-based volatility management.
+
+The EA also includes account-level risk controls such as daily loss protection, maximum drawdown monitoring, session controls, economic-news filtering, configurable position sizing and position limits.
+
+The system is designed for traders who prefer a structured multi-timeframe trend-following approach rather than relying on signals from a single timeframe.
+
+IMPORTANT: This EA is not a profit guarantee and does not claim a verified live trading record. Historical backtests, if performed, do not guarantee future results. Broker conditions and prop-firm rules can materially affect live results.
+
+============================================================
+3. WHO IS EMA MULTI-TIMEFRAME TREND EA FOR?
+===========================================
+
+EMA Multi-Timeframe Trend EA is designed for traders who:
+
+* Prefer multi-timeframe trend analysis.
+* Want the higher timeframe to define the broader market direction.
+* Want a confirmation layer before entering a trade.
+* Prefer M5 entry timing after higher-timeframe confirmation.
+* Trade XAUUSD, major forex pairs or other supported trending markets.
+* Want volatility-aware stop-loss management.
+* Want automated account-level risk controls.
+* Trade personal, challenge or funded accounts subject to applicable rules.
+* Want the EA to operate continuously on a VPS.
+* Prefer a system without martingale or grid recovery logic.
+
+EMA Multi-Timeframe Trend EA may not be suitable for traders who:
+
+* Want a guaranteed-return system.
+* Prefer discretionary manual trading only.
+* Want a single-timeframe strategy.
+* Specifically want martingale or grid recovery systems.
+* Are unwilling to verify broker execution conditions.
+* Are unwilling to verify the current rules of their prop-firm provider.
+
+============================================================
+4. KEY FEATURES
+===============
+
+Multi-Timeframe Trading Strategy
+
+* H1 defines the broader market trend.
+* M15 confirms the H1 trend direction.
+* M5 provides entry timing.
+* EMA(20), EMA(50) and EMA(200) are used for H1 trend structure.
+* EMA(20) and EMA(50) are used for M15 confirmation.
+* EMA(20) and EMA(50) are used to identify the M5 pullback area.
+* ATR(14) provides volatility-aware stop-loss management.
+* Configurable 1:2 or 1:3 risk-reward target.
+* Optional ATR-based trailing stop.
+* Optional session-end time exit.
+* Signals are based on closed-bar information.
+
+Risk Management
+
+* Daily equity-loss protection.
+* Maximum drawdown protection.
+* Configurable risk-based position sizing.
+* Session-aware risk controls.
+* High-impact economic-news filter.
+* Position limits.
+* Automated trading lockout when configured risk thresholds are reached.
+
+Monitoring
+
+* H1 trend status.
+* M15 confirmation status.
+* M5 entry status.
+* EMA alignment visualization.
+* Current pullback zone.
+* Daily loss percentage.
+* Maximum drawdown status.
+* Current trading session.
+* Next high-impact news event.
+* Open positions with SL/TP information.
+* Kill-switch status.
+
+Alerts
+
+* Multi-timeframe alignment achieved.
+* Entry signal triggered.
+* Daily-loss warning.
+* Kill-switch activation.
+* Maximum-drawdown warning.
+* Session changes.
+* High-impact news approaching.
+* Trade entry.
+* Trade exit.
+* Trailing-stop updates.
+
+Compatibility
+
+* MetaTrader 5.
+* XAUUSD / Gold.
+* Major forex and selected trending markets supported by the current product configuration.
+* M5 execution timeframe with H1 and M15 analysis.
+* Standard, raw-spread and ECN broker environments.
+* Personal, challenge and funded accounts, subject to applicable account rules.
+* VPS operation.
+* Closed-bar signal processing.
+
+============================================================
+5. HOW THE MULTI-TIMEFRAME STRATEGY WORKS
+=========================================
+
+The EA does not rely on a single timeframe to determine whether a trade should be taken.
+
+Instead, the strategy uses three stages:
+
+H1 → Market direction
+
+M15 → Trend confirmation
+
+M5 → Entry timing
+
+This creates a structured top-down process where lower-timeframe entries are considered only after the higher-timeframe trend conditions are satisfied.
+
+============================================================
+6. TREND DEFINITION — H1
+========================
+
+The H1 timeframe represents the broader market direction.
+
+Bullish H1 structure:
+
+* EMA(20) > EMA(50) > EMA(200)
+* EMA structure must be aligned upward according to the current strategy configuration.
+
+Bearish H1 structure:
+
+* EMA(20) < EMA(50) < EMA(200)
+* EMA structure must be aligned downward according to the current strategy configuration.
+
+Neutral H1 structure:
+
+* Any other EMA arrangement.
+* No directional setup is considered while the required alignment is absent.
+
+The purpose of the H1 layer is to prevent lower-timeframe signals from being evaluated independently of the broader trend.
+
+============================================================
+7. M15 CONFIRMATION
+===================
+
+Once the H1 direction is established, the M15 timeframe is used as a confirmation layer.
+
+The M15 EMA structure must agree with the H1 direction.
+
+For a bullish setup:
+
+* M15 EMA structure must support the bullish H1 direction.
+* EMA(20) crossing above EMA(50) in the trend direction can arm the setup.
+
+For a bearish setup:
+
+* M15 EMA structure must support the bearish H1 direction.
+* EMA(20) crossing below EMA(50) in the trend direction can arm the setup.
+
+The M15 layer is therefore intended to reduce the number of M5 setups considered when the broader trend is unclear.
+
+============================================================
+8. M5 ENTRY TIMING
+==================
+
+The M5 timeframe is used for more precise entry timing.
+
+For a bullish setup:
+
+* The higher-timeframe trend must be bullish.
+* The M15 confirmation must agree with the H1 direction.
+* Price may pull back toward the M5 EMA(20) or EMA(50) area.
+* A confirmation candle must close in the trend direction.
+* Entry is considered on the next candle according to the strategy configuration.
+
+For a bearish setup:
+
+* The higher-timeframe trend must be bearish.
+* The M15 confirmation must agree with the H1 direction.
+* Price may pull back toward the M5 EMA(20) or EMA(50) area.
+* A confirmation candle must close in the trend direction.
+* Entry is considered on the next candle according to the strategy configuration.
+
+The purpose of the M5 layer is to provide entry timing after the broader trend and confirmation conditions have been established.
+
+============================================================
+9. STRATEGY FLOW
+================
+
+The basic decision process is:
+
+H1 trend check
+
+↓
+
+Is the H1 EMA structure bullish or bearish?
+
+↓
+
+M15 confirmation
+
+↓
+
+Does M15 agree with the H1 direction?
+
+↓
+
+Setup armed
+
+↓
+
+M5 pullback
+
+↓
+
+Price approaches EMA(20) or EMA(50)
+
+↓
+
+Confirmation candle closes in trend direction
+
+↓
+
+Entry considered on the next candle
+
+↓
+
+Risk management applied
+
+↓
+
+Trade monitored
+
+This multi-stage process is intended to keep the entry decision connected to the broader market structure.
+
+============================================================
+10. EXIT MANAGEMENT
+===================
+
+Stop Loss:
+
+ATR(14) × 2 on M15 according to the current product configuration.
+
+The ATR-based stop is designed to adapt the stop distance to current market volatility rather than using one fixed price distance.
+
+Take Profit:
+
+Configurable 1:2 or 1:3 risk-reward target.
+
+Trailing Stop:
+
+Optional ATR-based trailing stop using the M15 configuration.
+
+Time Exit:
+
+Optional closing of positions at the end of the configured trading session.
+
+============================================================
+11. BUILT-IN RISK MANAGEMENT
+============================
+
+EMA Multi-Timeframe Trend EA contains a separate risk-management layer in addition to the trading strategy.
+
+The two components should be viewed separately:
+
+1. Trading logic
+2. Account-level risk controls
+
+11.1 Daily Loss Protection
+
+The EA monitors account equity against the configured daily-loss threshold.
+
+When the configured limit is reached, the risk engine can close positions and block new trades.
+
+11.2 Maximum Drawdown Protection
+
+The EA monitors account drawdown against the configured maximum drawdown threshold.
+
+When the configured limit is reached, the risk engine can stop further trading and, according to the current configuration, protect the account from additional exposure.
+
+11.3 Configurable Position Sizing
+
+Position size is calculated using the configured risk percentage and account conditions.
+
+The risk setting should be selected according to:
+
+* Account size.
+* Broker conditions.
+* Strategy configuration.
+* Maximum acceptable drawdown.
+* Applicable prop-firm rules.
+
+11.4 Session-Aware Risk Controls
+
+The EA provides session-aware controls for major trading periods.
+
+Current configuration references:
+
+* London Open: 08:00–09:00 UTC
+* New York Open: 13:00–14:00 UTC
+* London/New York overlap: 13:00–16:00 UTC
+
+The purpose is to control exposure around periods where market activity and volatility may change.
+
+11.5 Economic News Filter
+
+The EA can pause trading around high-impact economic events using the MetaTrader 5 built-in economic calendar.
+
+The current product configuration references:
+
+* NFP
+* CPI
+* FOMC
+* ECB
+* BoE
+
+The configured protection window is 15 minutes before and after high-impact events.
+
+11.6 Position Limits
+
+Position limits help restrict excessive simultaneous exposure and reduce overtrading.
+
+============================================================
+12. ON-CHART DASHBOARD
+======================
+
+The dashboard can display:
+
+* H1 trend direction.
+* M15 trend confirmation.
+* M5 entry status.
+* EMA alignment.
+* Current pullback zone.
+* Daily loss percentage.
+* Daily-loss risk status.
+* Maximum drawdown status.
+* Current trading session.
+* Next high-impact news event.
+* News countdown.
+* Open positions.
+* Stop-loss and take-profit levels.
+* Kill-switch status.
+
+The dashboard is intended to make the EA's current trading state easier to monitor without manually inspecting each timeframe.
+
+============================================================
+13. ALERTS
+==========
+
+EMA Multi-Timeframe Trend EA can provide alerts for:
+
+* Multi-timeframe alignment achieved.
+* Setup armed.
+* Entry signal triggered.
+* Daily loss approaching the configured limit.
+* Kill-switch activation.
+* Maximum drawdown warning.
+* Session changes.
+* High-impact news approaching.
+* Trade entry.
+* Trade exit.
+* Trailing-stop updates.
+
+Available channels in the current product description:
+
+* Push notifications
+* Email
+* Telegram
+
+============================================================
+14. COMPATIBILITY AND SETUP
+===========================
+
+Platform:
+
+MetaTrader 5
+
+Primary Markets:
+
+* XAUUSD / Gold
+* EURUSD
+* GBPUSD
+* USDJPY
+* US30
+* NAS100
+* BTCUSD
+
+The current product description lists these markets as supported examples. Actual suitability depends on broker symbol availability, execution conditions and the strategy configuration.
+
+Timeframes:
+
+* H1 — primary trend analysis
+* M15 — confirmation and volatility management
+* M5 — entry timing
+
+The EA reads the higher timeframes internally while using M5 for execution timing.
+
+Broker environments:
+
+* Standard spread
+* Raw spread
+* ECN
+
+Account types:
+
+* Personal accounts
+* Challenge accounts
+* Funded accounts
+
+All use remains subject to the applicable broker and account-provider rules.
+
+VPS:
+
+A VPS is recommended for continuous automated operation.
+
+Before running the EA, traders should verify:
+
+* Correct broker symbol name.
+* Contract specifications.
+* Spread conditions.
+* Minimum lot size.
+* Execution conditions.
+* Trading hours.
+* Market availability.
+* Account drawdown limits.
+* Daily-loss rules.
+* Applicable prop-firm restrictions.
+
+============================================================
+15. RECOMMENDED SETTINGS BY SYMBOL
+==================================
+
+The current product configuration provides the following starting-point examples:
+
+XAUUSD
+
+H1 EMA: 20/50/200
+M15 EMA: 20/50
+M5 EMA: 20/50
+ATR Multiplier: 2.0
+Risk: 1.5%
+Preferred Sessions: London / New York
+
+EURUSD
+
+H1 EMA: 20/50/200
+M15 EMA: 20/50
+M5 EMA: 20/50
+ATR Multiplier: 1.5
+Risk: 1.0%
+Preferred Sessions: London / New York
+
+GBPUSD
+
+H1 EMA: 20/50/200
+M15 EMA: 20/50
+M5 EMA: 20/50
+ATR Multiplier: 1.5
+Risk: 1.0%
+Preferred Sessions: London / New York
+
+US30
+
+H1 EMA: 20/50/200
+M15 EMA: 20/50
+M5 EMA: 20/50
+ATR Multiplier: 2.0
+Risk: 1.5%
+Preferred Session: New York
+
+NAS100
+
+H1 EMA: 20/50/200
+M15 EMA: 20/50
+M5 EMA: 20/50
+ATR Multiplier: 2.0
+Risk: 1.5%
+Preferred Session: New York
+
+IMPORTANT: These are configuration examples from the current product information, not guarantees of performance or suitability. Traders should test the configuration under their own broker conditions before using it with real funds.
+
+============================================================
+16. BACKTEST & PERFORMANCE
+==========================
+
+EMA Multi-Timeframe Trend EA is designed around a predefined multi-timeframe trend-following process combining higher-timeframe direction, M15 confirmation and M5 entry timing.
+
+Actual trading results can vary significantly depending on:
+
+* Broker spread.
+* Slippage.
+* Execution speed.
+* Symbol specifications.
+* Market volatility.
+* Trading session.
+* Account type.
+* Risk settings.
+* Time period.
+* Market regime.
+* EA configuration.
+
+No specific historical performance figures are claimed in this listing without a reproducible Strategy Tester report.
+
+Past performance does not guarantee future results.
+
+============================================================
+17. WHY BACKTEST RESULTS SHOULD BE READ CAREFULLY
+=================================================
+
+Backtesting can help evaluate how a defined trading strategy behaved under historical market conditions.
+
+However, historical simulation cannot reproduce every aspect of live trading.
+
+Differences can occur because of:
+
+* Real-market spreads.
+* Slippage.
+* Execution latency.
+* Broker liquidity.
+* Symbol specifications.
+* News events.
+* Market regime changes.
+* Trading costs.
+* Configuration differences.
+
+The supplied product information does not provide a verified live or forward-test track record.
+
+For this reason, traders should evaluate the EA using their own broker conditions, supported symbols, risk settings and testing environment before committing significant capital.
+
+============================================================
+18. WHY EMA MULTI-TIMEFRAME TREND EA?
+=====================================
+
+The main difference in the system is its top-down decision structure.
+
+Instead of allowing a lower-timeframe signal to act independently, the EA evaluates the market in stages:
+
+H1
+
+Defines the broader trend.
+
+M15
+
+Confirms whether the intermediate timeframe agrees with the broader direction.
+
+M5
+
+Looks for a pullback and confirmation-based entry opportunity.
+
+This creates a structured relationship between market direction and entry timing.
+
+Key differentiators:
+
+* Three-timeframe trend analysis.
+* H1 trend structure using EMA(20), EMA(50) and EMA(200).
+* M15 confirmation layer.
+* M5 pullback-based entry timing.
+* ATR-based volatility management.
+* Configurable risk-reward targets.
+* Optional trailing stop.
+* Daily-loss protection.
+* Maximum drawdown protection.
+* Session-aware controls.
+* Economic-news filtering.
+* Position limits.
+* On-chart multi-timeframe monitoring.
+* Automated alerts.
+* No martingale.
+* No grid recovery system.
+
+The objective is to provide a systematic multi-timeframe trend-following framework rather than a strategy based on a single isolated indicator signal.
+
+============================================================
+19. QUICK FEATURE COMPARISON
+============================
+
+Capability                         EMA MTF Trend EA
+
+Multi-timeframe strategy           YES
+H1 trend filter                    YES
+H1 EMA(20/50/200)                  YES
+M15 confirmation                   YES
+M5 entry timing                    YES
+M5 pullback logic                  YES
+ATR-based stop loss                YES
+Configurable risk/reward           YES
+ATR trailing stop                  OPTIONAL
+Daily loss protection              YES
+Maximum drawdown protection        YES
+Economic-news filter               YES
+Session controls                   YES
+Risk-based position sizing         YES
+Position limits                    YES
+On-chart dashboard                 YES
+Push alerts                        YES
+Email alerts                       YES
+Telegram alerts                    YES
+Martingale                         NO
+Grid recovery                      NO
+
+============================================================
+20. FREQUENTLY ASKED QUESTIONS
+==============================
+
+Q1. What does EMA Multi-Timeframe Trend EA trade?
+
+The current product configuration supports XAUUSD/Gold and selected major or trending markets, including EURUSD, GBPUSD, USDJPY, US30, NAS100 and BTCUSD.
+
+Q2. How does the multi-timeframe strategy work?
+
+H1 establishes the broader trend, M15 confirms the direction and M5 is used to identify an entry opportunity after a pullback and confirmation candle.
+
+Q3. Why does the EA use three timeframes?
+
+The three-timeframe structure separates trend identification from entry timing. H1 provides broader direction, M15 provides confirmation and M5 provides more precise entry timing.
+
+Q4. What indicators does the EA use?
+
+The primary strategy uses EMA(20), EMA(50) and EMA(200) for trend structure, together with ATR(14) for volatility-aware stop management.
+
+Q5. Does the EA use martingale or grid trading?
+
+No. The current product description does not use martingale or grid recovery logic.
+
+Q6. Does the EA repaint?
+
+The supplied product description states that signals are based on closed-bar information. This means the strategy is designed to avoid making entry decisions from an unfinished candle.
+
+Q7. Which timeframe should I use?
+
+The strategy uses all three:
+
+* H1 for trend direction.
+* M15 for confirmation.
+* M5 for entry timing.
+
+Q8. Can I use it on a funded or prop-firm account?
+
+The EA includes account-level risk controls intended to help manage challenge and funded-account risk. However, every provider has different rules. Verify the current rules of your provider before trading.
+
+Q9. Does the EA guarantee profits?
+
+No. No automated trading system can guarantee profits. Historical or simulated performance does not guarantee future results.
+
+Q10. Does it have a news filter?
+
+Yes. The current configuration uses the MetaTrader 5 built-in economic calendar to manage trading around high-impact economic events.
+
+Q11. What happens when the daily-loss limit is reached?
+
+When the configured daily-loss threshold is reached, the risk engine can close positions and block new trades according to the current configuration.
+
+Q12. Does it support different brokers?
+
+The EA is designed to work with MetaTrader 5 brokers, but execution, spreads, symbol names and contract specifications can vary. Traders should verify their broker conditions before deployment.
+
+Q13. Do I need a VPS?
+
+A VPS is recommended for continuous automated operation.
+
+Q14. Can I change the risk settings?
+
+The EA includes configurable risk controls. Risk should be selected according to account size, trading conditions and the applicable account or prop-firm limits.
+
+Q15. Can I use the EA on multiple symbols?
+
+The current product description lists several supported markets. Actual symbol availability and suitability depend on the broker and configuration.
+
+============================================================
+21. SUPPORT
+===========
+
+Post-delivery bug-fix support is included.
+
+Customization and additional strategy modifications are available through MQL5 Freelance.
+
+============================================================
+22. RELATED PRODUCTS
+====================
+
+Session Countdown Panel ($30)
+
+Visual session boxes and countdown information for monitoring London and New York trading periods.
+
+Global Stop Loss and Target Manager ($30)
+
+Bulk position-management utility for managing stop-loss and take-profit levels.
+
+Daily Loss Guardian ($35)
+
+Standalone risk-management utility for traders who want account-level loss controls independently of this EA.
+
+XAUUSD Session Scalper ($69)
+
+A separate Gold-focused strategy designed around session-based trading.
+
+Prop Firm Challenge Suite ($79)
+
+A bundle of related risk-management tools.
+
+These products are related tools and should not be treated as mandatory dependencies unless specifically confirmed otherwise.
+
+============================================================
+23. FINAL MARKETPLACE POSITIONING
+=================================
+
+EMA Multi-Timeframe Trend EA is designed for traders who want a structured, automated approach to trend following across multiple timeframes.
+
+The system follows a simple decision hierarchy:
+
+H1 trend direction
+
+*
+
+M15 trend confirmation
+
+*
+
+M5 entry timing
+
+*
+
+ATR-based volatility management
+
+*
+
+Account-level risk controls
+
+*
+
+Session and news filtering
+
+*
+
+Monitoring and alerts
+
+The strategy is based on predefined rules rather than martingale or grid recovery techniques.
+
+The EA should be evaluated using the trader's own broker conditions, supported symbols, account requirements and risk tolerance.
+
+No specific performance figures are claimed without a reproducible Strategy Tester report.
+
+Historical or simulated results, when available, represent past conditions and are not a promise of future performance.

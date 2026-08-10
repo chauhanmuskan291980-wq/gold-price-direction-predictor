@@ -1,0 +1,606 @@
+ SESSION COUNTDOWN PANEL — MQL5 MARKETPLACE
+
+Product Type: Indicator
+Product: Session Countdown Panel
+Price: USD 30
+Platform: MetaTrader 5
+Primary Purpose: Trading-session timing, countdowns and kill-zone visualization
+Supported Markets: Forex, Gold, Indices, Crypto, Futures
+Supported Timeframes: Any
+
+============================================================
+
+1. HEADLINE
+   ============================================================
+
+Session Countdown Panel — Visual London, New York & Asian Session Timers for MT5
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+=================================
+
+Session Countdown Panel is a MetaTrader 5 indicator designed to make major trading sessions and configured market windows easier to monitor directly from the chart.
+
+The indicator displays session information for Sydney, Tokyo, London and New York, together with countdown timers for session openings and closings.
+
+It can also highlight configured kill zones such as the London open, New York open and London/New York overlap.
+
+Session definitions, kill-zone windows, panel placement, colors, labels and alert settings can be customized according to the trader's preferred setup and broker time configuration.
+
+The indicator is designed for traders who use session-based or time-sensitive trading strategies and want the relevant market windows visible without manually calculating session times.
+
+IMPORTANT: Session Countdown Panel is a visual timing and alert tool. It does not generate trading signals, execute trades or guarantee profits. Session times can be affected by broker server time and daylight-saving changes. Traders should verify their broker's time configuration.
+
+============================================================
+3. WHO IS SESSION COUNTDOWN PANEL FOR?
+======================================
+
+Session Countdown Panel is designed for traders who:
+
+* Monitor London, New York and Asian trading sessions.
+* Use session-based trading strategies.
+* Trade Gold, Forex, indices, crypto or other supported markets.
+* Want session opening and closing times visible directly on the chart.
+* Use specific trading windows or kill zones.
+* Want countdown timers for upcoming market sessions.
+* Want alerts before or during important session windows.
+* Want to customize session definitions according to their broker.
+* Trade manually or use other automated trading systems that depend on session timing.
+* Operate trading setups on a VPS.
+
+Session Countdown Panel may not be suitable for traders who:
+
+* Do not use session-based timing in their trading.
+* Are looking for an automated trading strategy.
+* Expect the indicator to generate buy or sell signals.
+* Expect the indicator to manage account risk automatically.
+* Expect session timing alone to guarantee better trading results.
+
+============================================================
+4. KEY FEATURES
+===============
+
+Session Monitoring
+
+* Sydney session display.
+* Tokyo session display.
+* London session display.
+* New York session display.
+* Configurable session opening and closing times.
+* Current-session identification.
+* Session labels on the chart.
+* Visual session boxes.
+
+Countdown Timers
+
+* Countdown to the next session opening.
+* Countdown to the current session closing.
+* Countdown to the next configured kill zone.
+* HH:MM:SS countdown format.
+* Updates every second.
+
+Kill-Zone Visualization
+
+* London kill-zone highlighting.
+* New York kill-zone highlighting.
+* London/New York overlap highlighting.
+* Configurable kill-zone start and end times.
+* Optional kill-zone labels.
+* Visual identification of configured trading windows.
+
+Customization
+
+* Custom session definitions.
+* Custom kill-zone definitions.
+* Session box colors.
+* Kill-zone colors.
+* Countdown text colors.
+* Configurable font size.
+* Configurable panel corner.
+* Optional session labels.
+* Optional countdown display.
+* Optional kill-zone labels.
+
+Alerts
+
+* Session open alerts.
+* Session close alerts.
+* Kill-zone start alerts.
+* Kill-zone end alerts.
+* Custom alert timing before session events.
+* Push notifications.
+* Email alerts.
+* Telegram alerts.
+
+Optional Session Statistics
+
+The current product configuration can display information for the current or previous session, including:
+
+* Session high.
+* Session low.
+* Session range.
+* Direction: bullish, bearish or neutral.
+* Tick-count volume proxy.
+
+============================================================
+5. HOW SESSION COUNTDOWN PANEL WORKS
+====================================
+
+The indicator operates as a visual timing layer on top of the MetaTrader 5 chart.
+
+Basic workflow:
+
+Load indicator on MT5 chart
+
+↓
+
+Detect broker/server time configuration
+
+↓
+
+Apply configured session definitions
+
+↓
+
+Display active and upcoming sessions
+
+↓
+
+Calculate remaining time
+
+↓
+
+Display countdown
+
+↓
+
+Highlight configured kill zones
+
+↓
+
+Trigger configured alerts
+
+↓
+
+Optionally display session statistics
+
+The indicator does not place trades or modify trading positions.
+
+============================================================
+6. SESSION DEFINITIONS
+======================
+
+The default session configuration is:
+
+Sydney:
+
+22:00–07:00 UTC
+
+Tokyo:
+
+00:00–09:00 UTC
+
+London:
+
+08:00–17:00 UTC
+
+New York:
+
+13:00–22:00 UTC
+
+These are configurable values.
+
+Traders should verify the relationship between UTC, broker server time and daylight-saving changes before relying on a session schedule.
+
+============================================================
+7. KILL-ZONE CONFIGURATION
+==========================
+
+The current product configuration provides the following default windows:
+
+London Kill Zone:
+
+08:00–09:00 UTC
+
+New York Kill Zone:
+
+13:00–14:00 UTC
+
+London/New York Overlap:
+
+13:00–16:00 UTC
+
+These windows are configurable.
+
+The indicator visually highlights the configured periods so traders can identify them without manually tracking the clock.
+
+IMPORTANT: A "kill zone" in this indicator is simply a configured time window. The indicator does not determine whether a market will actually experience higher volatility, liquidity or a profitable trading opportunity during that period.
+
+============================================================
+8. COUNTDOWN SYSTEM
+===================
+
+The panel can display:
+
+* Time until the next session opens.
+* Time until the current session closes.
+* Time until the next configured kill zone.
+* Countdown in HH:MM:SS format.
+* Updates approximately once per second.
+
+This allows traders to monitor session transitions directly from the chart.
+
+============================================================
+9. VISUAL CUSTOMIZATION
+=======================
+
+The panel provides configurable visual settings.
+
+Available configuration includes:
+
+* Session box color.
+* Kill-zone color.
+* Countdown text color.
+* Font size.
+* Panel position.
+* Session labels.
+* Countdown visibility.
+* Kill-zone labels.
+
+The panel can be positioned in one of the supported chart corners.
+
+Example configuration:
+
+Top Left
+Top Right
+Bottom Left
+Bottom Right
+
+============================================================
+10. ALERTS
+==========
+
+The indicator can provide alerts for:
+
+* London session opening.
+* London session closing.
+* New York session opening.
+* New York session closing.
+* Other configured session events.
+* Kill-zone starting.
+* Kill-zone ending.
+* Custom warning periods before session events.
+
+Available notification channels in the current product description:
+
+* Push notifications.
+* Email.
+* Telegram.
+
+For example, a trader can configure an alert several minutes before the London session or a selected kill zone begins.
+
+============================================================
+11. OPTIONAL SESSION STATISTICS
+===============================
+
+When enabled, the indicator can display information about the current or previous session.
+
+Available information includes:
+
+* Session high.
+* Session low.
+* Session range.
+* Direction.
+* Tick-count volume proxy.
+
+Direction is displayed using the configured session data as:
+
+* Bullish.
+* Bearish.
+* Neutral.
+
+These statistics are descriptive information about the selected session and should not be interpreted as predictive signals.
+
+============================================================
+12. WHY SESSION COUNTDOWN PANEL?
+================================
+
+The main purpose of Session Countdown Panel is to remove the need to manually track session times while trading.
+
+Key differentiators:
+
+* Four major session displays.
+* Live session countdowns.
+* Configurable kill zones.
+* Visual session boxes.
+* Custom session definitions.
+* Custom broker-time configuration.
+* Session opening and closing alerts.
+* Kill-zone alerts.
+* Optional session statistics.
+* Configurable visual layout.
+* Push, email and Telegram notifications.
+* Lightweight chart-based monitoring.
+* Works independently of a specific trading strategy.
+
+The indicator provides timing information rather than attempting to predict market direction.
+
+============================================================
+13. QUICK FEATURE COMPARISON
+============================
+
+Capability                         Session Countdown Panel
+
+Sydney session                     YES
+Tokyo session                      YES
+London session                     YES
+New York session                   YES
+Session countdown                  YES
+Session close countdown            YES
+Kill-zone visualization            YES
+London kill zone                   YES
+New York kill zone                 YES
+London/NY overlap                  YES
+Custom session times               YES
+Custom kill-zone times             YES
+Session labels                     YES
+Countdown display                  YES
+Visual customization               YES
+Session alerts                     YES
+Kill-zone alerts                   YES
+Custom alert timing                YES
+Push alerts                        YES
+Email alerts                       YES
+Telegram alerts                    YES
+Session statistics                 OPTIONAL
+Automated trading                  NO
+Buy/sell signals                   NO
+Automatic risk management          NO
+Trade execution                    NO
+Martingale                         NO
+Grid trading                       NO
+
+============================================================
+14. COMPATIBILITY AND SETUP
+===========================
+
+Platform:
+
+MetaTrader 5
+
+Supported Markets:
+
+* Forex.
+* Gold.
+* Indices.
+* Crypto.
+* Futures.
+
+Supported Timeframes:
+
+The indicator is designed to operate independently of a specific trading timeframe and can be attached to supported MT5 charts.
+
+Broker:
+
+The indicator is designed to work with MetaTrader 5 brokers and provides configurable session definitions.
+
+The current product configuration can account for broker/server time differences.
+
+VPS:
+
+The indicator can operate on a VPS and does not require continuous chart interaction for configured alerts.
+
+Before using the indicator, traders should verify:
+
+* Broker server time.
+* UTC offset.
+* Daylight-saving changes.
+* Market trading hours.
+* Symbol-specific trading schedules.
+* Session definitions.
+
+============================================================
+15. SESSION TIME CONFIGURATION
+==============================
+
+The default configuration is based on UTC:
+
+Sydney Open: 22:00
+Sydney Close: 07:00
+
+Tokyo Open: 00:00
+Tokyo Close: 09:00
+
+London Open: 08:00
+London Close: 17:00
+
+New York Open: 13:00
+New York Close: 22:00
+
+Kill Zones:
+
+London: 08:00–09:00 UTC
+
+New York: 13:00–14:00 UTC
+
+Overlap: 13:00–16:00 UTC
+
+These are configurable starting values rather than universal trading rules.
+
+Session timing can change because of daylight-saving adjustments and broker server-time differences.
+
+============================================================
+16. PERFORMANCE & SESSION DATA
+==============================
+
+Session Countdown Panel is a visual timing indicator rather than an automated trading strategy.
+
+It does not make performance claims based on profitability, win rate, profit factor or account returns.
+
+The indicator's purpose is to provide:
+
+* Session timing.
+* Countdown information.
+* Configured kill-zone visualization.
+* Session alerts.
+* Optional descriptive session statistics.
+
+Actual market volatility, liquidity and trading conditions can vary between sessions and across different market periods.
+
+The presence of a session or kill zone on the chart does not guarantee a particular market behavior.
+
+============================================================
+17. WHY SESSION TIMING SHOULD BE USED CAREFULLY
+===============================================
+
+Trading sessions are time-based market windows, but market behavior is not guaranteed to repeat in the same way every day.
+
+Factors that can change market conditions include:
+
+* Economic news.
+* Market holidays.
+* Daylight-saving changes.
+* Broker trading hours.
+* Liquidity conditions.
+* Symbol-specific schedules.
+* Unexpected market events.
+
+The indicator therefore provides timing information rather than predicting what price will do during a session.
+
+Traders should verify session definitions against their broker and trading strategy.
+
+============================================================
+18. FREQUENTLY ASKED QUESTIONS
+==============================
+
+Q1. What does Session Countdown Panel do?
+
+It displays major trading sessions, countdown timers and configurable kill zones directly on a MetaTrader 5 chart.
+
+Q2. Which sessions are supported?
+
+The current configuration includes Sydney, Tokyo, London and New York sessions.
+
+Q3. Does the indicator generate buy or sell signals?
+
+No. It is a session-timing and visualization tool. It does not generate trading signals.
+
+Q4. Does it execute trades?
+
+No. The indicator does not place, modify or close trading positions.
+
+Q5. What is a kill zone?
+
+A kill zone is a user-configured time window that the indicator highlights visually. The default configuration includes London open, New York open and the London/New York overlap.
+
+Q6. Can I change the session times?
+
+Yes. Session opening and closing times can be configured according to the trader's preferred schedule and broker time.
+
+Q7. Does the indicator account for broker time?
+
+The current product description provides broker/server-time configuration and UTC-offset handling. Traders should still verify the displayed times against their broker.
+
+Q8. Does it adjust for daylight saving?
+
+Session timing can be affected by daylight-saving changes. Traders should verify the configured schedule when the broker or relevant market changes its time offset.
+
+Q9. Can I receive alerts?
+
+Yes. The current product configuration supports push, email and Telegram alerts.
+
+Q10. Can I receive an alert before a session starts?
+
+Yes. Custom warning periods can be configured so the trader receives an alert before a selected session or kill zone.
+
+Q11. Does it work with Gold?
+
+Yes. The indicator can be used on XAUUSD/Gold and other supported markets.
+
+Q12. Does it work on every timeframe?
+
+The panel is designed to be timeframe-independent and can be attached to supported MT5 charts.
+
+Q13. Does it guarantee better trading results?
+
+No. The indicator provides timing information and does not guarantee profitability or improved trading performance.
+
+Q14. Can I use it with an Expert Advisor?
+
+Yes. It can be used alongside other trading systems as a visual session-monitoring tool. It is not a mandatory dependency for other EAs unless explicitly stated.
+
+Q15. Is it suitable for prop-firm trading?
+
+It can be useful for traders who monitor specific trading sessions, but it does not enforce prop-firm risk limits. Traders remain responsible for following their provider's current rules.
+
+============================================================
+19. SUPPORT
+===========
+
+Post-delivery bug-fix support is included.
+
+Customization and additional indicator modifications are available through MQL5 Freelance.
+
+============================================================
+20. RELATED PRODUCTS
+====================
+
+Daily Loss Guardian ($35)
+
+Standalone risk-management utility for monitoring and controlling account-level trading risk.
+
+Global Stop Loss and Target Manager ($30)
+
+Utility for managing stop-loss and take-profit levels across positions.
+
+EMA Multi-Timeframe Trend EA ($39)
+
+Automated multi-timeframe trend-following Expert Advisor using H1, M15 and M5 market structure.
+
+XAUUSD Session Scalper ($69)
+
+Gold-focused automated strategy designed around session-based trading.
+
+Prop Firm Challenge Suite ($79)
+
+Bundle of related risk-management tools.
+
+These products are related tools and should not be treated as mandatory dependencies unless specifically confirmed otherwise.
+
+============================================================
+21. FINAL MARKETPLACE POSITIONING
+=================================
+
+Session Countdown Panel is designed for traders who want session timing information directly on their MetaTrader 5 charts.
+
+The indicator provides:
+
+Major session visualization
+
+*
+
+Live countdown timers
+
+*
+
+Configurable kill zones
+
+*
+
+Session and kill-zone alerts
+
+*
+
+Optional session statistics
+
+*
+
+Custom timing and visual settings
+
+The indicator does not attempt to predict market direction or execute trades.
+
+Its purpose is to make time-based trading decisions easier to monitor by keeping session information visible while the trader works on the chart.
+
+Traders should configure the session schedule according to their broker's server time and verify daylight-saving changes when applicable.
+
+Session Countdown Panel should be treated as a timing and monitoring tool, not as a standalone trading strategy or profitability system.
