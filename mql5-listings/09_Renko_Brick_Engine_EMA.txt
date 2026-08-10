@@ -1,0 +1,483 @@
+RENKO BRICK ENGINE WITH EMA OVERLAY MQL5 MARKETPLACE
+
+Product Type: Utility
+Product: Renko Brick Engine With EMA Overlay
+Price: Free
+Platform: MetaTrader 5
+Primary Use: Renko visualization and brick-based EMA analysis
+Recommended Use: Any symbol and supported chart/timeframe configuration
+
+============================================================
+1. HEADLINE
+============================================================
+
+Renko Brick Engine With EMA Overlay — Native Renko Bricks and EMA Analysis Inside MT5
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+============================================================
+
+Renko Brick Engine With EMA Overlay is a free MetaTrader 5 utility that
+builds and tracks its own Renko brick series directly from price data.
+
+The engine creates Renko bricks in memory, seeds the series with recent
+historical data when attached, and calculates fast and slow EMAs directly
+from Renko brick closes rather than time-based candle closes.
+
+The utility displays the recent brick series and both EMA lines directly
+on the chart, while also providing an information panel and recent-brick
+logging for easier inspection of the engine's behaviour.
+
+IMPORTANT: This is a visualization and analysis utility. It does not
+open, close, or manage trades and does not provide a profitability
+guarantee or trading performance claim.
+
+============================================================
+3. WHO IS THIS UTILITY FOR?
+============================================================
+
+Renko Brick Engine With EMA Overlay is designed for:
+
+-   Traders who use Renko-style price analysis.
+-   Users who want a self-contained Renko engine inside MetaTrader 5.
+-   Traders who want EMAs calculated from Renko brick closes.
+-   Developers evaluating brick-based EMA logic before building a
+    trading system.
+-   Users who want to inspect recent Renko bricks directly on a chart.
+-   Users who want recent brick and EMA values available through logs.
+
+It may not be suitable for traders who:
+
+-   Want an automated trading EA.
+-   Want the utility to open or close positions.
+-   Want automated Stop Loss or Take Profit management.
+-   Need an offline Renko chart file.
+-   Are looking for a standalone trading signal or guaranteed strategy.
+
+============================================================
+4. KEY FEATURES
+============================================================
+
+Renko Engine
+
+-   Builds Renko bricks in memory from live tick data.
+-   Seeds the engine with recent historical data when attached.
+-   Maintains its own in-memory brick series.
+-   Confirmed bricks are based on brick closes.
+-   Confirmed bricks do not rely on external Renko chart generators.
+
+EMA Overlay
+
+-   Calculates a fast EMA directly from Renko brick closes.
+-   Calculates a slow EMA directly from Renko brick closes.
+-   EMAs are recalculated when a new brick is created.
+-   EMA values are based on the Renko brick series rather than
+    time-based candle closes.
+
+Chart Display
+
+-   Displays recent Renko bricks on the chart.
+-   Displays both fast and slow EMA lines.
+-   Provides a live information panel.
+-   Allows the user to control how many recent bricks are displayed.
+
+Audit and Logging
+
+-   Logs recent Renko bricks.
+-   Records brick close values.
+-   Records brick direction.
+-   Records fast EMA values.
+-   Records slow EMA values.
+-   Makes the engine's recent behaviour easier to inspect.
+
+Configuration
+
+-   Configurable brick size.
+-   Configurable fast EMA length.
+-   Configurable slow EMA length.
+-   Configurable history bars used to seed the engine.
+-   Configurable timeframe used for initial seeding.
+-   Configurable number of bricks displayed.
+-   Configurable number of recent bricks written to the log.
+
+============================================================
+5. HOW THE RENKO ENGINE WORKS
+============================================================
+
+The utility does not depend on an offline Renko chart.
+
+When the utility is attached to a chart, it uses recent historical data to
+seed the initial brick series and then continues tracking price through
+live tick data.
+
+The resulting Renko bricks are maintained in memory and used as the
+basis for the chart display and EMA calculations.
+
+5.1 Initial Seeding
+
+The engine uses the configured history bars and timeframe to build an
+initial Renko series when it is attached.
+
+5.2 Live Brick Construction
+
+After initialization, the engine continues processing live price
+movement and adds new Renko bricks when the configured brick conditions
+are met.
+
+5.3 Confirmed Bricks
+
+A brick is treated as confirmed when it closes. Confirmed bricks form
+the in-memory Renko series used by the utility.
+
+5.4 EMA Calculation
+
+The fast and slow EMAs are calculated from Renko brick closing prices,
+not from standard time-based candle closes.
+
+============================================================
+6. EMA OVERLAY
+============================================================
+
+The utility provides two configurable EMA calculations:
+
+Fast EMA:
+Calculated directly from Renko brick closes using the configured fast
+EMA length.
+
+Slow EMA:
+Calculated directly from Renko brick closes using the configured slow
+EMA length.
+
+The two EMA lines are displayed together with the Renko bricks so users
+can inspect how the moving averages behave on the brick-based series.
+
+============================================================
+7. ON-CHART DISPLAY
+============================================================
+
+The chart can display:
+
+-   Recent Renko bricks.
+-   Fast EMA.
+-   Slow EMA.
+-   Live information panel.
+-   Recent brick information.
+
+The number of bricks displayed can be configured by the user.
+
+============================================================
+8. LOGGING AND AUDITABILITY
+============================================================
+
+The utility records recent brick information in the log, including:
+
+-   Brick close.
+-   Brick direction.
+-   Fast EMA value.
+-   Slow EMA value.
+
+This allows users and developers to inspect the generated brick series
+and compare the displayed engine behaviour with the logged values.
+
+============================================================
+9. INPUTS AND CONFIGURATION
+============================================================
+
+The current product description provides the following configurable
+areas:
+
+Brick Size
+Controls the size of each Renko brick in points.
+
+Fast EMA Length
+Controls the period of the fast EMA calculated from Renko brick closes.
+
+Slow EMA Length
+Controls the period of the slow EMA calculated from Renko brick closes.
+
+History Bars
+Controls how much recent history is used to seed the Renko engine when
+the utility is attached.
+
+Seed Timeframe
+Controls the timeframe used for the initial historical seeding process.
+
+Displayed Bricks
+Controls the number of recent Renko bricks drawn on the chart.
+
+Logged Bricks
+Controls the number of recent bricks written to the log.
+
+============================================================
+10. WHAT THIS UTILITY DOES NOT DO
+============================================================
+
+Renko Brick Engine With EMA Overlay is not an automated trading system.
+
+It does not:
+
+-   Open trades.
+-   Close trades.
+-   Modify existing trades.
+-   Place pending orders.
+-   Manage Stop Loss.
+-   Manage Take Profit.
+-   Execute a trading strategy.
+-   Export an offline Renko chart file.
+-   Require a third-party Renko generator.
+
+The utility is intended for visualization, analysis and engine
+demonstration.
+
+============================================================
+11. WHY RENKO BRICK ENGINE WITH EMA OVERLAY?
+============================================================
+
+The main difference is that the Renko engine is built directly into the
+utility rather than requiring an external offline Renko chart or
+third-party Renko generator.
+
+Key differentiators:
+
+-   Native in-memory Renko engine.
+-   Live tick-based brick construction.
+-   Historical seeding when attached.
+-   EMA calculations based directly on Renko brick closes.
+-   Fast and slow EMA overlay.
+-   Recent-brick visualization.
+-   Built-in information panel.
+-   Recent-brick logging for inspection.
+-   No external Renko converter required.
+-   No automated trade execution.
+
+The utility is intended to provide a self-contained foundation for
+Renko-based analysis and development inside MetaTrader 5.
+
+============================================================
+12. QUICK FEATURE COMPARISON
+============================================================
+
+Capability                         Renko Brick Engine
+
+Native Renko engine                YES
+In-memory brick series             YES
+Live tick-based construction       YES
+Historical seeding                 YES
+Confirmed brick tracking           YES
+Fast EMA on brick closes           YES
+Slow EMA on brick closes           YES
+Renko brick chart display          YES
+Live information panel             YES
+Recent-brick logging               YES
+Configurable brick size            YES
+Configurable EMA lengths           YES
+Offline Renko chart required       NO
+Third-party Renko generator       NO
+Automated trade execution          NO
+Trade management                   NO
+Stop Loss management               NO
+Take Profit management             NO
+Free                               YES
+
+============================================================
+13. COMPATIBILITY AND SETUP
+============================================================
+
+Platform: MetaTrader 5
+
+Symbol:
+The current product description is designed for use on any chart/symbol
+where the required price data is available.
+
+Renko Engine:
+Built and maintained inside the utility.
+
+External Renko Converter:
+Not required.
+
+Offline Renko Chart:
+Not required.
+
+Third-Party Renko Generator:
+Not required.
+
+Setup:
+
+1. Attach the utility to the desired MT5 chart.
+2. Configure the Renko brick size.
+3. Configure the fast and slow EMA lengths.
+4. Configure the history bars and seed timeframe if required.
+5. Choose the number of bricks to display.
+6. Choose the number of recent bricks to log.
+7. Allow the utility to initialize and build its in-memory series.
+
+============================================================
+14. AUDIT AND EXPECTED BEHAVIOUR
+============================================================
+
+The utility is designed so that the Renko series is maintained internally
+and recent brick information can be inspected through the log.
+
+Users evaluating the engine should understand that Renko construction is
+dependent on the configured brick size and the price data available to
+the terminal.
+
+The utility should therefore be evaluated on the user's own symbol,
+broker data and configuration.
+
+No specific trading performance or profitability claim is made.
+
+============================================================
+15. PERFORMANCE AND BACKTEST CLAIMS
+============================================================
+
+No specific historical trading performance figures are claimed for this
+utility.
+
+This product is a visualization and Renko-engine demonstration tool. It
+does not execute trades and therefore does not have a claimed trading
+strategy backtest performance.
+
+The utility's behaviour can be inspected through the displayed brick
+series and recent-brick logs.
+
+============================================================
+16. WHY THIS TOOL SHOULD BE EVALUATED CAREFULLY
+============================================================
+
+Renko charts represent price movement differently from conventional
+time-based candles.
+
+Results and displayed structures can depend on:
+
+-   Brick size.
+-   Symbol.
+-   Broker price feed.
+-   Historical data available to MT5.
+-   Initial seeding configuration.
+-   Live tick data.
+-   EMA lengths.
+
+For development or strategy research, users should evaluate the engine
+using the symbol, broker conditions and configuration relevant to their
+intended use.
+
+============================================================
+17. FREQUENTLY ASKED QUESTIONS
+============================================================
+
+Q1. What is Renko Brick Engine With EMA Overlay?
+
+It is a free MetaTrader 5 utility that creates an in-memory Renko brick
+series and overlays fast and slow EMAs calculated from Renko brick
+closes.
+
+Q2. Do I need an offline Renko chart?
+
+No. The utility builds and tracks its own Renko series in memory.
+
+Q3. Do I need a third-party Renko generator?
+
+No. The Renko engine is included in the utility.
+
+Q4. Does it use live price data?
+
+Yes. After the initial historical seeding, the engine continues to
+process live tick data.
+
+Q5. Does it repaint confirmed Renko bricks?
+
+The product description states that a brick only confirms on close and
+that confirmed bricks are maintained as the source of truth.
+
+Q6. Are the EMAs calculated from normal candles?
+
+No. The EMAs are calculated directly from Renko brick closing prices.
+
+Q7. Can I change the brick size?
+
+Yes. Brick size is configurable in points.
+
+Q8. Can I change the EMA periods?
+
+Yes. Both fast and slow EMA lengths are configurable.
+
+Q9. Does the utility trade automatically?
+
+No. It does not open, close or manage trades.
+
+Q10. Can I use it as a trading signal?
+
+The utility is a visualization and engine demonstration tool. It does
+not claim to be a standalone trading signal service.
+
+Q11. Can developers use it for strategy development?
+
+Yes. It is intended in part as a foundation for developers evaluating
+Renko-based EMA logic before building a full trading system.
+
+Q12. Does it log the Renko bricks?
+
+Yes. Recent bricks can be written to the MT5 log, including close,
+direction and both EMA values.
+
+============================================================
+18. SUPPORT
+============================================================
+
+Post-delivery bug-fix support is included.
+
+Customization and development work can be requested through MQL5
+Freelance.
+
+============================================================
+19. RELATED PRODUCTS
+============================================================
+
+Global Stop Loss and Target Setter — Free utility for applying Stop Loss
+and Take Profit levels to open positions on the current symbol.
+
+Global Stop Loss and Target Manager — Paid utility for continuously
+managing global Stop Loss and Take Profit levels across positions.
+
+Daily Loss Guardian — Risk-management utility designed to enforce a
+configured daily loss limit.
+
+Session Countdown Panel — Visual session timing and countdown utility.
+
+Wyckoff Schematic Detector — Algorithmic Wyckoff structure and phase
+analysis indicator.
+
+These products are related tools and are not mandatory dependencies of
+Renko Brick Engine With EMA Overlay.
+
+============================================================
+20. FINAL MARKETPLACE POSITIONING
+============================================================
+
+Renko Brick Engine With EMA Overlay is a free MetaTrader 5 foundation
+tool for users who want to work with Renko-style price analysis without
+installing an external Renko converter.
+
+The utility combines:
+
+Native Renko engine + Live tick-based brick construction +
+Historical seeding + Brick-based EMA calculations +
+Chart visualization + Information panel + Auditable brick logging
+
+It does not execute trades or manage positions.
+
+The goal is to provide a self-contained Renko environment inside
+MetaTrader 5 that traders and developers can inspect, configure and use
+as a foundation for further Renko-based analysis or strategy
+development.
+
+MARKET NOTES AND THE SIGNAL CHANNEL
+
+The product's current marketplace description also references a free
+Telegram channel for market notes and product updates:
+t.me/boltiq_signals
+
+Users should evaluate the utility using their own broker data, symbol,
+brick size and configuration before relying on its displayed structures
+for analysis.
