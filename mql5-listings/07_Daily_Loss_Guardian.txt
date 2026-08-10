@@ -1,0 +1,805 @@
+DAILY LOSS GUARDIAN — MQL5 MARKETPLACE
+
+Product Type: Utility
+Product: Daily Loss Guardian
+Platform: MetaTrader 5
+Primary Purpose: Account-level daily-loss and drawdown risk management
+Supported Markets: Forex, Gold, Indices, Crypto and other MT5-supported symbols
+Account Types: Personal, Standard, Raw Spread, ECN and Prop-Firm Accounts
+
+============================================================
+
+1. HEADLINE
+   ============================================================
+
+Daily Loss Guardian — Automated Daily Loss & Drawdown Protection for MT5
+
+============================================================
+2. SHORT MARKETPLACE INTRODUCTION
+=================================
+
+Daily Loss Guardian is a MetaTrader 5 risk-management utility designed
+to monitor account equity against configured daily-loss and maximum-
+drawdown limits.
+
+When a configured risk threshold is reached, the utility can close open
+positions and prevent additional trading according to its risk-control
+settings.
+
+The utility also provides session-aware controls, economic-news
+filtering, an on-chart risk dashboard, alerts and additional risk
+calculation tools.
+
+Daily Loss Guardian is designed for traders who want an independent
+account-level risk layer that can operate alongside an existing Expert
+Advisor or manual trading workflow.
+
+IMPORTANT: Daily Loss Guardian is a risk-management utility, not a
+trading strategy. It does not generate trading signals and does not
+guarantee profits or prevent all trading losses.
+
+The utility enforces the rules configured by the trader. Prop-firm
+requirements can vary and may change, so traders must verify their
+provider's current rules before configuring the utility.
+
+============================================================
+3. WHO IS DAILY LOSS GUARDIAN FOR?
+==================================
+
+Daily Loss Guardian is designed for traders who:
+
+* Trade accounts with daily-loss restrictions.
+* Trade prop-firm challenge or funded accounts.
+* Want an additional account-level risk-control layer.
+* Want floating P&L included in daily-loss monitoring.
+* Want automated position liquidation when configured limits are
+  reached.
+* Want to prevent new trades after a configured risk threshold.
+* Use an Expert Advisor but want independent account-level protection.
+* Trade manually and want automated account-level risk monitoring.
+* Want session-aware risk controls.
+* Want configurable economic-news protection.
+* Want a visual dashboard showing current account risk.
+
+Daily Loss Guardian may not be suitable for traders who:
+
+* Are looking for a trading strategy or entry signals.
+* Expect guaranteed protection against every possible loss.
+* Do not want automated position closing.
+* Are unwilling to verify their broker or prop-firm rules.
+* Expect the utility to automatically determine the correct risk limits
+  for their account.
+
+============================================================
+4. KEY FEATURES
+===============
+
+Daily Loss Protection
+
+* Configurable daily-loss percentage.
+* Equity-based monitoring.
+* Floating profit and loss can be included in the risk calculation.
+* Automated position-closing protection when the configured threshold
+  is reached.
+* Trading lockout after the configured limit is reached.
+
+Maximum Drawdown Protection
+
+* Configurable maximum-drawdown percentage.
+* Account-level equity monitoring.
+* Additional liquidation protection.
+* Trading halt when the configured drawdown threshold is reached.
+
+Session-Aware Risk Controls
+
+* London session monitoring.
+* New York session monitoring.
+* London/New York overlap monitoring.
+* Configurable session behavior.
+
+Economic News Filter
+
+* High-impact economic-event monitoring.
+* Configurable protection window.
+* MetaTrader 5 built-in Economic Calendar.
+* No external economic-calendar API required by the described
+  implementation.
+
+Risk Calculation Tools
+
+* ATR-based stop-loss reference calculation.
+* Configurable ATR period and multiplier where supported.
+* Risk-per-trade calculation.
+* Position-size reference calculation based on equity and stop-loss
+  distance.
+
+On-Chart Dashboard
+
+The dashboard can display:
+
+* Current daily-loss percentage.
+* Daily-loss limit.
+* Daily-loss status.
+* Current trading session.
+* Maximum drawdown status.
+* Kill-switch status.
+* Next high-impact news event.
+* News countdown.
+* Open-position count.
+* Total risk information.
+
+Alerts
+
+* Daily-loss warning.
+* Daily-loss limit reached.
+* Kill-switch activation.
+* Maximum-drawdown warning.
+* Session changes.
+* High-impact news warning.
+* News-event completion / trading resumption.
+
+============================================================
+5. HOW DAILY LOSS GUARDIAN WORKS
+================================
+
+Daily Loss Guardian operates as an account-level risk-management layer.
+
+Basic workflow:
+
+Read account state
+
+↓
+
+Determine configured daily-loss baseline
+
+↓
+
+Monitor current account equity
+
+↓
+
+Calculate current daily loss
+
+↓
+
+Compare equity against configured daily-loss limit
+
+↓
+
+Monitor maximum drawdown
+
+↓
+
+Monitor configured session/news conditions
+
+↓
+
+If configured risk threshold is reached:
+
+Close positions according to configuration
+
+↓
+
+Block additional trading according to configuration
+
+↓
+
+Generate dashboard status and alerts
+
+The utility is designed to run independently of the strategy generating
+the trades.
+
+============================================================
+6. DAILY LOSS PROTECTION
+========================
+
+Daily Loss Guardian monitors account equity against the configured
+daily-loss threshold.
+
+The system is designed to account for floating profit and loss rather
+than relying only on closed-trade balance.
+
+When the configured daily-loss threshold is reached, the utility can:
+
+* Close open positions.
+* Prevent additional trading.
+* Activate the configured kill-switch state.
+* Display the risk status on the dashboard.
+* Send configured alerts.
+
+The exact behavior depends on the configured parameters and the
+implementation of the current product version.
+
+IMPORTANT: Traders should verify how their specific prop firm calculates
+daily loss before configuring the utility.
+
+Different firms can use different definitions involving balance,
+equity, starting balance, daily reset time and other conditions.
+
+============================================================
+7. MAXIMUM DRAWDOWN PROTECTION
+==============================
+
+The second major protection layer monitors account-level drawdown.
+
+When equity reaches the configured maximum-drawdown threshold, the
+utility can:
+
+* Close open positions.
+* Stop additional trading.
+* Activate the drawdown protection state.
+* Display the current drawdown status.
+* Trigger configured alerts.
+
+This provides a second layer of protection in addition to the daily-loss
+limit.
+
+The utility does not determine whether a prop firm's drawdown definition
+matches the configured value automatically.
+
+Traders must verify their provider's current drawdown rules.
+
+============================================================
+8. SESSION-AWARE RISK CONTROLS
+==============================
+
+The utility provides session-aware monitoring for major market periods.
+
+The current product information references:
+
+London Open:
+
+08:00–09:00 UTC
+
+New York Open:
+
+13:00–14:00 UTC
+
+London/New York Overlap:
+
+13:00–16:00 UTC
+
+Session-aware controls are intended to help traders manage risk during
+periods when volatility or execution conditions may change.
+
+Session times can vary because of daylight-saving changes, broker server
+time and market-specific trading schedules.
+
+Traders should verify the relevant session timing for their broker.
+
+============================================================
+9. ECONOMIC NEWS FILTER
+=======================
+
+Daily Loss Guardian can use the MetaTrader 5 built-in Economic Calendar
+to monitor high-impact economic events.
+
+The current product description references events such as:
+
+* NFP.
+* CPI.
+* FOMC.
+* ECB.
+* BoE.
+* GDP.
+* Unemployment-related releases.
+
+The described configuration uses a protection window around high-impact
+events.
+
+The purpose is to provide an additional risk-control mechanism around
+scheduled economic releases.
+
+IMPORTANT: Economic-news filtering does not guarantee protection from
+market gaps, slippage, spread expansion or unexpected market movement.
+
+============================================================
+10. ATR-BASED STOP-LOSS HELPER
+==============================
+
+The utility includes an optional ATR-based stop-loss calculation tool.
+
+The current product description references:
+
+ATR(14) x 2
+
+as a volatility-based stop-loss reference.
+
+The calculation can be used as a reference for manual trading or as part
+of a compatible trading workflow.
+
+This feature does not guarantee that a particular stop-loss distance is
+appropriate for every market condition.
+
+============================================================
+11. POSITION-SIZING REFERENCE
+=============================
+
+Daily Loss Guardian can provide a position-size reference based on:
+
+* Account equity.
+* Risk percentage.
+* Stop-loss distance.
+
+The purpose is to help traders determine a position size consistent
+with their selected risk level.
+
+The calculation should be treated as a risk-management reference rather
+than a recommendation to use a particular risk percentage.
+
+============================================================
+12. ON-CHART DASHBOARD
+======================
+
+The dashboard can display:
+
+* Current daily-loss percentage.
+* Daily-loss limit.
+* Daily-loss status.
+* Current session.
+* Maximum drawdown percentage.
+* Maximum-drawdown status.
+* Kill-switch status.
+* Next high-impact news event.
+* News countdown.
+* Number of open positions.
+* Total position risk.
+
+The dashboard provides a real-time view of the account-level conditions
+being monitored by the utility.
+
+============================================================
+13. ALERTS
+==========
+
+Daily Loss Guardian can provide alerts for:
+
+* Daily loss reaching the configured warning threshold.
+* Daily loss limit reached.
+* Kill-switch activation.
+* Maximum drawdown warning.
+* Session changes.
+* High-impact news approaching.
+* News-event completion.
+
+Available channels described by the current product information:
+
+* Push notifications.
+* Email.
+* Telegram.
+
+Alerts are informational and do not replace monitoring of the trading
+account or verification of broker execution.
+
+============================================================
+14. WHY DAILY LOSS GUARDIAN?
+============================
+
+Many trading systems focus on generating entries while leaving account-
+level risk protection to the strategy itself.
+
+Daily Loss Guardian provides a separate risk-management layer that can
+monitor the account independently of the strategy generating trades.
+
+Key differentiators:
+
+* Account-level daily-loss monitoring.
+* Equity-based protection.
+* Maximum-drawdown protection.
+* Automated position liquidation when configured limits are reached.
+* Trading lockout after risk thresholds are reached.
+* Session-aware controls.
+* Economic-news monitoring.
+* On-chart risk dashboard.
+* Configurable alerts.
+* ATR-based stop-loss reference.
+* Position-sizing reference.
+* Designed to work alongside other EAs or manual trading.
+
+The objective is to separate account-level risk protection from the
+trading strategy itself.
+
+============================================================
+15. DAILY LOSS GUARDIAN VS BASIC ACCOUNT MONITORING
+===================================================
+
+Capability                         Basic Monitoring
+Daily Loss Guardian
+
+Daily-loss monitoring               Depends on platform/user
+Automated
+
+Floating P&L monitoring             May be limited
+Equity-based monitoring
+
+Maximum drawdown guard              Usually manual
+Included
+
+Position liquidation                Manual
+Configurable automated protection
+
+Trading lockout                     Usually unavailable
+Included according to configuration
+
+Session monitoring                  Limited
+Included
+
+Economic-news monitoring            Usually unavailable
+Included
+
+Risk dashboard                      Limited
+Included
+
+Risk alerts                         Depends on setup
+Push / Email / Telegram
+
+Position-size calculation           Usually separate
+Included as a reference tool
+
+ATR stop-loss reference             Usually separate
+Included
+
+IMPORTANT: This comparison describes the intended product capabilities
+and should not be interpreted as a guarantee that the utility can
+override every broker or Expert Advisor behavior.
+
+============================================================
+16. COMPATIBILITY AND SETUP
+===========================
+
+Platform:
+
+MetaTrader 5.
+
+Supported Markets:
+
+* Forex.
+* Gold.
+* Indices.
+* Crypto.
+* Other symbols supported by the broker and MT5.
+
+Account Types:
+
+* Standard accounts.
+* Raw-spread accounts.
+* ECN environments.
+* Prop-firm challenge accounts.
+* Funded accounts.
+
+Timeframe:
+
+The utility is designed to operate independently of a specific trading
+strategy timeframe.
+
+VPS:
+
+A VPS is recommended for continuous automated monitoring.
+
+Before using the utility, traders should verify:
+
+* Broker symbol specifications.
+* Account equity.
+* Broker trading permissions.
+* Position-closing behavior.
+* Broker server time.
+* Economic-calendar availability.
+* Prop-firm daily-loss definition.
+* Prop-firm maximum-drawdown definition.
+* Prop-firm reset time.
+* Any restrictions on automated risk-management utilities.
+
+============================================================
+17. PROP-FIRM CONFIGURATION EXAMPLES
+====================================
+
+The current product information includes the following configuration
+examples:
+
+FTMO:
+
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0
+
+5%ers:
+
+DailyLossPercent: 4.0
+MaxDrawdownPercent: 10.0
+
+Finotive:
+
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 8.0
+
+FundedNext:
+
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0
+
+The Funded Trader:
+
+DailyLossPercent: 5.0
+MaxDrawdownPercent: 10.0
+
+Custom:
+
+Fully configurable.
+
+IMPORTANT: These values are configuration examples from the current
+product information. They are not a guarantee that the utility complies
+with the current rules of any specific provider.
+
+Prop-firm rules can change. Traders must verify the provider's current
+rules before trading.
+
+============================================================
+18. WHAT YOU GET
+================
+
+The current product information describes the utility as including:
+
+* Compiled MT5 utility.
+* Parameter configuration.
+* Risk-management controls.
+* Dashboard.
+* Alert functionality.
+* Installation/setup support.
+
+Exact package contents should be confirmed against the current MQL5
+Market delivery.
+
+============================================================
+19. PERFORMANCE & VALIDATION
+============================
+
+Daily Loss Guardian is a risk-management utility, not a trading
+strategy.
+
+It does not generate trading signals and therefore should not be
+evaluated using traditional strategy metrics such as:
+
+* Win rate.
+* Profit factor.
+* Strategy return.
+* Trading expectancy.
+
+Its purpose is to enforce configured account-level risk controls.
+
+Evaluation should instead focus on:
+
+* Correct daily-loss calculation.
+* Correct equity monitoring.
+* Correct drawdown calculation.
+* Correct position-closing behavior.
+* Correct trading lockout behavior.
+* Correct session handling.
+* Correct news-filter behavior.
+* Correct alert behavior.
+* Correct behavior under broker-specific conditions.
+
+No specific profitability or performance figures are claimed without a
+reproducible test report.
+
+============================================================
+20. IMPORTANT RISK AND CONFIGURATION NOTES
+==========================================
+
+Daily Loss Guardian enforces the limits configured by the trader.
+
+It does not automatically know the exact rules of every prop firm.
+
+Important variables can include:
+
+* Daily reset time.
+* Starting balance.
+* Starting equity.
+* Floating P&L.
+* Closed P&L.
+* Maximum drawdown calculation.
+* Trading-day definition.
+* Server time.
+* Weekend rules.
+* News restrictions.
+
+Incorrect configuration can result in the utility using limits that do
+not match a firm's actual rules.
+
+For this reason, traders should verify the provider's official rules
+before relying on the utility for account protection.
+
+The utility also cannot guarantee execution at a specific price during
+fast markets, gaps or periods of extreme liquidity conditions.
+
+============================================================
+21. FREQUENTLY ASKED QUESTIONS
+==============================
+
+Q1. What does Daily Loss Guardian do?
+
+It monitors account-level daily loss and maximum drawdown against
+configured thresholds and can take protective actions when those
+thresholds are reached.
+
+Q2. Does it generate trading signals?
+
+No. It is a risk-management utility, not a trading strategy.
+
+Q3. Can it close my positions automatically?
+
+The current product description states that the utility can close open
+positions when configured risk limits are reached.
+
+Q4. Does it monitor floating profit and loss?
+
+Yes. The current product description describes equity-based daily-loss
+monitoring, allowing floating P&L to be included.
+
+Q5. Can it stop new trades?
+
+The utility is designed to block additional trading after configured
+risk thresholds are reached.
+
+The exact behavior can depend on the current configuration and trading
+environment.
+
+Q6. Can I use it with another Expert Advisor?
+
+Yes. It is designed as a standalone account-level risk layer and can be
+used alongside an existing trading system.
+
+Compatibility should be tested with the specific EA and broker
+environment before live use.
+
+Q7. Can I use it for manual trading?
+
+Yes. The utility can monitor the account independently of whether trades
+are generated manually or by an Expert Advisor.
+
+Q8. Does it guarantee that I will not violate a prop-firm rule?
+
+No.
+
+The utility enforces the values configured by the trader. Prop firms can
+have different definitions and rules, so the trader must configure the
+utility correctly and verify the provider's current requirements.
+
+Q9. Does it protect against slippage?
+
+No risk-management utility can guarantee a specific execution price.
+During fast markets, gaps or low liquidity, actual execution can differ
+from the configured threshold.
+
+Q10. Does it include a news filter?
+
+Yes. The current product description includes a high-impact news filter
+using the MetaTrader 5 Economic Calendar.
+
+Q11. Can I change the daily-loss limit?
+
+Yes. The daily-loss percentage is configurable.
+
+Q12. Can I change the maximum-drawdown limit?
+
+Yes. The maximum-drawdown percentage is configurable.
+
+Q13. Does it work with Gold?
+
+Yes. Gold/XAUUSD is among the supported market types.
+
+Q14. Does it work with Forex?
+
+Yes. Forex symbols are supported.
+
+Q15. Does it require a specific timeframe?
+
+The utility is designed to operate independently of a trading-strategy
+timeframe.
+
+Q16. Do I need a VPS?
+
+A VPS is recommended for continuous automated monitoring and risk
+management.
+
+Q17. Does it guarantee profits?
+
+No.
+
+Daily Loss Guardian does not generate trading signals and does not
+guarantee profits.
+
+Q18. What happens if the daily-loss limit is reached?
+
+According to the current product description, the utility can close
+positions and block new trades when the configured daily-loss threshold
+is reached.
+
+Q19. Can I use custom limits?
+
+Yes. The product information describes custom configuration as
+supported.
+
+============================================================
+22. SUPPORT
+===========
+
+Post-delivery bug-fix support is included.
+
+Feature requests and customization are available through MQL5
+Freelance.
+
+============================================================
+23. RELATED PRODUCTS
+====================
+
+Global Stop Loss and Target Manager ($30)
+
+Utility for managing stop-loss and take-profit levels across positions.
+
+Session Countdown Panel ($30)
+
+Visual session boxes and countdown timers for major market sessions.
+
+Prop Firm Challenge Suite ($79)
+
+Bundle of related risk-management tools.
+
+These products are related tools and should not be treated as mandatory
+dependencies unless specifically confirmed otherwise.
+
+============================================================
+24. FINAL MARKETPLACE POSITIONING
+=================================
+
+Daily Loss Guardian is designed for traders who want an independent
+account-level risk-management layer for MetaTrader 5.
+
+The utility combines:
+
+Daily Loss Monitoring
+
+*
+
+Maximum Drawdown Protection
+
+*
+
+Equity-Based Risk Controls
+
+*
+
+Position Liquidation
+
+*
+
+Trading Lockout
+
+*
+
+Session Monitoring
+
+*
+
+Economic-News Filtering
+
+*
+
+Risk Dashboard
+
+*
+
+Alerts
+
+*
+
+Risk Calculation Tools
+
+The purpose of Daily Loss Guardian is not to find profitable trades.
+
+Its purpose is to help enforce predefined account-level risk limits
+while a trading strategy or manual trading workflow is operating.
+
+The utility should be configured using the trader's actual account and
+the current rules of the relevant broker or prop firm.
+
+It does not guarantee compliance, prevent all losses, guarantee
+execution at a specific price or guarantee trading profitability.
